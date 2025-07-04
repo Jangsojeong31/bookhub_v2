@@ -1,6 +1,6 @@
 package com.bookhub.bookhub_back.common.enums;
 
-public enum Status {
+public enum EmployeeStatus {
     EMPLOYED,
     EXITED
 }
