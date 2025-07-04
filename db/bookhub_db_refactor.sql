@@ -132,11 +132,11 @@ CREATE TABLE IF NOT EXISTS `book_categories` (
 	category_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     category_type VARCHAR(255) NOT NULL, -- 국내 / 해외
 	category_level INT NOT NULL DEFAULT 1, -- 1: 대분류, 2: 소분류
-    parent_category_id BIGINT DEFAULT NULL, -- 대분류 카테고리일 경우: NULL
+    parent_category_id BIGINT, -- 대분류 카테고리일 경우: NULL
     category_name VARCHAR(255) NOT NULL,
-    category_order INT DEFAULT TRUE, -- 카테고리 정렬 우선순위
+    category_order INT DEFAULT 0, -- 카테고리 정렬 우선순위
     is_active BOOLEAN DEFAULT TRUE, -- 비활성화(삭제 대신)
-    discount_policy_id BIGINT DEFAULT NULL, -- 적용 할인
+    discount_policy_id BIGINT, -- 적용 할인
     
     FOREIGN KEY (parent_category_id) 
 		REFERENCES book_categories(category_id) ON DELETE CASCADE,
@@ -170,7 +170,8 @@ CREATE TABLE IF NOT EXISTS `books` (
     page_count VARCHAR(255) NOT NULL, -- 책 페이지
     language VARCHAR(255) NOT NULL,
     description TEXT,
-    discount_policy_id BIGINT DEFAULT NULL,
+    discount_policy_id BIGINT,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES book_categories(category_id),
@@ -341,9 +342,11 @@ CREATE TABLE IF NOT EXISTS `alerts` (
 	employee_id BIGINT NOT NULL, -- 알림 수신자
 	alert_type VARCHAR(255),
     message TEXT NOT NULL, -- UI에 노출할 메시지
-    target_table VARCHAR(255), -- 관련 테이블
+
+    target_table VARCHAR(255) NOT NULL, -- 관련 테이블
     target_pk BIGINT, -- 타겟 테이블의 기본키
-    target_isbn VARCHAR(255) DEFAULT NULL, -- 타겟이 책일 경우 ISBN 사용
+    target_isbn VARCHAR(255), -- 타겟이 책일 경우 ISBN 사용
+
     is_read BOOLEAN DEFAULT FALSE, -- 읽음 여부
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     
