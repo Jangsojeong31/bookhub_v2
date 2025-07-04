@@ -171,6 +171,7 @@ CREATE TABLE IF NOT EXISTS `books` (
     language VARCHAR(255) NOT NULL,
     description TEXT,
     discount_policy_id BIGINT,
+
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES book_categories(category_id),
@@ -341,9 +342,11 @@ CREATE TABLE IF NOT EXISTS `alerts` (
 	employee_id BIGINT NOT NULL, -- 알림 수신자
 	alert_type VARCHAR(255),
     message TEXT NOT NULL, -- UI에 노출할 메시지
+
     target_table VARCHAR(255) NOT NULL, -- 관련 테이블
     target_pk BIGINT, -- 타겟 테이블의 기본키
     target_isbn VARCHAR(255), -- 타겟이 책일 경우 ISBN 사용
+
     is_read BOOLEAN DEFAULT FALSE, -- 읽음 여부
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     
