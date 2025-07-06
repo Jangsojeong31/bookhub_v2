@@ -1,0 +1,100 @@
+.searchContainer {
+  width: 100%;
+  gap: 40px;
+}
+
+.searchContainer h2 {
+  text-align: center;
+  font-size: 30px;
+  color: #265185;
+}
+
+h2 {
+  text-align: center;
+  font-size: 30px;
+  color: #265185;
+}
+
+.search-row {
+  display: flex;
+  gap: 20px;
+}
+
+.search-row input {
+  padding: 10px 10px;
+  flex: 1;
+  border: 1px solid #4a90e2;
+  border-radius: 4px;
+}
+
+.search-row input[type="date"] {
+  display: flex;
+  border: 1px solid #4a90e2;
+  border-radius: 4px;
+  border-radius: 8px;
+  transition: border-color 0.3s ease;
+}
+
+.search-row span {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.search-row select {
+  flex: 1;
+  border: 1px solid #4a90e2;
+  background-color: #89dcff35;
+  padding: 10px 15px;
+}
+
+.search-button {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+}
+
+.search-button button {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+  background-color: #7fb8fe;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button button:hover {
+  background-color: #265185;
+}
+
+.approval-button {
+  background-color: #4a90e2;
+  border: 0;
+  border-radius: 4px;
+  color: white;
+  width: auto;
+  height: 30px;
+  transition: background-color 0.3s;
+}
+
+.approval-button:hover {
+  background-color: #265185;
+}
+
+.denied-button {
+  background-color: #fc2323;
+  border: 0;
+  border-radius: 4px;
+  color: white;
+  width: auto;
+  height: 30px;
+  transition: background-color 0.3s;
+}
+
+.denied-button:hover {
+  background-color: #920000;
+}

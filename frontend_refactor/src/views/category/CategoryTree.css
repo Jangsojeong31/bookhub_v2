@@ -1,0 +1,45 @@
+.category-type {
+  background-color: #c8d8ec;
+  padding: 16px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-top: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.category-type:hover {
+  background-color: #b7cce7;
+}
+
+.category {
+  background-color: #e9edf5;
+  margin: 6px 0 0 20px;
+  padding: 10px 14px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.category:hover {
+  background-color: #dde3ee;
+}
+
+.subcategory-item {
+  background-color: #fff;
+  margin-left: 40px;
+  margin-top: 4px;
+  padding: 8px 14px;
+  font-size: 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.subcategory-item:hover {
+  background-color: #eef6ff;
+}

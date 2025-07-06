@@ -1,0 +1,27 @@
+.parent {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  position: relative;
+  height: 400px;
+}
+
+.center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  
+}
+
+.right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+}
+
+.table-scroll-container {
+  max-height: 400px; 
+  overflow-y: auto;
+}

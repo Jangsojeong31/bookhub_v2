@@ -1,0 +1,81 @@
+.employee-details {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.employee-details h1 {
+  font-size: 50px;
+  margin-top: 2px;
+  text-align: center;
+  color: #265185;
+}
+
+.vertical-row {
+  display: flex;
+  gap: 40px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.field span,
+.field select {
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 9px 12px;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.field select {
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.field select:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+.actions button {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.actions button {
+  background-color: #7fb8fe;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.actions button:hover {
+  background-color: #265185;
+}

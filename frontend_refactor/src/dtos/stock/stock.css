@@ -1,0 +1,70 @@
+.stock-page-container {
+  padding: 1rem;
+}
+.topBar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.search {
+  flex: 1;
+  padding: 0.5rem;
+}
+.table-container {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+.gray-text {
+  color: #888;
+}
+.modifyBtn, .deleteBtn {
+  margin-right: 0.5rem;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.pageBtn {
+  padding: 0.25rem 0.5rem;
+}
+.pageBtn.current {
+  font-weight: bold;
+}
+.searchAll {
+  margin-left: auto;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  width: 400px;
+}
+.modal-header {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+.modal-footer {
+  margin-top: 1rem;
+  text-align: right;
+}

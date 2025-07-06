@@ -1,0 +1,55 @@
+.contain {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: white;
+  flex-direction: column;
+  width: 100%;
+}
+
+.contain h1 {
+  text-align: center;
+  font-size: 40px;
+  margin-bottom: 40px;
+  margin-top: 10px;
+  color: #265185;
+}
+
+.contain .de-select,
+.contain .de-button,
+.contain .de-input{
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 12px;
+  margin: 6px 0 12px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  border: 1px solid #4a90e2 ;
+  font-size: 18px;
+}
+
+.contain .custom-select {
+  border: 1px solid #ccc;
+  transition: border-color 0.3s;
+}
+
+.contain .custom-select:focus,
+.contain .de-input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+.contain .de-button {
+  background-color: #7fb8fe;
+  color: white;
+  font-size: 18px;
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contain button:hover {
+  background-color: #265185;
+}

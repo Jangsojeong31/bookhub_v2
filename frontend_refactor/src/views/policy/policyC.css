@@ -1,0 +1,304 @@
+/* File: views/policy/policyC.css */
+
+/* ————————————————————————————
+   전체 모달 안의 폼 레이아웃
+   ———————————————————————————— */
+.policy-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  padding-bottom: 4rem; 
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.policy-frame ::placeholder {
+  color: #CCC;
+}
+
+/* ————————————————————————————
+   필터 행 (카테고리, 시작/종료 날짜)
+   ———————————————————————————— */
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filters select {
+  flex: 0 0 auto;
+}
+.filters input[type="date"]:first-of-type {
+  margin-left: auto;
+}
+
+.filters select,
+.filters input[type="date"] {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fdfdfd;
+  font-size: 0.9rem;
+}
+
+/* 날짜 입력 아이콘 색 연하게 */
+.filters input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0) invert(0.4);
+}
+
+/* ————————————————————————————
+   제목 / 설명 입력
+   ———————————————————————————— */
+.form-group input[type="text"] {
+  width: 75%;
+  font-size: 1.25rem;
+  /* font-weight: bold; */
+  border: none;
+  padding: 0.5rem 0;
+}
+
+
+
+.form-group textarea {
+  width: 100%;
+  min-height: 280px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  resize: vertical;
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  color: #666;
+  background: transparent;
+}
+
+/* ————————————————————————————
+   두 열 레이아웃 (총 금액 / 할인율)
+   ———————————————————————————— */
+.two-cols {
+  display: flex;
+  gap: 1rem;
+}
+
+.two-cols input {
+  flex: 1;
+  padding: 0.77rem 0.1rem;
+  border: none;
+  border-radius: 4px;
+  background: #e6f7ff;
+  font-size: 1rem;
+}
+
+/* placeholder 스타일 (굵고 진한 회색) */
+.two-cols input::placeholder {
+  color: #555;
+ 
+}
+
+/* ————————————————————————————
+   등록 버튼 영역 (맨 아래 고정)
+   ———————————————————————————— */
+.form-actions {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 2rem;
+  margin-top: 0;
+}
+
+.btn-primary {
+  background-color: #305882;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.45rem 1.0rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.button{
+  background-color: #e74c3c;
+  color: white;
+  font-size: 12px;
+  border: none;
+  border-radius: 50px;
+  padding: 4px 10px;
+  margin: 0 4px;
+  cursor: pointer;
+}
+
+/* input-search 공통 스타일 */
+.input-search {
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  color: #333;
+  background-color: #fdfdfd;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  min-width: 180px;
+}
+
+/* placeholder 색상 */
+.input-search::placeholder {
+  color: #aaa;
+  font-weight: 500;
+}
+
+/* focus 시 스타일 */
+.input-search:focus {
+  border-color: #305882; /* 강조 색상 */
+  box-shadow: 0 0 0 2px rgba(48, 88, 130, 0.2);
+  background-color: #fff;
+}
+
+/* 모달 오버레이 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 상세 정보 모달 박스 */
+.policy-detail-modal {
+  background-color: #fff;
+  border-radius: 6px;
+  padding: 24px;
+  width: 700px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+/* 제목 */
+.modal-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.modal-close-button {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 1.5rem;
+  color: #999;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.modal-close-button:hover {
+  color: #e74c3c;
+}
+
+
+/* 테이블 */
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+}
+
+.detail-table th,
+.detail-table td {
+  border: 1px solid #ccc;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.detail-table th {
+  background-color: #305882;
+  color: white;
+  width: 120px;
+  font-weight: 600;
+}
+
+.detail-table td {
+  background-color: #f9f9f9;
+}
+
+/* 하단 버튼 영역 */
+.modal-footer {
+  text-align: right;
+}
+
+.modal-footer .btn-primary {
+  background-color: #305882;
+  color: white;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+}
+
+.modal-footer .btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* 필터 바 전체 레이아웃 간격 조정 */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem; /* 상단 배너와 여백 */
+}
+
+/* 날짜 인풋 통일 */
+.filter-bar input[type="date"] {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.95rem;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  transition: border-color 0.2s ease;
+}
+
+.filter-bar input[type="date"]:hover,
+.filter-bar input[type="date"]:focus {
+  border-color: #305882;
+  outline: none;
+}
+
+/* 달력 아이콘 색상 통일 */
+.filter-bar input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0) invert(0.4);
+  cursor: pointer;
+}
+
+.form-group label {
+  display: inline-block;
+  background-color: #305882;
+  color: white;
+  padding: 8px 16px;       /* 더 넓고 높게 */
+ 
+  font-weight: 700;
+  font-size: 1.1rem;        /* 글씨도 조금 더 큼 */
+  margin-bottom: 10px;
+  min-width: 100px;         /* 박스 길이 일정 수준 이상 확보 */
+  text-align: center;
+}
+
+.error-message {
+  color: #e74c3c; /* 진한 빨간색 */
+  font-weight: 500;
+  margin-top: 4px;
+  font-size: 0.9rem;
+}
