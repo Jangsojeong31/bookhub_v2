@@ -144,7 +144,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     // 재귀적으로 하위 카테고리를 포함한 트리 구조로 변환
     private CategoryResponseDto buildTree(BookCategory parent) {
         CategoryResponseDto dto = toResponseDto(parent);
-        List<BookCategory> childrenCategories = bookCategoryRepository.findAllByParentCategoryId(parent.getCategoryId());
+        List<BookCategory> childrenCategories = bookCategoryRepository.findAllByParentCategoryId(parent);
         if (!childrenCategories.isEmpty()) {
             List<CategoryResponseDto> childDtos = childrenCategories.stream()
                     .map(this::buildTree)

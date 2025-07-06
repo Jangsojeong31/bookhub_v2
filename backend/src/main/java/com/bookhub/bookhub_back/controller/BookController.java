@@ -33,22 +33,15 @@ public class BookController {
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
-    // 도서 검색 (isbn)
-    @GetMapping( "/{isbn}")
-    public ResponseEntity<ResponseDto<BookResponseDto>> getBookByIsbn(
-            @PathVariable String isbn
-    ) {
-        ResponseDto<BookResponseDto> response = bookService.getBookByIsbn(isbn);
-        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
-    }
     // 도서 검색 (keyword)
-    @GetMapping
+    @GetMapping("/search")
     public ResponseEntity<ResponseDto<List<BookResponseDto>>> searchBooks(
             @RequestParam String keyword
     ) {
         ResponseDto<List<BookResponseDto>> response = bookService.searchBooks(keyword);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
+
     // 도서 수정
     @PutMapping( "/{isbn}")
     public ResponseEntity<ResponseDto<BookResponseDto>> updateBook(

@@ -57,11 +57,11 @@ public class BookCategoryController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
-    // 대분류 카테고리 목록 조회
-    @GetMapping("/parentCategories")
-    public ResponseEntity<ResponseDto<List<CategoryResponseDto>>> getParentCategories(
-    ) {
-        ResponseDto<List<CategoryResponseDto>> response = bookCategoryService.getParentCategories();
-        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
-    }
+//    // 대분류 카테고리 목록 조회
+//    @GetMapping("/parentCategories")
+//    public ResponseEntity<ResponseDto<List<CategoryResponseDto>>> getParentCategories(
+//    ) {
+//        ResponseDto<List<CategoryResponseDto>> response = bookCategoryService.getParentCategories();
+//        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
+//    }
 }

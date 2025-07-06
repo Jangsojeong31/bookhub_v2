@@ -2,6 +2,7 @@ package com.bookhub.bookhub_back.controller;
 
 import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.author.response.AuthorResponseDto;
 import com.bookhub.bookhub_back.dto.publisher.request.PublisherRequestDto;
 import com.bookhub.bookhub_back.dto.publisher.response.PublisherResponseDto;
 import com.bookhub.bookhub_back.service.PublisherService;
@@ -29,18 +30,21 @@ public class PublisherController {
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
-    // 출판사 조회 (검색어 없을 시 전체조회)
+    // 출판사 전체 조회
     @GetMapping
-    public ResponseEntity<ResponseDto<List<PublisherResponseDto>>> getPublishersByName(
-            @RequestParam(required = false) String publisherName
-    ){
-        if(publisherName != null && !publisherName.isBlank()) {
-            ResponseDto<List<PublisherResponseDto>> response = publisherService.getPublishersByName(publisherName);
-            return ResponseDto.toResponseEntity(HttpStatus.OK, response);
-        }
-
+    public ResponseEntity<ResponseDto<List<PublisherResponseDto>>> getAllPublishers(
+    ) {
         ResponseDto<List<PublisherResponseDto>> response = publisherService.getAllPublishers();
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
+    }
+
+    // 출판사 이름으로 조회
+    @GetMapping("/search")
+    public ResponseEntity<ResponseDto<List<PublisherResponseDto>>> getPublishersByName(
+            @RequestParam String publisherName
+    ){
+            ResponseDto<List<PublisherResponseDto>> response = publisherService.getPublishersByName(publisherName);
+            return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 출판사 수정

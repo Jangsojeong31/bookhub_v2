@@ -62,6 +62,11 @@ public class PublisherServiceImpl implements PublisherService {
     // 출판사 이름으로 조회
     @Override
     public ResponseDto<List<PublisherResponseDto>> getPublishersByName(String publisherName) {
+
+        if (publisherName == null && publisherName.isBlank()) {
+            return ResponseDto.fail(ResponseCode.FAIL, "검색하실 출판사 이름을 입력해주세요.");
+        }
+
         List<Publisher> publishers = publisherRepository.findAllByPublisherNameContaining(publisherName);
 
         List<PublisherResponseDto> responseDtos = publishers.stream()

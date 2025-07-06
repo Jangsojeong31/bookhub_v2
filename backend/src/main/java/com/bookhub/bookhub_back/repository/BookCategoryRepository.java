@@ -13,7 +13,7 @@ public interface BookCategoryRepository extends JpaRepository<BookCategory, Long
 
     List<BookCategory> findAllByParentCategoryIdIsNull();
 
-    List<BookCategory> findAllByParentCategoryId(Long parentCategoryId);
+    List<BookCategory> findAllByParentCategoryId(BookCategory parentCategoryId);
 
     List<BookCategory> findByCategoryTypeAndCategoryLevel(CategoryType categoryType, int categoryLevel);
 }
