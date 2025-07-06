@@ -3,7 +3,6 @@ package com.bookhub.bookhub_back.service.impl;
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 import com.bookhub.bookhub_back.common.enums.IsApproved;
-import com.bookhub.bookhub_back.common.enums.Status;
 
 import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.provider.JwtProvider;

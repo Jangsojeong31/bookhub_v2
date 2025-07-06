@@ -2,7 +2,7 @@ package com.bookhub.bookhub_back.entity;
 
 import com.bookhub.bookhub_back.common.enums.EmployeeStatus;
 import com.bookhub.bookhub_back.common.enums.IsApproved;
-import com.bookhub.bookhub_back.common.enums.Status;
+
 import com.bookhub.bookhub_back.entity.datetime.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;

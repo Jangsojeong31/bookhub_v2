@@ -116,8 +116,8 @@ CREATE TABLE IF NOT EXISTS `discount_policies` (
     
     total_price_achieve INT DEFAULT NULL,
     discount_percent INT NOT NULL,
-    start_date DATE DEFAULT NULL,
-    end_date DATE DEFAULT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE,
     
     CONSTRAINT chk_policy_type
       CHECK (policy_type IN ('BOOK_DISCOUNT','CATEGORY_DISCOUNT','TOTAL_PRICE_DISCOUNT'))
@@ -171,7 +171,6 @@ CREATE TABLE IF NOT EXISTS `books` (
     language VARCHAR(255) NOT NULL,
     description TEXT,
     discount_policy_id BIGINT,
-
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES book_categories(category_id),
@@ -190,7 +189,7 @@ CREATE TABLE IF NOT EXISTS `book_display_locations` (
     hall VARCHAR(50) NOT NULL,
     section VARCHAR(50) NOT NULL,
     display_type VARCHAR(50) NOT NULL,
-    display_note TEXT NOT NULL, -- 위치에 대한 추가 설명
+    display_note TEXT, -- 위치에 대한 추가 설명
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (branch_id) REFERENCES branches(branch_id),
@@ -221,8 +220,8 @@ CREATE TABLE IF NOT EXISTS `stock_logs` (
     branch_id BIGINT NOT NULL,
     amount BIGINT NOT NULL,
     book_amount BIGINT NOT NULL,
-    action_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    description TEXT DEFAULT NULL, -- 재고 이동 이유
+    actioned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    description TEXT, -- 재고 이동 이유
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
     FOREIGN KEY (book_isbn) REFERENCES books(book_isbn),
     FOREIGN KEY (branch_id) REFERENCES branches(branch_id),
@@ -240,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `purchase_orders` (
     purchase_employee_id BIGINT NOT NULL, -- 발주 담당자
     purchase_order_amount INT NOT NULL, -- 발주량
     purchase_order_status VARCHAR(50) NOT NULL, -- 발주 승인 상태
-    purchase_order_date DATETIME NOT NULL, -- 발주 일자
+    purchase_order_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- 발주 일자
     FOREIGN KEY (purchase_employee_id) REFERENCES employees(employee_id),
     FOREIGN KEY (book_isbn) REFERENCES books(book_isbn),
     FOREIGN KEY (branch_id) REFERENCES branches(branch_id),
@@ -264,9 +263,9 @@ CREATE TABLE IF NOT EXISTS `book_reception_approvals` (
     reception_employee_id BIGINT NOT NULL,
     book_isbn VARCHAR(255) NOT NULL,
     purchase_order_amount INT NOT NULL,
-    branch_id VARCHAR(255) NOT NULL,
+    branch_name VARCHAR(255) NOT NULL,
     purchase_order_approval_id BIGINT NOT NULL,
-    is_reception_approved BOOLEAN NOT NULL, 
+    is_reception_approved BOOLEAN DEFAULT FALSE, 
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (reception_employee_id) REFERENCES employees(employee_id),
     FOREIGN KEY (purchase_order_approval_id) REFERENCES purchase_order_approvals(purchase_order_approval_id)
@@ -342,11 +341,9 @@ CREATE TABLE IF NOT EXISTS `alerts` (
 	employee_id BIGINT NOT NULL, -- 알림 수신자
 	alert_type VARCHAR(255),
     message TEXT NOT NULL, -- UI에 노출할 메시지
-
     target_table VARCHAR(255) NOT NULL, -- 관련 테이블
     target_pk BIGINT, -- 타겟 테이블의 기본키
     target_isbn VARCHAR(255), -- 타겟이 책일 경우 ISBN 사용
-
     is_read BOOLEAN DEFAULT FALSE, -- 읽음 여부
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     

@@ -5,7 +5,6 @@ import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 import com.bookhub.bookhub_back.common.enums.AlertType;
 import com.bookhub.bookhub_back.common.enums.ChangeType;
 import com.bookhub.bookhub_back.common.enums.IsApproved;
-import com.bookhub.bookhub_back.common.enums.Status;
 import com.bookhub.bookhub_back.common.util.DateUtils;
 
 import com.bookhub.bookhub_back.entity.Employee;
