@@ -36,7 +36,7 @@ public class EmployeeSignUpApproval {
     private IsApproved isApproved;
 
     @CreatedDate
-    @Column(name = "applied_at")
+    @Column(name = "applied_at", nullable = false, updatable = false)
     private LocalDateTime appliedAt;
 
 //    @LastModifiedDate

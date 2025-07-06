@@ -1,5 +1,10 @@
 package com.bookhub.bookhub_back.repository;
 
-public interface DiscountPolicyRepository  {
+import com.bookhub.bookhub_back.entity.DiscountPolicy;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface DiscountPolicyRepository extends JpaRepository<DiscountPolicy, Long> {
 
 }

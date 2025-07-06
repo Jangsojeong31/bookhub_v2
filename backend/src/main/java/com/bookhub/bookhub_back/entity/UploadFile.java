@@ -39,7 +39,7 @@ public class UploadFile {
     private FileTargetType targetType;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDate createdAt;
 
     @Builder

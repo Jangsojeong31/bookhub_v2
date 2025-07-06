@@ -40,7 +40,7 @@ public class CustomerOrder {
     private DiscountPolicy appliedPolicyId;
 
     @CreatedDate
-    @Column(name = "ordered_at")
+    @Column(name = "ordered_at", nullable = false, updatable = false)
     private LocalDateTime orderdAt;
 
     @OneToMany(mappedBy = "customerOrderId")
