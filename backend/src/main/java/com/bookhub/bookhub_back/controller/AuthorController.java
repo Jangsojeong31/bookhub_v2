@@ -25,7 +25,6 @@ public class AuthorController {
     public ResponseEntity<ResponseDto<AuthorResponseDto>> createAuthor(
             @Valid @RequestBody AuthorRequestDto dto
     ) {
-
         ResponseDto<AuthorResponseDto> response = authorService.createAuthor(dto);
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }

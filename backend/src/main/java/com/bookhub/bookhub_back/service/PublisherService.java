@@ -5,13 +5,18 @@ import com.bookhub.bookhub_back.dto.publisher.request.PublisherRequestDto;
 import com.bookhub.bookhub_back.dto.publisher.response.PublisherResponseDto;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 public interface PublisherService {
 
     ResponseDto<PublisherResponseDto> createPublisher(@Valid PublisherRequestDto dto);
 
-    ResponseDto<PublisherResponseDto> getPublishersByName(String publisherName);
+    ResponseDto<List<PublisherResponseDto>> getAllPublishers();
+
+    ResponseDto<List<PublisherResponseDto>> getPublishersByName(String publisherName);
 
     ResponseDto<PublisherResponseDto> updatePublisher(Long publisherId, @Valid PublisherRequestDto dto);
 
     ResponseDto<Void> deletePublisher(Long publisherId);
+
 }

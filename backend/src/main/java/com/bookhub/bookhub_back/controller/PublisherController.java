@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(ApiMappingPattern.V1 + ApiMappingPattern.ADMIN + "/publishers")
 @RequiredArgsConstructor
@@ -27,12 +29,17 @@ public class PublisherController {
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
-    // 출판사 조회
+    // 출판사 조회 (검색어 없을 시 전체조회)
     @GetMapping
-    public ResponseEntity<ResponseDto<PublisherResponseDto>> getPublishersByName(
+    public ResponseEntity<ResponseDto<List<PublisherResponseDto>>> getPublishersByName(
             @RequestParam(required = false) String publisherName
     ){
-        ResponseDto<PublisherResponseDto> response = publisherService.getPublishersByName(publisherName);
+        if(publisherName != null && !publisherName.isBlank()) {
+            ResponseDto<List<PublisherResponseDto>> response = publisherService.getPublishersByName(publisherName);
+            return ResponseDto.toResponseEntity(HttpStatus.OK, response);
+        }
+
+        ResponseDto<List<PublisherResponseDto>> response = publisherService.getAllPublishers();
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 

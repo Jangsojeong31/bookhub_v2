@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.author.request.AuthorRequestDto;
 import com.bookhub.bookhub_back.dto.author.response.AuthorResponseDto;
 import com.bookhub.bookhub_back.entity.Author;
+import com.bookhub.bookhub_back.exception.DuplicateResourceException;
 import com.bookhub.bookhub_back.repository.AuthorRepository;
 import com.bookhub.bookhub_back.service.AuthorService;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,7 +28,7 @@ public class AuthorServiceImpl implements AuthorService {
 
         // 이메일 중복 확인
         if(authorRepository.existsByAuthorEmail(dto.getAuthorEmail())){
-            return ResponseDto.fail(ResponseCode.DUPLICATED_EMAIL, "이미 등록된 이메일입니다.");
+            throw new DuplicateResourceException("이미 등록된 이메일입니다.");
         }
 
         Author newAuthor = Author.builder()
@@ -50,11 +51,11 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public ResponseDto<List<AuthorResponseDto>> getAuthorsByName(String authorName) {
 
-        if (authorName.trim().isEmpty()) {
+        if (authorName == null && authorName.isBlank()) {
             return ResponseDto.fail(ResponseCode.FAIL, "검색하실 저자 이름을 입력해주세요.");
         }
 
-        List<Author> authors = authorRepository.findAllByAuthorName(authorName);
+        List<Author> authors = authorRepository.findAllByAuthorNameContaining(authorName);
 
         List<AuthorResponseDto> responseDtos = authors.stream()
                 .map(author -> AuthorResponseDto.builder()
@@ -77,7 +78,7 @@ public class AuthorServiceImpl implements AuthorService {
         // 이메일 중복 확인
         if(!author.getAuthorEmail().equals(dto.getAuthorEmail()) &&
                 authorRepository.existsByAuthorEmail(dto.getAuthorEmail())) {
-            return ResponseDto.fail(ResponseCode.DUPLICATED_EMAIL, "이미 등록된 이메일입니다.");
+            throw new DuplicateResourceException("이미 등록된 이메일입니다.");
         }
 
         author.setAuthorName(dto.getAuthorName());

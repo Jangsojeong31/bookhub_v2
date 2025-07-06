@@ -44,6 +44,11 @@ public class GlobalExceptionHandler {
         return logAndRespond(ResponseCode.DATA_INTEGRITY_VIOLATION, ResponseMessage.DATA_INTEGRITY_VIOLATION, HttpStatus.CONFLICT, e);
     }
 
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ResponseDto<?>> handleDuplicateResource(DuplicateResourceException e) {
+        return logAndRespond(ResponseCode.DUPLICATED_RESOURCE, e.getMessage(), HttpStatus.CONFLICT, e);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDto<?>> handleGeneral(Exception e) {
         return logAndRespond(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR, e);
@@ -52,6 +57,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ResponseDto<?>> logAndRespond(String code, String message, HttpStatus status, Exception e) {
         e.printStackTrace();
         return ResponseDto.failWithStatus(code, message, status);
-
     }
+
+
 }
