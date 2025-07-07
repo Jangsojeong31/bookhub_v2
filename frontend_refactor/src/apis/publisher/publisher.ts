@@ -16,11 +16,9 @@ import {
   DELETE_PUBLISHER_URL
 } from '@/apis';
 
-
+// 키워드가 입력될 경우 조건에 맞게 조회
 export const getPublishers = async (
   accessToken: string,
-  page: number,
-  size: number,
   keyword?: string
 ): Promise<
   ResponseDto<
@@ -28,9 +26,9 @@ export const getPublishers = async (
   >
 > => {
   try {
-    let url = `${GET_ALL_PUBLISHER_URL}?page=${page}&size=${size}`;
+    let url = `${GET_ALL_PUBLISHER_URL}`
     if (keyword && keyword.trim() !== '') {
-      url += `&keyword=${encodeURIComponent(keyword.trim())}`;
+      url += `?keyword=${encodeURIComponent(keyword.trim())}`;
     }
     const response = await axiosInstance.get(
       url,

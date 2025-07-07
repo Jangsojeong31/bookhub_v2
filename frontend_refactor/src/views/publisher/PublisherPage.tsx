@@ -37,7 +37,7 @@ function PublisherPage() {
   const fetchPage = async (page: number, keyword?: string) => {
     if (!accessToken) return;
     try {
-      const response = await getPublishers(accessToken, page, pageSize, keyword);
+      const response = await getPublishers(accessToken, keyword);
       if (response.code === 'SU' && response.data) {
         // response.data 가 PageResponseDto 인지 배열인지 분기
         if ('content' in response.data) {
