@@ -26,7 +26,7 @@ public class PublisherController {
             @Valid @RequestBody PublisherRequestDto dto
     ){
         ResponseDto<PublisherResponseDto> response = publisherService.createPublisher(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
     // 출판사 조회 (키워드 없을 경우 전체 조회)
@@ -45,7 +45,7 @@ public class PublisherController {
             @Valid @RequestBody PublisherRequestDto dto
     ){
         ResponseDto<PublisherResponseDto> response = publisherService.updatePublisher(publisherId, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 출판사 삭제하기
@@ -54,6 +54,6 @@ public class PublisherController {
             @PathVariable Long publisherId
     ){
         ResponseDto<Void> response = publisherService.deletePublisher(publisherId);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 }

@@ -23,48 +23,51 @@ import java.util.List;
 public class BookCategoryController {
     private final BookCategoryService bookCategoryService;
 
+    private final String BOOK_CATEGORY_ADMIN = ApiMappingPattern.ADMIN + "/categories";
+    private final String BOOK_CATEGORY_COMMON = ApiMappingPattern.COMMON + "/categories";
+
     // 카테고리 생성
-    @PostMapping
+    @PostMapping(BOOK_CATEGORY_ADMIN)
     public ResponseEntity<ResponseDto<CategoryCreateResponseDto>> createCategory(
             @Valid @RequestBody CategoryCreateRequestDto dto
     ) {
         ResponseDto<CategoryCreateResponseDto> response = bookCategoryService.createCategory(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
     // 트리형 카테고리 전체 조회
-    @GetMapping("/tree")
+    @GetMapping(BOOK_CATEGORY_ADMIN + "/tree")
     public ResponseEntity<ResponseDto<List<CategoryTreeResponseDto>>> getCategoryTree(
             @RequestParam CategoryType type
     ) {
         ResponseDto<List<CategoryTreeResponseDto>> response =bookCategoryService.getCategoryTree(type);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 대분류 카테고리 조회
-    @GetMapping( "/roots")
+    @GetMapping( BOOK_CATEGORY_ADMIN + "/roots")
     public ResponseEntity<ResponseDto<List<CategoryTreeResponseDto>>> getRootCategories() {
         ResponseDto<List<CategoryTreeResponseDto>> response = bookCategoryService.getRootCategories();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 카테고리 수정
-    @PutMapping("/{categoryId}")
+    @PutMapping(BOOK_CATEGORY_ADMIN + "/{categoryId}")
     public ResponseEntity<ResponseDto<CategoryUpdateResponseDto>> updateCategory(
             @PathVariable Long categoryId,
             @RequestBody CategoryUpdateRequestDto dto
     ) {
         ResponseDto<CategoryUpdateResponseDto> response = bookCategoryService.updateCategory(categoryId, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 카테고리 삭제
-    @DeleteMapping("/{categoryId}")
+    @DeleteMapping(BOOK_CATEGORY_ADMIN + "/{categoryId}")
     public ResponseEntity<ResponseDto<Void>> deleteCategory(
             @PathVariable Long categoryId
     ) {
         ResponseDto<Void> response = bookCategoryService.deleteCategory(categoryId);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
 //    // 카테고리 ID로 적용된 할인 정책 조회

@@ -25,7 +25,7 @@ public class AuthorController {
             @Valid @RequestBody AuthorRequestDto dto
     ) {
         ResponseDto<AuthorResponseDto> response = authorService.createAuthor(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
     // 작가 이름으로 조회 (동명이인까지 조회)
@@ -34,7 +34,7 @@ public class AuthorController {
             @RequestParam String authorName
     ) {
         ResponseDto<List<AuthorResponseDto>> response = authorService.getAuthorsByName(authorName);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 작가 수정
@@ -44,7 +44,7 @@ public class AuthorController {
             @Valid @RequestBody AuthorRequestDto dto
     ) {
         ResponseDto<AuthorResponseDto> response = authorService.updateAuthor(authorId, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 작가 삭제
@@ -53,6 +53,6 @@ public class AuthorController {
             @PathVariable Long authorId
     ) {
         ResponseDto<Void> response = authorService.deleteAuthor(authorId);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 }
