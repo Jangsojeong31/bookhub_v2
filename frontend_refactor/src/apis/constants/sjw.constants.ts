@@ -41,6 +41,9 @@ export const POST_CATEGORY_URL = `${CATEGORY_MODULE_URL}`;
 export const GET_CATEGORY_TREE_URL = (type: "DOMESTIC" | "FOREIGN") =>
   `${CATEGORY_MODULE_URL}/tree?type=${type}`;
 
+// 대분류 카테고리 조회
+export const GET_PARENT_CATEGORY_URL = `${CATEGORY_MODULE_URL}/roots`;
+
 // 카테고리 수정
 export const PUT_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}`;
 
