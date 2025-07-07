@@ -1,5 +1,87 @@
 package com.bookhub.bookhub_back.service.impl;
 
-public class PublisherServiceImpl {
+import com.bookhub.bookhub_back.common.constants.ResponseCode;
+import com.bookhub.bookhub_back.common.constants.ResponseMessage;
+import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.publisher.request.PublisherRequestDto;
+import com.bookhub.bookhub_back.dto.publisher.response.PublisherResponseDto;
+import com.bookhub.bookhub_back.entity.Publisher;
+import com.bookhub.bookhub_back.repository.PublisherRepository;
+import com.bookhub.bookhub_back.service.PublisherService;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class PublisherServiceImpl implements PublisherService {
+    private final PublisherRepository publisherRepository;
+
+    @Override
+    public ResponseDto<PublisherResponseDto> createPublisher(PublisherRequestDto dto) {
+        Publisher newPublisher = Publisher.builder()
+                .publisherName(dto.getPublisherName())
+                .build();
+
+        Publisher savedPublisher = publisherRepository.save(newPublisher);
+
+        PublisherResponseDto responseDto = toResponseDto(savedPublisher);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Override
+    public ResponseDto<PublisherResponseDto> getPublisherByName(String keyword) {
+        Publisher publisher = publisherRepository.findByPublisherNameContaining(keyword);
+
+        PublisherResponseDto responseDto = toResponseDto(publisher);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Override
+    public ResponseDto<List<PublisherResponseDto>> getAllPublishers() {
+        List<Publisher> publishers = publisherRepository.findAll();
+
+        List<PublisherResponseDto> responseDtos = publishers.stream()
+                .map(this::toResponseDto)
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
+    }
+
+    @Override
+    public ResponseDto<PublisherResponseDto> updatePublisher(Long publisherId, PublisherRequestDto dto) {
+        Publisher publisher = publisherRepository.findById(publisherId)
+                .orElseThrow(() -> new EntityNotFoundException());
+
+        publisher.setPublisherName(dto.getPublisherName());
+
+        Publisher updatedPublisher = publisherRepository.save(publisher);
+
+        PublisherResponseDto responseDto = toResponseDto(updatedPublisher);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
+    }
+
+    @Override
+    public ResponseDto<Void> deletePublisher(Long publisherId) {
+        Publisher publisher = publisherRepository.findById(publisherId)
+                .orElseThrow(() -> new EntityNotFoundException());
+
+        publisherRepository.delete(publisher);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
+    // responseDto 변환 메서드
+    private PublisherResponseDto toResponseDto(Publisher publisher) {
+        return PublisherResponseDto.builder()
+                .publisherId(publisher.getPublisherId())
+                .publisherName(publisher.getPublisherName())
+                .build();
+    }
 }

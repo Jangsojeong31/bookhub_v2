@@ -51,7 +51,7 @@ public class Book extends BaseTimeEntity {
     private String language;
 
     @Lob
-    @Column(nullable = false)
+    @Column
     private String description;
 
     @Enumerated(EnumType.STRING)

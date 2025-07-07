@@ -34,7 +34,7 @@ public class BookCategory {
     private String categoryName;
 
     @Column(name = "category_level", nullable = false)
-    private int catgoryLevel = 1;
+    private int categoryLevel = 1;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category_type", nullable = false)

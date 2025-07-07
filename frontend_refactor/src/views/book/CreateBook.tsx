@@ -63,7 +63,7 @@ function CreateBook({ onSuccess }: CreateBookProps) {
     if (!publisherName || !token) return;
 
     const delayDebounce = setTimeout(async () => {
-      const res = await getPublishers(token, 0, 10, publisherName);
+      const res = await getPublishers(token, publisherName);
       if (res.code === 'SU' && res.data) {
         const publishers = Array.isArray(res.data) ? res.data : (res.data as PageResponseDto<PublisherResponseDto>).content;
         const options = publishers.map((p) => ({ label: p.publisherName, value: p.publisherId }));
