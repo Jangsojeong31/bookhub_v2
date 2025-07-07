@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
     private final EmployeeRepository employeeRepository;
     private final UploadFileRepository uploadFileRepository;
 
-    @Value("${file.upload-dir}")
+    @Value("${file.upload.path}")
     private String uploadDir;
 
     // 도서 등록
