@@ -49,9 +49,13 @@ public class GlobalExceptionHandler {
         return logAndRespond(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ResponseDto<?>> handleDuplicateResource(DuplicateResourceException e) {
+        return logAndRespond(ResponseCode.DUPLICATED_RESOURCE, e.getMessage(), HttpStatus.BAD_REQUEST, e);
+    }
+
     private ResponseEntity<ResponseDto<?>> logAndRespond(String code, String message, HttpStatus status, Exception e) {
         e.printStackTrace();
         return ResponseDto.failWithStatus(code, message, status);
-
     }
 }

@@ -20,13 +20,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.V1 + ApiMappingPattern.ADMIN + "/books")
+@RequestMapping(ApiMappingPattern.V1)
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
 
+    private final String BOOK_ADMIN = ApiMappingPattern.ADMIN + "/books";
+    private final String BOOK_COMMON = ApiMappingPattern.COMMON + "/books";
+
     // 도서 등록
-    @PostMapping
+    @PostMapping(BOOK_ADMIN)
     public ResponseEntity<ResponseDto<BookResponseDto>> createBook(
             @AuthenticationPrincipal String loginId,
             @Valid @RequestBody BookCreateRequestDto dto,
@@ -37,7 +40,7 @@ public class BookController {
     }
 
     // 도서 통합 검색
-    @GetMapping("/search")
+    @GetMapping(BOOK_COMMON + "/search")
     public ResponseEntity<ResponseDto<List<BookResponseDto>>> searchBook(
             @RequestParam String keyword
     ) {
@@ -46,7 +49,7 @@ public class BookController {
     }
 
     // 도서 수정
-    @PutMapping("/{isbn}")
+    @PutMapping(BOOK_ADMIN + "/{isbn}")
     public ResponseEntity<ResponseDto<BookResponseDto>> updateBook(
             @PathVariable String isbn,
             @AuthenticationPrincipal String loginId,
@@ -58,7 +61,7 @@ public class BookController {
     }
 
     // 도서 hidden 처리
-    @PutMapping("/{isbn}/hidden")
+    @PutMapping(BOOK_ADMIN + "/{isbn}/hidden")
     public ResponseEntity<ResponseDto<Void>> hideBook(
             @PathVariable String isbn,
             @AuthenticationPrincipal String loginId

@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.author.request.AuthorRequestDto;
 import com.bookhub.bookhub_back.dto.author.response.AuthorResponseDto;
 import com.bookhub.bookhub_back.entity.Author;
+import com.bookhub.bookhub_back.exception.DuplicateResourceException;
 import com.bookhub.bookhub_back.repository.AuthorRepository;
 import com.bookhub.bookhub_back.service.AuthorService;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,6 +24,10 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public ResponseDto<AuthorResponseDto> createAuthor(AuthorRequestDto dto) {
+        if (authorRepository.existsByAuthorEmail(dto.getAuthorEmail())) {
+            throw new DuplicateResourceException("이미 존재하는 작가 이메일입니다.");
+        }
+
         Author newAuthor = Author.builder()
                 .authorName(dto.getAuthorName())
                 .authorEmail(dto.getAuthorEmail())
@@ -50,6 +55,11 @@ public class AuthorServiceImpl implements AuthorService {
     public ResponseDto<AuthorResponseDto> updateAuthor(Long authorId, AuthorRequestDto dto) {
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException());
+
+        if (!author.getAuthorEmail().equals(dto.getAuthorEmail())
+                && authorRepository.existsByAuthorEmail(dto.getAuthorEmail())) {
+            throw new DuplicateResourceException("이미 존재하는 작가 이메일입니다.");
+        }
 
         author.setAuthorName(dto.getAuthorName());
         author.setAuthorEmail(dto.getAuthorEmail());

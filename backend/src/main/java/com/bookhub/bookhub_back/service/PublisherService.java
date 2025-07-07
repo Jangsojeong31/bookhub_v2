@@ -11,11 +11,9 @@ public interface PublisherService {
 
     ResponseDto<PublisherResponseDto> createPublisher(@Valid PublisherRequestDto dto);
 
-    ResponseDto<PublisherResponseDto> getPublisherByName(String keyword);
-
-    ResponseDto<List<PublisherResponseDto>> getAllPublishers();
-
     ResponseDto<PublisherResponseDto> updatePublisher(Long publisherId, @Valid PublisherRequestDto dto);
 
     ResponseDto<Void> deletePublisher(Long publisherId);
+
+    ResponseDto<List<PublisherResponseDto>> getPublishers(String keyword);
 }

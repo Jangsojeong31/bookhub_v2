@@ -6,6 +6,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.publisher.request.PublisherRequestDto;
 import com.bookhub.bookhub_back.dto.publisher.response.PublisherResponseDto;
 import com.bookhub.bookhub_back.entity.Publisher;
+import com.bookhub.bookhub_back.exception.DuplicateResourceException;
 import com.bookhub.bookhub_back.repository.PublisherRepository;
 import com.bookhub.bookhub_back.service.PublisherService;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +23,10 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public ResponseDto<PublisherResponseDto> createPublisher(PublisherRequestDto dto) {
+        if (publisherRepository.existsByPublisherName(dto.getPublisherName())) {
+            throw new DuplicateResourceException("이미 존재하는 출판사입니다.");
+        }
+
         Publisher newPublisher = Publisher.builder()
                 .publisherName(dto.getPublisherName())
                 .build();
@@ -34,17 +39,14 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public ResponseDto<PublisherResponseDto> getPublisherByName(String keyword) {
-        Publisher publisher = publisherRepository.findByPublisherNameContaining(keyword);
+    public ResponseDto<List<PublisherResponseDto>> getPublishers(String keyword) {
+        List<Publisher> publishers = null;
 
-        PublisherResponseDto responseDto = toResponseDto(publisher);
-
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
-    }
-
-    @Override
-    public ResponseDto<List<PublisherResponseDto>> getAllPublishers() {
-        List<Publisher> publishers = publisherRepository.findAll();
+        if (keyword == null || keyword.isBlank()) {
+            publishers = publisherRepository.findAll();
+        } else {
+            publishers = publisherRepository.findByPublisherNameContaining(keyword);
+        }
 
         List<PublisherResponseDto> responseDtos = publishers.stream()
                 .map(this::toResponseDto)
@@ -57,6 +59,11 @@ public class PublisherServiceImpl implements PublisherService {
     public ResponseDto<PublisherResponseDto> updatePublisher(Long publisherId, PublisherRequestDto dto) {
         Publisher publisher = publisherRepository.findById(publisherId)
                 .orElseThrow(() -> new EntityNotFoundException());
+
+        if (!publisher.getPublisherName().equals(dto.getPublisherName())
+            && publisherRepository.existsByPublisherName(dto.getPublisherName())) {
+            throw new DuplicateResourceException("이미 존재하는 출판사입니다.");
+        }
 
         publisher.setPublisherName(dto.getPublisherName());
 
