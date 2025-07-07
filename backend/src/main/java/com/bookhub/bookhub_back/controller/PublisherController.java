@@ -2,6 +2,7 @@ package com.bookhub.bookhub_back.controller;
 
 import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.branch.response.BranchResponseDto;
 import com.bookhub.bookhub_back.dto.publisher.request.PublisherRequestDto;
 import com.bookhub.bookhub_back.dto.publisher.response.PublisherResponseDto;
 import com.bookhub.bookhub_back.service.PublisherService;
@@ -30,15 +31,11 @@ public class PublisherController {
 
     // 출판사 조회 (키워드 없을 경우 전체 조회)
     @GetMapping
-    public ResponseEntity<ResponseDto<?>> getPublishers(
+    public ResponseEntity<ResponseDto<List<PublisherResponseDto>>> getPublishers(
             @RequestParam(required = false) String keyword
     ) {
-        if (keyword != null && !keyword.isBlank()) {
-            ResponseDto<PublisherResponseDto> response = publisherService.getPublisherByName(keyword);
-            return ResponseEntity.ok(response);
-        }
-        ResponseDto<List<PublisherResponseDto>> response = publisherService.getAllPublishers();
-        return ResponseEntity.ok(response);
+        ResponseDto<List<PublisherResponseDto>> response = publisherService.getPublishers(keyword);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 출판사 수정

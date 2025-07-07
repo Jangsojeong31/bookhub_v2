@@ -2,7 +2,6 @@ package com.bookhub.bookhub_back.service.impl;
 
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessage;
-import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 import com.bookhub.bookhub_back.common.util.DateUtils;
 
 import com.bookhub.bookhub_back.dto.ResponseDto;
@@ -73,6 +72,11 @@ public class BranchServiceImpl implements BranchService {
     public ResponseDto<BranchResponseDto> updateBranch(Long branchId, BranchRequestDto dto) {
         Branch branch = branchRepository.findById(branchId)
                 .orElseThrow(EntityNotFoundException::new);
+
+        if (!branch.getBranchName().equals(dto.getBranchName())
+                && branchRepository.existsByBranchName(dto.getBranchName())) {
+            throw new DuplicateResourceException("이미 존재하는 지점입니다.");
+        }
 
         branch.setBranchName(dto.getBranchName());
         branch.setBranchLocation(dto.getBranchLocation());
