@@ -1,5 +1,10 @@
 package com.bookhub.bookhub_back.repository;
 
-public interface AuthorRepository {
+import com.bookhub.bookhub_back.entity.Author;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AuthorRepository extends JpaRepository<Author, Long> {
 
 }
