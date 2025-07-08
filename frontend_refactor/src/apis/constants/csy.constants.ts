@@ -1,7 +1,7 @@
 // csy.constants.ts
 // # URL 상수 정의
 
-const API_DOMAIN = import.meta.env.REACT_APP_API_DOMAIN || "http://localhost:8080";
+const API_DOMAIN = import.meta.env.REACT_APP_API_DOMAIN || "http://localhost:8081";
 
 const ADMIN = 'admin';
 const MANAGER = 'manager';
@@ -74,7 +74,7 @@ export const DELETE_POLICY_URL = (PolicyId : number) => `${POLICY_URL_ADMIN}/${P
 
 //&Stock
 //1> Stock base Url
- const STOCK_BASE_URL =  `${API_DOMAIN}/api/v1/${MANAGER}/stocks`;
+const STOCK_BASE_URL =  `${API_DOMAIN}/api/v1/${MANAGER}/stocks`;
 //Stock update Url
 //export const UPDATE_STOCK_URL = (branchId : number, stockId : number) => `${STOCK_BASE_URL}/branch/${branchId}/${stockId}`;
 export const UPDATE_STOCK_URL = ( stockId : number) => `${STOCK_BASE_URL}/${stockId}`;

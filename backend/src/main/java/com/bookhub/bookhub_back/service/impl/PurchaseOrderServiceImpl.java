@@ -149,30 +149,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                 .isApproved(approvedPurchaseOrder.getPurchaseOrderStatus().equals(PurchaseOrderStatus.APPROVED))
                 .build();
 
-        purchaseOrderApprovalRepository.save(pOA);
-
-//        // 수령 확인 생성
-//        if(savedApproval.isApproved()) {
-//            BookReceptionApproval reception = BookReceptionApproval.builder()
-//                    .bookIsbn(approvedPurchaseOrder.getBookIsbn().getBookIsbn())
-//                    .receptionEmployeeId(null)
-//                    .branchName(approvedPurchaseOrder.getBranchId().getBranchName())
-//                    .bookTitle(approvedPurchaseOrder.getBookIsbn().getBookTitle())
-//                    .purchaseOrderAmount(approvedPurchaseOrder.getPurchaseOrderAmount())
-//                    .isReceptionApproved(false)
-//                    .createdAt(null)
-//                    .purchaseOrderApprovalId(savedApproval)
-//                    .build();
-//
-//            bookReceptionApprovalRepository.save(reception);
-//        }
-//
-//        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
-
-        // 수령 확인 자동 생성 (승인됐을때 자동 생성)
         PurchaseOrderApproval savedApproval = purchaseOrderApprovalRepository.save(pOA);
 
-        if(savedApproval.isApproved()) {
+        // 수령 확인 자동 생성 (승인됐을때 자동 생성)
+
+//        if(savedApproval.isApproved()) {
             BookReceptionApproval reception = BookReceptionApproval.builder()
                     .bookIsbn(approvedPurchaseOrder.getBookIsbn().getBookIsbn())
                     .receptionEmployeeId(null)
@@ -185,10 +166,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                     .build();
 
             bookReceptionApprovalRepository.save(reception);
-        }
-
-        System.out.println("현재 상태: " + approvedPurchaseOrder.getPurchaseOrderStatus());
-        System.out.println("isApproved: " + savedApproval.isApproved());
+//        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }

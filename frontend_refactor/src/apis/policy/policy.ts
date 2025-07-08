@@ -1,4 +1,4 @@
-import {
+      import {
   axiosInstance,
   responseSuccessHandler,
   responseErrorHandler,
@@ -28,10 +28,10 @@ export const getPolicies = async (
   end?: string
 ): Promise<ResponseDto<PageResponseDto<PolicyListResponseDto>>> => {
   try {
-    const response: AxiosResponse<
+    const response: AxiosResponse<                                           
       ResponseDto<PageResponseDto<PolicyListResponseDto>>
     > = await axios.get(GET_ALL_POLICIES_URL, {
-      params: { page, size, keyword, type, start, end },
+      params:                                                                                                                                                                                                                                                        { page, size, keyword, type, start, end },
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     return responseSuccessHandler(response);

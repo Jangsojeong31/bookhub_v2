@@ -260,8 +260,9 @@ CREATE TABLE IF NOT EXISTS `purchase_order_approvals` (
 
 CREATE TABLE IF NOT EXISTS `book_reception_approvals` (
 	book_reception_approval_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    reception_employee_id BIGINT NOT NULL,
+    reception_employee_id BIGINT,
     book_isbn VARCHAR(255) NOT NULL,
+    book_title VARCHAR(255) NOT NULL,
     purchase_order_amount INT NOT NULL,
     branch_name VARCHAR(255) NOT NULL,
     purchase_order_approval_id BIGINT NOT NULL,

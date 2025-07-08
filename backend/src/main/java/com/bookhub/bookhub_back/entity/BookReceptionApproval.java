@@ -20,7 +20,7 @@ public class BookReceptionApproval {
     private Long bookReceptionApprovalId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reception_employee_id", nullable = false)
+    @JoinColumn(name = "reception_employee_id")
     private Employee receptionEmployeeId;
 
     @Column(name = "book_isbn", nullable = false)
