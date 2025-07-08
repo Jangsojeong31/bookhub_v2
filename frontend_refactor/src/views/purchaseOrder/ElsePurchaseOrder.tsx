@@ -238,11 +238,7 @@ function ElsePurchaseOrder() {
           <td>{purchaseOrder.isbn}</td>
           <td>{purchaseOrder.bookTitle}</td>
           <td>{purchaseOrder.purchaseOrderAmount}</td>
-          <td>
-            {new Date(purchaseOrder.purchaseOrderDateAt).toLocaleString(
-              "ko-KR"
-            )}
-          </td>
+          <td>{purchaseOrder.purchaseOrderAt}</td>
           <td>
             {purchaseOrder.purchaseOrderStatus == PurchaseOrderStatus.REQUESTED
               ? "요청중"

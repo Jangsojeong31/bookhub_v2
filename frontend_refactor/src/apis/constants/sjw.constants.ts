@@ -20,7 +20,7 @@ const BOOK_COMMON_MODULE_URL = `${API_DOMAIN}/api/v1/common/books`;
 export const POST_BOOK_URL = `${BOOK_ADMIN_MODULE_URL}`;
 
 // 도서 검색
-export const GET_BOOK_URL = `${BOOK_COMMON_MODULE_URL}/search`; 
+export const GET_BOOK_URL = `${BOOK_COMMON_MODULE_URL}`; 
 
 // 도서 수정
 export const UPDATE_BOOK_URL = (isbn : string) => `${BOOK_ADMIN_MODULE_URL}/${isbn}`;

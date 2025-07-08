@@ -32,9 +32,9 @@ public class PublisherController {
     // 출판사 조회 (키워드 없을 경우 전체 조회)
     @GetMapping
     public ResponseEntity<ResponseDto<List<PublisherResponseDto>>> getPublishers(
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String publisherName
     ) {
-        ResponseDto<List<PublisherResponseDto>> response = publisherService.getPublishers(keyword);
+        ResponseDto<List<PublisherResponseDto>> response = publisherService.getPublishers(publisherName);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 

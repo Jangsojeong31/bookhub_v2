@@ -19,8 +19,11 @@ import java.util.List;
 public class BranchController {
     private final BranchService branchService;
 
+    private final String BRANCH_ADMIN = ApiMappingPattern.ADMIN + "/branches";
+    private final String BRANCH_AUTH = ApiMappingPattern.AUTH + "/branches";
+
     // 지점 등록
-    @PostMapping(ApiMappingPattern.ADMIN + "/branches")
+    @PostMapping(BRANCH_ADMIN)
     public ResponseEntity<ResponseDto<BranchResponseDto>> createBranch(
             @Valid @RequestBody BranchRequestDto dto
     ) {
@@ -29,7 +32,7 @@ public class BranchController {
     }
 
     // 주소로 지점 조회
-    @GetMapping(ApiMappingPattern.AUTH + "/branches")
+    @GetMapping(BRANCH_AUTH)
     public ResponseEntity<ResponseDto<List<BranchResponseDto>>> getBranchesByLocation(
             @RequestParam(required = false) String branchLocation
     ) {
@@ -38,7 +41,7 @@ public class BranchController {
     }
 
     // 단건 조회
-    @GetMapping(ApiMappingPattern.ADMIN + "/branches/{branchId}")
+    @GetMapping(BRANCH_ADMIN + "/{branchId}")
     public ResponseEntity<ResponseDto<BranchResponseDto>> getBranchById(
             @PathVariable Long branchId
     ) {
@@ -47,7 +50,7 @@ public class BranchController {
     }
 
     // 지점 수정
-    @PutMapping(ApiMappingPattern.ADMIN + "/branches/{branchId}")
+    @PutMapping(BRANCH_ADMIN + "/{branchId}")
     public ResponseEntity<ResponseDto<BranchResponseDto>> updateBranch(
             @PathVariable Long branchId,
             @Valid @RequestBody BranchRequestDto dto

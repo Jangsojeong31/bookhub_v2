@@ -1,5 +1,5 @@
 export interface PurchaseOrderResponseDto {
-  purchaseOrderId: number; // java: long -> react: ?
+  purchaseOrderId: number;
   branchName: string;
   branchLocation: string;
   employeeName: string;
@@ -9,5 +9,5 @@ export interface PurchaseOrderResponseDto {
   purchaseOrderAmount: number;
   purchaseOrderPrice: number;
   purchaseOrderStatus: string;
-  purchaseOrderDateAt: string;
+  purchaseOrderAt: string;
 }

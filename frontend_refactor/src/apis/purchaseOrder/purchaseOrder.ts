@@ -9,7 +9,7 @@ import { PurchaseOrderStatus } from "@/dtos/purchaseOrderApproval/request/purcha
 
 
 // 발주 요청서 작성 (사용자 정보 가져와서 이름, 지점 등 사용)
-export const createPurchaseOrder = async(dto: PurchaseOrderCreateRequestDto, accessToken: string): Promise<ResponseDto<PurchaseOrderResponseDto[]>> => {
+export const createPurchaseOrder = async(dto: PurchaseOrderRequestDto, accessToken: string): Promise<ResponseDto<PurchaseOrderResponseDto>> => {
   try{
     const response = await axiosInstance.post(POST_PURCHASE_ORDER_URL, dto, bearerAuthorization(accessToken));
     return responseSuccessHandler(response);
@@ -17,16 +17,6 @@ export const createPurchaseOrder = async(dto: PurchaseOrderCreateRequestDto, acc
     return responseErrorHandler(error as AxiosError<ResponseDto>);
   }
 }
-
-// // 발주 요청서 전체 조회 (날짜순)
-// export const getAllPurchaseOrder = async(accessToken: string): Promise<ResponseDto<PurchaseOrderResponseDto[]>> => {
-//   try{
-//     const response = await axiosInstance.get(GET_ALL_PURCHASE_ORDER_URL, bearerAuthorization(accessToken));
-//     return responseSuccessHandler(response);
-//   }catch(error){
-//     return responseErrorHandler(error as AxiosError<ResponseDto>)
-//   }
-// }
 
 // 조회 기준으로 조회(발주 담당 사원, isbn, 승인 상태)
 export const getAllPurchaseOrderByCriteria = async(employeeName: string, bookIsbn: string, purchaseOrderStatus: PurchaseOrderStatus | null, accessToken: string): Promise<ResponseDto<PurchaseOrderResponseDto[]>> => {

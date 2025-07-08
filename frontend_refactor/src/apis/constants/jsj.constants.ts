@@ -69,7 +69,7 @@ export const PURCHASE_APPROVAL_MODULE_URL = `${API_DOMAIN}/api/v1/${ADMIN}/purch
 export const GET_ALL_PURCHASE_ORDER_REQUESTED_URL = `${PURCHASE_ORDER_MODULE_URL_ADMIN}/requested`;
 
 // 발주 승인 / 승인 취소 (발주 요청서 수정)
-export const PUT_PURCHASE_ORDER_STATUS_URL = (purchaseOrderId: number) => `${PURCHASE_ORDER_MODULE_URL_ADMIN}/approval/${purchaseOrderId}`;
+export const PUT_PURCHASE_ORDER_STATUS_URL = (purchaseOrderId: number) => `${PURCHASE_ORDER_MODULE_URL_ADMIN}/${purchaseOrderId}/approval`;
 
 // 조회 기준으로 조회 (승인 담당자, 승인 여부)
 export const GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL = (
