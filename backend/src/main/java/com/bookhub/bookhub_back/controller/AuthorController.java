@@ -29,7 +29,7 @@ public class AuthorController {
     }
 
     // 작가 이름으로 조회 (동명이인까지 조회)
-    @GetMapping("/search")
+    @GetMapping
     public ResponseEntity<ResponseDto<List<AuthorResponseDto>>> getAuthorsByName(
             @RequestParam String authorName
     ) {

@@ -54,7 +54,7 @@ export const getAdminReceptionApproval = async (
   let url = GET_ADMIN_RECEPTION_URL;
   const params = new URLSearchParams();
 
-  if (branchName) params.append("branchName", branchName);
+  if (branchName) params.append("branchName", branchName);   
   if (bookIsbn) params.append("bookIsbn", bookIsbn);
 
   if ([...params].length > 0) {

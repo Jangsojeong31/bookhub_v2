@@ -39,14 +39,11 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public ResponseDto<List<PublisherResponseDto>> getPublishers(String keyword) {
-        List<Publisher> publishers = null;
+    public ResponseDto<List<PublisherResponseDto>> getPublishers(String publisherName) {
 
-        if (keyword == null || keyword.isBlank()) {
-            publishers = publisherRepository.findAll();
-        } else {
-            publishers = publisherRepository.findByPublisherNameContaining(keyword);
-        }
+        List<Publisher> publishers = publisherName == null || publisherName.isBlank()
+                ? publisherRepository.findAll()
+                : publisherRepository.findByPublisherNameContaining(publisherName);
 
         List<PublisherResponseDto> responseDtos = publishers.stream()
                 .map(this::toResponseDto)

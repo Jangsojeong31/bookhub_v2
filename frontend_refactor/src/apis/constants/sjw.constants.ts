@@ -20,7 +20,7 @@ const BOOK_COMMON_MODULE_URL = `${API_DOMAIN}/api/v1/common/books`;
 export const POST_BOOK_URL = `${BOOK_ADMIN_MODULE_URL}`;
 
 // 도서 검색
-export const GET_BOOK_URL = `${BOOK_COMMON_MODULE_URL}/search`; 
+export const GET_BOOK_URL = `${BOOK_COMMON_MODULE_URL}`; 
 
 // 도서 수정
 export const UPDATE_BOOK_URL = (isbn : string) => `${BOOK_ADMIN_MODULE_URL}/${isbn}`;
@@ -54,13 +54,13 @@ export const DELETE_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_U
 export const GET_POLICY_BY_CATEGORYID_URL = (categoryId : number) => `${API_DOMAIN}/api/v1/${COMMON}/categories/${categoryId}/policy`
 
 //! 4. 수령 승인 관련 요청 베이스 URL
-const RECEPTION_ADMIN_MODULE_URL = `${API_DOMAIN}/api/v1/admin/reception`;
-const RECEPTION_MANAGER_MODULE_URL = `${API_DOMAIN}/api/v1/manager/reception`;
+const RECEPTION_ADMIN_MODULE_URL = `${API_DOMAIN}/api/v1/admin/receptions`;
+const RECEPTION_MANAGER_MODULE_URL = `${API_DOMAIN}/api/v1/manager/receptions`;
 
 //? 수령 승인 관련 기능
 
 // 수령 확인 (지점 관리자가 확인 버튼 누를 시)
-export const PUT_RECEPTION_URL = (purchaseOrderApprovalId : number) => `${RECEPTION_MANAGER_MODULE_URL}/approve/${purchaseOrderApprovalId}`;
+export const PUT_RECEPTION_URL = (purchaseOrderApprovalId : number) => `${RECEPTION_MANAGER_MODULE_URL}/${purchaseOrderApprovalId}/approve`;
 
 // 수령 대기 목록 조회(지점 관리자 전용)
 export const GET_PENDING_RECEPTION_URL = `${RECEPTION_MANAGER_MODULE_URL}/pending`;

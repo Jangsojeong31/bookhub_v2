@@ -43,8 +43,3 @@ export const getStockLogsByBook = async (branchId: number, bookIsbn: string, acc
   return res.data;
 };
 
-// 단건 상세
-export const getStockLogDetail = async (stockLogId: number, accessToken: string) => {
-  const res = await axiosInstance.get(urls.STOCK_LOG_DETAIL(stockLogId), bearerAuthorization(accessToken));
-  return res.data;
-};

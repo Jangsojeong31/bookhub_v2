@@ -2,7 +2,7 @@ import { ResponseDto } from "@/dtos";
 import { PurchaseOrderResponseDto } from "@/dtos/purchaseOrder/response/purchaseOrder.response.dto";
 import { AxiosError } from "axios";
 import { axiosInstance, bearerAuthorization, responseSuccessHandler, responseErrorHandler } from "../axiosConfig";
-import {GET_ALL_PURCHASE_ORDER_REQUESTED_URL, GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL, GET_PURCHASE_ORDER_APPROVAL_BY_DATE, PUT_PURCHASE_ORDER_STATUS_URL } from "../constants/jsj.constants";
+import {GET_ALL_PURCHASE_ORDER_REQUESTED_URL, GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL, PUT_PURCHASE_ORDER_STATUS_URL } from "../constants/jsj.constants";
 import { PurchaseOrderApproveRequestDto } from "@/dtos/purchaseOrderApproval/request/purchaseOrder-approve.request.dto";
 import { PurchaseOrderApprovalResponseDto } from "@/dtos/purchaseOrderApproval/response/purchaseOrderApproval.respose.dto";
 
@@ -37,21 +37,21 @@ export const updatePurchaseOrderStatus = async(purchaseOrderId: number, dto: Pur
 // }
 
 // 조건으로 조회 
-export const getAllPurchaseOrderApprovalByCriteria = async( employeeName: string, isApproved: boolean | null, accessToken: string):Promise<ResponseDto<PurchaseOrderApprovalResponseDto[]>> => {
+export const getAllPurchaseOrderApprovalByCriteria = async( employeeName: string, isApproved: boolean | null, startDate: string, endDate: string, accessToken: string):Promise<ResponseDto<PurchaseOrderApprovalResponseDto[]>> => {
   try{
-    const response = await axiosInstance.get(GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL(employeeName, isApproved), bearerAuthorization(accessToken));
+    const response = await axiosInstance.get(GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL(employeeName, isApproved, startDate, endDate), bearerAuthorization(accessToken));
     return responseSuccessHandler(response);
   }catch(error) {
     return responseErrorHandler(error as AxiosError<ResponseDto>)
   }
 }
 
-// 승인 일자로 조회
-export const getAllPurchaseOrderApprovalByDate = async(startDate: string, endDate: string, accessToken: string): Promise<ResponseDto<PurchaseOrderApprovalResponseDto[]>> => {
-  try{
-    const response = await axiosInstance.get(GET_PURCHASE_ORDER_APPROVAL_BY_DATE(startDate, endDate), bearerAuthorization(accessToken));
-    return responseSuccessHandler(response);
-  }catch(error) {
-    return responseErrorHandler(error as AxiosError<ResponseDto>)
-  }
-}
+// // 승인 일자로 조회
+// export const getAllPurchaseOrderApprovalByDate = async(startDate: string, endDate: string, accessToken: string): Promise<ResponseDto<PurchaseOrderApprovalResponseDto[]>> => {
+//   try{
+//     const response = await axiosInstance.get(GET_PURCHASE_ORDER_APPROVAL_BY_DATE(startDate, endDate), bearerAuthorization(accessToken));
+//     return responseSuccessHandler(response);
+//   }catch(error) {
+//     return responseErrorHandler(error as AxiosError<ResponseDto>)
+//   }
+// }

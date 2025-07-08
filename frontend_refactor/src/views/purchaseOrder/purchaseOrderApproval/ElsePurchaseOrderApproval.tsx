@@ -1,6 +1,5 @@
 import {
   getAllPurchaseOrderApprovalByCriteria,
-  getAllPurchaseOrderApprovalByDate,
 } from "@/apis/purchaseOrder/purchaseOrderApproval";
 import { PurchaseOrderStatus } from "@/dtos/purchaseOrderApproval/request/purchaseOrder-approve.request.dto";
 import { PurchaseOrderApprovalResponseDto } from "@/dtos/purchaseOrderApproval/response/purchaseOrderApproval.respose.dto";
@@ -12,12 +11,11 @@ function ElsePurchaseOrderApproval() {
   const [searchForm, setSearchForm] = useState<{
     employeeName: string;
     isApproved: boolean | null;
+    startDate: string,
+    endDate: string,
   }>({
     employeeName: "",
     isApproved: null,
-  });
-
-  const [dateForm, setDateForm] = useState({
     startDate: "",
     endDate: "",
   });
@@ -33,15 +31,10 @@ function ElsePurchaseOrderApproval() {
 
   const navigate = useNavigate();
 
-  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setDateForm({ ...dateForm, [name]: value });
-  };
-
   //* 조회 조건으로 조회 -- 조건 선택안하면 전체 조회
   const onGetPurchaseOrderByCriteria = async () => {
     setPurchaseOrderApprovals([]);
-    const { employeeName, isApproved } = searchForm;
+    const { employeeName, isApproved, startDate, endDate } = searchForm;
     const token = cookies.accessToken;
 
     if (!token) {
@@ -53,35 +46,6 @@ function ElsePurchaseOrderApproval() {
     const response = await getAllPurchaseOrderApprovalByCriteria(
       employeeName,
       isApproved,
-      token
-    );
-    const { code, message, data } = response;
-
-    if (!code) {
-      setMessage(message);
-      return;
-    }
-
-    if (Array.isArray(data)) {
-      setPurchaseOrderApprovals(data);
-      setMessage("");
-    } else {
-      setMessage("올바른 검색 조건을 입력해주세요.");
-    }
-  };
-
-  // * 날짜로 조회
-  const onGetPurchaseOrderApprovalByDate = async () => {
-    setPurchaseOrderApprovals([]);
-    const { startDate, endDate } = dateForm;
-    const token = cookies.accessToken;
-
-    if (!token) {
-      alert("인증 토큰이 없습니다.");
-      return;
-    }
-
-    const response = await getAllPurchaseOrderApprovalByDate(
       startDate,
       endDate,
       token
@@ -123,7 +87,7 @@ function ElsePurchaseOrderApproval() {
   );
 
   // *노출 리스트
-  const responsePurchaseOrderApprovalList = purchaseOrderApprovals.map(
+  const responsePurchaseOrderApprovalList = pagedPurchaseOrderApprovals.map(
     (purchaseOrderApproval, index) => {
       return (
         <tr key={index}>
@@ -157,15 +121,7 @@ function ElsePurchaseOrderApproval() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div
-          style={{
-            flex: "2",
-            display: "flex",
-
-            gap: "12px",
-          }}
-        >
+      <div style={{ display: "flex", gap: 12 }}>
           <input
             type="text"
             name="employeeName"
@@ -197,43 +153,34 @@ function ElsePurchaseOrderApproval() {
             <option value="true">승인</option>
             <option value="false">승인 거부</option>
           </select>
+          <p>시작일</p>
+          <input
+            type="date"
+            name="startDate"
+            value={searchForm.startDate}
+            placeholder="시작일"
+            onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSearchForm({ ...searchForm, startDate: e.target.value });
+            }}
+            style={{ border: "1px solid #ccc", width: 150 }}
+          />
+          <p>종료일</p>
+          <input
+            type="date"
+            name="endDate"
+            value={searchForm.endDate}
+            placeholder="종료일"
+            onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSearchForm({ ...searchForm, endDate: e.target.value });
+            }}
+            style={{ border: "1px solid #ccc", width: 150 }}
+          />
           <button
             onClick={onGetPurchaseOrderByCriteria}
             style={{ border: "1px solid #ccc" }}
           >
             검색
           </button>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            gap: "12px",
-          }}
-        >
-          <input
-            type="date"
-            name="startDate"
-            value={dateForm.startDate}
-            placeholder="시작일"
-            onInput={onInputChange}
-            style={{ border: "1px solid #ccc", width: 150 }}
-          />
-          <input
-            type="date"
-            name="endDate"
-            value={dateForm.endDate}
-            placeholder="종료일"
-            onInput={onInputChange}
-            style={{ border: "1px solid #ccc", width: 150 }}
-          />
-          <button
-            onClick={onGetPurchaseOrderApprovalByDate}
-            style={{ border: "1px solid #ccc" }}
-          >
-            검색
-          </button>
-        </div>
       </div>
 
       {purchaseOrderApprovals && (

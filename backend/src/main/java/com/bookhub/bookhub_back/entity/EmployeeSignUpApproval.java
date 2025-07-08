@@ -39,9 +39,9 @@ public class EmployeeSignUpApproval {
     @Column(name = "applied_at")
     private LocalDateTime appliedAt;
 
-//    @LastModifiedDate
-//    @Column(name = "updated_at", nullable = false)
-//    private LocalDateTime updatedAt;
+    @LastModifiedDate
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     @Column(name = "denied_reason")
     private String deniedReason;

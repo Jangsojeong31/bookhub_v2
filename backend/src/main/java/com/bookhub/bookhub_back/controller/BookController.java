@@ -40,7 +40,7 @@ public class BookController {
     }
 
     // 도서 통합 검색
-    @GetMapping(BOOK_COMMON + "/search")
+    @GetMapping(BOOK_COMMON)
     public ResponseEntity<ResponseDto<List<BookResponseDto>>> searchBook(
             @RequestParam String keyword
     ) {

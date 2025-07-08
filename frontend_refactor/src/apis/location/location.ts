@@ -24,7 +24,7 @@ export const getLocations = async (
   try {
     let url = `${GET_ALL_LOCATIONS_URL}?branchId=${branchId}`;
     if (keyword && keyword.trim() !== "") {
-      url += `&bookTitle=${encodeURIComponent(keyword.trim())}`;
+      url += `&keyword=${encodeURIComponent(keyword.trim())}`;
     }
     const response = await axiosInstance.get(
       url,

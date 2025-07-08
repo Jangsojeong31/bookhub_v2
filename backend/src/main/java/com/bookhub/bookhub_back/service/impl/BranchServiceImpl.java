@@ -43,13 +43,10 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ResponseDto<List<BranchResponseDto>> getBranchesByLocation(String branchLocation) {
-        List<Branch> branches = null;
 
-        if (branchLocation == null || branchLocation.isBlank()) {
-            branches = branchRepository.findAll();
-        } else {
-            branches = branchRepository.findByBranchLocationContaining(branchLocation);
-        }
+        List<Branch> branches = branchLocation == null || branchLocation.isBlank()
+                ? branchRepository.findAll()
+                : branchRepository.findByBranchLocationContaining(branchLocation);
 
         List<BranchResponseDto> responseDtos = branches.stream()
                 .map(this::toResponseDto)

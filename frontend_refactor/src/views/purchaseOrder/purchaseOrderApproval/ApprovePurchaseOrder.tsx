@@ -81,7 +81,7 @@ function ApprovePurchaseOrder() {
           <td>{purchaseOrder.bookTitle}</td>
           <td>{purchaseOrder.purchaseOrderAmount}</td>
           <td>
-            {new Date(purchaseOrder.purchaseOrderDateAt).toLocaleString(
+            {new Date(purchaseOrder.purchaseOrderAt).toLocaleString(
               "ko-KR"
             )}
           </td>

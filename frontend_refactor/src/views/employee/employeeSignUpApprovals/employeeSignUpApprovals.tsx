@@ -169,7 +169,7 @@ function EmployeeSignUpApprovals() {
 
   return (
     <div>
-      <h2>로그인 승인</h2>
+      <h2>회원가입 승인</h2>
       <table>
         <thead>
           <tr>
