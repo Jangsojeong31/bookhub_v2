@@ -31,7 +31,7 @@ export const adminMenu: SidebarMenu[] = [
   {
     title: '사원 관리',
     submenu: [
-      { label: '로그인 승인', path: '/employees/approval' },
+      { label: '회원가입 승인', path: '/employees/approval' },
       { label: '사원정보 수정', path: '/employees/edit' },
       { label: '사원 정보 조회', path: '/employees' },
       { label: '퇴사자 로그 조회', path: '/employees/retired/logs' },
