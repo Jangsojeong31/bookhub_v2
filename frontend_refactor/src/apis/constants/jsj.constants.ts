@@ -73,7 +73,7 @@ export const PUT_PURCHASE_ORDER_STATUS_URL = (purchaseOrderId: number) => `${PUR
 
 // 조회 기준으로 조회 (승인 담당자, 승인 여부)
 export const GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL = (
-  employeeName?: string, isApproved?: boolean | null
+  employeeName?: string, isApproved?: boolean | null, startDate?: string, endDate?: string
 ) => {
   const queryParams = new URLSearchParams();
   
@@ -83,19 +83,21 @@ export const GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL = (
   } else {
     queryParams.append("isApproved", String(isApproved))
   }
+  if (startDate) queryParams.append("startDate", startDate);
+  if (endDate) queryParams.append("endDate", endDate);
   
   return `${PURCHASE_APPROVAL_MODULE_URL}?${queryParams.toString()}`;
 };
 
-// 일자로 조회
-export const GET_PURCHASE_ORDER_APPROVAL_BY_DATE = (startDate: string, endDate: string) => {
-  const queryParams = new URLSearchParams();
+// // 일자로 조회
+// export const GET_PURCHASE_ORDER_APPROVAL_BY_DATE = (startDate: string, endDate: string) => {
+//   const queryParams = new URLSearchParams();
 
-  if (startDate) queryParams.append("startDate", startDate);
-  if (endDate) queryParams.append("endDate", endDate);
+//   if (startDate) queryParams.append("startDate", startDate);
+//   if (endDate) queryParams.append("endDate", endDate);
 
-  return `${PURCHASE_APPROVAL_MODULE_URL}/date?${queryParams.toString()}`;
-}
+//   return `${PURCHASE_APPROVAL_MODULE_URL}/date?${queryParams.toString()}`;
+// }
 
 // & 4. sales-quantity statistics
 // 베이스 URL
