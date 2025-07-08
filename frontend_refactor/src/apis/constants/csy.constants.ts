@@ -27,8 +27,8 @@ export const DELETE_PUBLISHER_URL = (publisherId: number) => `${PUBLISHER_MODULE
 // & 2. locations
 
 // 공통·관리자 공통 도메인
-const LOCATION_BRANCH_MANAGER = `${API_DOMAIN}/api/v1/${MANAGER}/branch/locations`
-const LOCATION_BRANCH_COMMON  = `${API_DOMAIN}/api/v1/${COMMON}/branch/locations`
+const LOCATION_BRANCH_MANAGER = `${API_DOMAIN}/api/v1/${MANAGER}/locations`
+const LOCATION_BRANCH_COMMON  = `${API_DOMAIN}/api/v1/${COMMON}/locations`
 
 // 1) 지점별 진열위치 등록 (POST)
 export const POST_LOCATION_URL = 
@@ -92,16 +92,22 @@ export const STOCK_SEARCH_BRANCH_URL =  (branchId : number) => `${STOCK_SEARCH_B
 
 //&StockLog
 export const STOCK_LOG_BASE_URL =  `${API_DOMAIN}/api/v1/${ADMIN}/stock-logs`;
+
 export const STOCK_LOGS_BY_BRANCH = (branchId: number) =>
   `${STOCK_LOG_BASE_URL}/branch/${branchId}`;
+
 export const STOCK_LOGS_BY_TYPE = (branchId: number, type: string) =>
   `${STOCK_LOG_BASE_URL}/branch/${branchId}/type?type=${type}`;
+
 export const STOCK_LOGS_BY_DATE = (branchId: number, start: string, end: string) =>
   `${STOCK_LOG_BASE_URL}/branch/${branchId}/date?start=${start}&end=${end}`;
+
 export const STOCK_LOGS_BY_EMPLOYEE = (employeeId: number) =>
   `${STOCK_LOG_BASE_URL}/employee/${employeeId}`;
+
 export const STOCK_LOGS_BY_BOOK = (branchId: number, bookIsbn: string) =>
   `${STOCK_LOG_BASE_URL}/branch/${branchId}/book/${bookIsbn}`;
+
 export const STOCK_LOG_DETAIL = (stockLogId: number) =>
   `${STOCK_LOG_BASE_URL}/${stockLogId}`;
 
