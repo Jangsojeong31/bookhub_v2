@@ -26,6 +26,9 @@ public class BookReceptionApproval {
     @Column(name = "book_isbn", nullable = false)
     private String bookIsbn;
 
+    @Column(name = "book_title", nullable = false)
+    private String bookTitle;
+
     @Column(name = "purchase_order_amount", nullable = false)
     private int purchaseOrderAmount;
 
@@ -39,6 +42,6 @@ public class BookReceptionApproval {
     @Column(name = "is_reception_approved", nullable = false)
     private Boolean isReceptionApproved = false;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

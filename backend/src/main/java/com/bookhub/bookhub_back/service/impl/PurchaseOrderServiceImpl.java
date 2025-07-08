@@ -34,7 +34,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final AlertService alertService;
     private final BookReceptionApprovalRepository bookReceptionApprovalRepository;
     private final AuthorityRepository authorityRepository;
-//    private final PurchaseOrderMapper purchaseOrderMapper;
 
     // 발주 요청서 작성
     @Override
@@ -146,11 +145,50 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         // 발주 승인 로그 생성
         PurchaseOrderApproval pOA = PurchaseOrderApproval.builder()
                 .employeeId(employee)
-                .purchaseOrderId(purchaseOrder)
-                .isApproved(purchaseOrder.getPurchaseOrderStatus() == PurchaseOrderStatus.APPROVED)
+                .purchaseOrderId(approvedPurchaseOrder)
+                .isApproved(approvedPurchaseOrder.getPurchaseOrderStatus().equals(PurchaseOrderStatus.APPROVED))
                 .build();
 
         purchaseOrderApprovalRepository.save(pOA);
+
+//        // 수령 확인 생성
+//        if(savedApproval.isApproved()) {
+//            BookReceptionApproval reception = BookReceptionApproval.builder()
+//                    .bookIsbn(approvedPurchaseOrder.getBookIsbn().getBookIsbn())
+//                    .receptionEmployeeId(null)
+//                    .branchName(approvedPurchaseOrder.getBranchId().getBranchName())
+//                    .bookTitle(approvedPurchaseOrder.getBookIsbn().getBookTitle())
+//                    .purchaseOrderAmount(approvedPurchaseOrder.getPurchaseOrderAmount())
+//                    .isReceptionApproved(false)
+//                    .createdAt(null)
+//                    .purchaseOrderApprovalId(savedApproval)
+//                    .build();
+//
+//            bookReceptionApprovalRepository.save(reception);
+//        }
+//
+//        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
+
+        // 수령 확인 자동 생성 (승인됐을때 자동 생성)
+        PurchaseOrderApproval savedApproval = purchaseOrderApprovalRepository.save(pOA);
+
+        if(savedApproval.isApproved()) {
+            BookReceptionApproval reception = BookReceptionApproval.builder()
+                    .bookIsbn(approvedPurchaseOrder.getBookIsbn().getBookIsbn())
+                    .receptionEmployeeId(null)
+                    .branchName(approvedPurchaseOrder.getBranchId().getBranchName())
+                    .bookTitle(approvedPurchaseOrder.getBookIsbn().getBookTitle())
+                    .purchaseOrderAmount(approvedPurchaseOrder.getPurchaseOrderAmount())
+                    .isReceptionApproved(false)
+                    .createdAt(null)
+                    .purchaseOrderApprovalId(savedApproval)
+                    .build();
+
+            bookReceptionApprovalRepository.save(reception);
+        }
+
+        System.out.println("현재 상태: " + approvedPurchaseOrder.getPurchaseOrderStatus());
+        System.out.println("isApproved: " + savedApproval.isApproved());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
