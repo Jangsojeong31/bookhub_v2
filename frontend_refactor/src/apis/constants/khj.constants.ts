@@ -82,7 +82,7 @@ export const PUT_EMPLOYEE_STATUS_URL = (employeeId: number) =>
   `${EMPLOYEE_MODULE_URL}/${employeeId}/status`;
 
 // 5) 회원 가입 신청 직원 조회
-export const GET_PENDING_EMPLOYEE_URL = `${EMPLOYEE_MODULE_URL}/approval`;
+export const GET_PENDING_EMPLOYEE_URL = `${EMPLOYEE_MODULE_URL}/pending`;
 
 // 6) 직원 회원가입 승인
 export const PUT_EMPLOYEE_APPROVE_URL = (employeeId: number) =>
