@@ -11,9 +11,10 @@ INSERT INTO `positions` VALUES (2,'과장'),(3,'대리'),(1,'부장'),(4,'사원
 SELECT * FROM positions;
 
 INSERT INTO `employees` VALUES (46,2,4,3,25291020,'qwe123','$2a$10$Uo7xXA6GWl4CCwOgttq41OQ5gBLSnrxAgb8pAUqnFjezLpmgFXqle','ko','01012345678','2000-01-01','kohj0686@naver.com','APPROVED','2025-06-05 03:26:03','2025-06-05 03:43:09','EMPLOYED'),(47,2,4,3,25853780,'qwe1234','$2a$10$pbGWjZEM5r09zv1JAesz7uHjHWH6uEBUlJCkykWA9QG3qdyrIBr02','ko','01012345679','2000-01-01','kohj@naver.com','PENDING','2025-06-05 03:36:28','2025-06-05 03:36:28','EMPLOYED');
-
 SELECT * FROM employees;
+
 INSERT INTO `authorities` VALUES (1,'ADMIN'), (2,'MANAGER'),(3,'STAFF');
+SELECT * FROM authorities;
 
 SELECT * FROM purchase_orders;
 ALTER TABLE purchase_orders
@@ -30,3 +31,20 @@ ALTER TABLE book_reception_approvals
 MODIFY COLUMN reception_employee_id BIGINT NULL;
 ALTER TABLE book_reception_approvals
 ADD COLUMN book_isbn VARCHAR(255) NOT NULL;
+
+SELECT CONSTRAINT_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_NAME = 'employee_change_logs'
+  AND COLUMN_NAME = 'previous_authority_id'
+  AND CONSTRAINT_SCHEMA = 'bookhub_db_refactor';
+  
+ALTER TABLE employee_change_logs
+DROP FOREIGN KEY employee_change_logs_ibfk_3;
+
+ALTER TABLE employee_change_logs
+ADD CONSTRAINT fk_previous_authority
+FOREIGN KEY (previous_authority_id) REFERENCES authorities(authority_id);
+
+ALTER TABLE employee_change_logs
+ADD CONSTRAINT fk_previous_position
+FOREIGN KEY (previous_position_id) REFERENCES positions(position_id);

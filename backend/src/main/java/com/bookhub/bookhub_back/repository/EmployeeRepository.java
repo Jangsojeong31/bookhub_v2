@@ -38,4 +38,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             @Param("authorityName") String authorityName,
             @Param("status") EmployeeStatus status
     );
+
+    Optional<Employee> findByEmail(String email);
 }

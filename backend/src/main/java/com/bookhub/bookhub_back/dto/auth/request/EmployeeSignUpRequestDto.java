@@ -1,12 +1,10 @@
-package com.bookhub.bookhub_back.dto.employee.request;
+package com.bookhub.bookhub_back.dto.auth.request;
 
 import com.bookhub.bookhub_back.common.constants.RegexConstants;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
