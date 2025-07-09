@@ -5,6 +5,7 @@ import com.bookhub.bookhub_back.entity.Branch;
 import com.bookhub.bookhub_back.entity.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +19,11 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
     @Query("""
             SELECT s FROM Stock s
             WHERE (:bookTitle IS NULL OR s.bookIsbn.bookTitle LIKE CONCAT("%", :bookTitle, "%"))
-            AND (:isbn IS NULL OR s.bookIsbn = :isbn)
+            AND (:isbn IS NULL OR s.bookIsbn.bookIsbn = :isbn)
             AND (:branchName IS NULL OR s.branchId.branchName LIKE CONCAT("%", :branchName, "%"))
         """)
-    List<Stock> searchStocksByConditions(String bookTitle, String isbn, String branchName);
+    List<Stock> searchStocksByConditions(
+            @Param("bookTitle") String bookTitle,
+            @Param("isbn") String isbn,
+            @Param("branchName") String branchName);
 }

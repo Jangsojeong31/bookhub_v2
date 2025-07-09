@@ -57,7 +57,7 @@ export const adminMenu: SidebarMenu[] = [
   {
     title: '재고 로그 관리',
     submenu: [
-      {label: '재고 로그 관리', path: '/stock-logs'}
+      {label: '재고 로그 관리', path: '/stock-logs/branch'}
     ]
   },
   {
