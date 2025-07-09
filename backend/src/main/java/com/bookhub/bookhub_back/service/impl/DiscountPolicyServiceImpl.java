@@ -2,21 +2,26 @@ package com.bookhub.bookhub_back.service.impl;
 
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessage;
+import com.bookhub.bookhub_back.common.enums.AlertType;
 import com.bookhub.bookhub_back.common.enums.PolicyType;
 
 import com.bookhub.bookhub_back.dto.PageResponseDto;
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
 import com.bookhub.bookhub_back.dto.policy.request.DiscountPolicyCreateRequestDto;
 import com.bookhub.bookhub_back.dto.policy.request.DiscountPolicyUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.policy.response.DiscountPolicyDetailResponseDto;
 import com.bookhub.bookhub_back.dto.policy.response.DiscountPolicyListResponseDto;
 import com.bookhub.bookhub_back.entity.DiscountPolicy;
+import com.bookhub.bookhub_back.entity.Employee;
 import com.bookhub.bookhub_back.repository.DiscountPolicyRepository;
 import com.bookhub.bookhub_back.repository.EmployeeRepository;
+import com.bookhub.bookhub_back.service.AlertService;
 import com.bookhub.bookhub_back.service.DiscountPolicyService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.antlr.v4.runtime.tree.pattern.ParseTreePattern;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +35,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     private final DiscountPolicyRepository policyRepository;
+    private final EmployeeRepository employeeRepository;
+    private final AlertService alertService;
 
     // 할인 정책 등록
     @Override
@@ -55,16 +62,16 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
 
         DiscountPolicy saved = policyRepository.save(newPolicy);
 
-        // 모든 직원에게 이벤트 생성 알림 보내기(NOTICE)
-//        for (Employee employee : employeeRepository.findAll()) {
-//            alertService.createAlert(AlertCreateRequestDto.builder()
-//                    .employeeId(employee.getEmployeeId())
-//                    .alertType("NOTICE")
-//                    .alertTargetTable("DISCOUNT_POLICIES")
-//                    .targetPk(saved.getPolicyId())
-//                    .message("새로운 할인 정책이 생성되었습니다.")
-//                    .build());
-//        }
+        // 알림 기능: 모든 직원에게 이벤트 생성 알림 보내기(NOTICE)
+        for (Employee employee : employeeRepository.findAll()) {
+            alertService.createAlert(AlertCreateRequestDto.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .alertType(String.valueOf(AlertType.NOTICE))
+                    .alertTargetTable("DISCOUNT_POLICIES")
+                    .targetPk(saved.getPolicyId())
+                    .message("새로운 할인 정책이 생성되었습니다.")
+                    .build());
+        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

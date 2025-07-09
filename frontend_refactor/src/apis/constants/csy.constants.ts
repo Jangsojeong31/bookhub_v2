@@ -79,40 +79,45 @@ const STOCK_BASE_URL =  `${API_DOMAIN}/api/v1/${MANAGER}/stocks`;
 //export const UPDATE_STOCK_URL = (branchId : number, stockId : number) => `${STOCK_BASE_URL}/branch/${branchId}/${stockId}`;
 export const UPDATE_STOCK_URL = ( stockId : number) => `${STOCK_BASE_URL}/${stockId}`;
 
-//2>책 검색 base Url
-export const STOCK_SEARCH_BASE_URL =  `${STOCK_BASE_URL}/search`;
+// 재고 조회
+export const STOCK_SEARCH_BOOK_URL = (
+  bookTitle: string,
+  isbn : string,
+  branchName: string
+) => {
+  const queryParams = new URLSearchParams();
+  
+  if (bookTitle) queryParams.append("bookTitle", bookTitle);
+  if (isbn) queryParams.append("isbn", isbn);
+  if (branchName) queryParams.append("branchName", branchName);
 
-//1)책 Isbn 재고 전체 조회
-export const STOCK_SEARCH_BOOK_URL = (bookIsbn : string) => `${STOCK_SEARCH_BASE_URL}/book/${bookIsbn}`;
-
-//2)책 제목 재고 전체 조회
-export const STOCK_SEARCH_TITLE_URL =  `${STOCK_SEARCH_BASE_URL}/title`;
-
-//3)책 지점 기준 전체 조회
-export const STOCK_SEARCH_BRANCH_URL =  (branchId : number) => `${STOCK_SEARCH_BASE_URL}/${branchId}`;
-
-
+  return `${STOCK_BASE_URL}?${queryParams.toString()}`;
+}
 
 //&StockLog
 export const STOCK_LOG_BASE_URL =  `${API_DOMAIN}/api/v1/${ADMIN}/stock-logs`;
 
-export const STOCK_LOGS_BY_BRANCH = (branchId: number) =>
-  `${STOCK_LOG_BASE_URL}/branch/${branchId}`;
+// 지점별 재고 로그 조회
+export const STOCK_LOGS_BY_BRANCH = (
+  branchId: number,
+  type: string,
+  bookIsbn: string,
+  start: string,
+  end: string
+) => {
+  const queryParams = new URLSearchParams();
+  
+  if (type) queryParams.append("type", type);
+  if (bookIsbn) queryParams.append("bookIsbn", bookIsbn);
+  if (start) queryParams.append("start", start);
+  if (end) queryParams.append("end", end);
 
-export const STOCK_LOGS_BY_TYPE = (branchId: number, type: string) =>
-  `${STOCK_LOG_BASE_URL}/branch/${branchId}/type?type=${type}`;
+  return `${STOCK_LOG_BASE_URL}/branch/${branchId}?${queryParams.toString()}`;
+}
 
-export const STOCK_LOGS_BY_DATE = (branchId: number, start: string, end: string) =>
-  `${STOCK_LOG_BASE_URL}/branch/${branchId}/date?start=${start}&end=${end}`;
-
+// 담당 사원별 재고 로그 조회
 export const STOCK_LOGS_BY_EMPLOYEE = (employeeId: number) =>
   `${STOCK_LOG_BASE_URL}/employee/${employeeId}`;
-
-export const STOCK_LOGS_BY_BOOK = (branchId: number, bookIsbn: string) =>
-  `${STOCK_LOG_BASE_URL}/branch/${branchId}/book/${bookIsbn}`;
-
-export const STOCK_LOG_DETAIL = (stockLogId: number) =>
-  `${STOCK_LOG_BASE_URL}/${stockLogId}`;
 
 // & 그 외
 // 통계 베이스 URL

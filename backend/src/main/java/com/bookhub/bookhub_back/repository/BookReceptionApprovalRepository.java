@@ -32,7 +32,7 @@ public interface BookReceptionApprovalRepository extends JpaRepository<BookRecep
     SELECT r FROM BookReceptionApproval r
     WHERE r.isReceptionApproved = true
     AND (:branchName IS NULL OR r.branchName LIKE %:branchName%)
-    AND (:bookIsbn IS NULL OR r.bookIsbn LIKE %:isbn%)
+    AND (:isbn IS NULL OR r.bookIsbn LIKE %:isbn%)
     """)
     List<BookReceptionApproval> findConfirmedLogsByConditions(@Param("branchName")String branchName, @Param("isbn")String isbn);
 }

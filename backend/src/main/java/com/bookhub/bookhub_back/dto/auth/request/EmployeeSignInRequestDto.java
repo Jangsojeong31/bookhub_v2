@@ -1,4 +1,4 @@
-package com.bookhub.bookhub_back.dto.employee.request;
+package com.bookhub.bookhub_back.dto.auth.request;
 
 import com.bookhub.bookhub_back.common.constants.RegexConstants;
 import jakarta.validation.constraints.NotBlank;

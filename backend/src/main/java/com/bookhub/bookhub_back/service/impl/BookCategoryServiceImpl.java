@@ -10,6 +10,7 @@ import com.bookhub.bookhub_back.dto.category.request.CategoryUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryCreateResponseDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryTreeResponseDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryUpdateResponseDto;
+import com.bookhub.bookhub_back.dto.policy.response.DiscountPolicyDetailResponseDto;
 import com.bookhub.bookhub_back.entity.BookCategory;
 import com.bookhub.bookhub_back.entity.DiscountPolicy;
 import com.bookhub.bookhub_back.repository.BookCategoryRepository;
@@ -100,11 +101,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
                 : null;
 
         category.setCategoryName(dto.getCategoryName());
-        category.setCategoryLevel(dto.getCategoryLevel());
         category.setCategoryType(dto.getCategoryType());
-        category.setCategoryOrder(dto.getCategoryOrder());
-        category.setIsActive(dto.getIsActive());
-        category.setParentCategoryId(parent);
         category.setDiscountPolicyId(policy);
 
         BookCategory updatedCategory = bookCategoryRepository.save(category);
@@ -133,6 +130,31 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         bookCategoryRepository.save(category);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
+    @Override
+    public ResponseDto<DiscountPolicyDetailResponseDto> getPolicyByCategoryId(Long categoryId) {
+        BookCategory category = bookCategoryRepository.findById(categoryId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다."));
+
+        DiscountPolicy policy = category.getDiscountPolicyId();
+
+        // 정책이 없는 경우 null 응답
+        if (policy == null) {
+            return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, null);
+        }
+
+        DiscountPolicyDetailResponseDto responseDto = DiscountPolicyDetailResponseDto.builder()
+                .policyTitle(policy.getPolicyTitle())
+                .policyDescription(policy.getPolicyDescription())
+                .policyType(policy.getPolicyType())
+                .totalPriceAchieve(policy.getTotalPriceAchieve())
+                .discountPercent(policy.getDiscountPercent())
+                .startDate(policy.getStartDate())
+                .endDate(policy.getEndDate())
+                .build();
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
     // CategoryTreeResponseDto 변환 메서드

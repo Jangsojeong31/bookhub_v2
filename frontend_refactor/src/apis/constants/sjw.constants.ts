@@ -48,7 +48,7 @@ export const GET_PARENT_CATEGORY_URL = `${CATEGORY_MODULE_URL}/roots`;
 export const PUT_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}`;
 
 // 카테고리 삭제
-export const DELETE_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}`;
+export const DELETE_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}/isInactive`;
 
 // 카테고리 ID로 연결된 할인정책 조회
 export const GET_POLICY_BY_CATEGORYID_URL = (categoryId : number) => `${API_DOMAIN}/api/v1/${COMMON}/categories/${categoryId}/policy`
@@ -80,7 +80,7 @@ const ALERT_COMMON_MODULE_URL = `${API_DOMAIN}/api/v1/common/alerts`;
 export const GET_ALERT_URL = `${ALERT_COMMON_MODULE_URL}/all/{employeeId}`;
 
 // 읽지 않은 알람 전체 조회
-export const GET_UNREAD_ALERT_URL = `${ALERT_COMMON_MODULE_URL}/unread/{employeeId}`;
+export const GET_UNREAD_ALERT_URL = `${ALERT_COMMON_MODULE_URL}/unread`;
 
 // 알람 읽음 처리
 export const PUT_ALERT_URL = `${ALERT_COMMON_MODULE_URL}/read`;

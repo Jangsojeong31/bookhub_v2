@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CategoryUpdateRequestDto } from "@/dtos/category/request/category-update.request.dto";
-import { updateCategory } from "@/apis/category/category";
+import { deleteCategory, updateCategory } from "@/apis/category/category";
 import { CategoryTreeResponseDto } from "@/dtos/category/response/category-tree.response.dto";
 import { useCookies } from "react-cookie";
 
@@ -60,15 +60,9 @@ function UpdateCategory({ category, onSuccess, mode }: UpdateCategoryProps) {
       alert("로그인이 필요합니다.");
       return;
     }
-
-    const dto: CategoryUpdateRequestDto = {
-      categoryName,
-      categoryType,
-      isActive: false,
-    };
     
     try {
-      await updateCategory(category.categoryId, dto, token);
+      await deleteCategory(category.categoryId, token);
       alert("카테고리 비활성화 완료");
       onSuccess();
     } catch (error) {
@@ -100,14 +94,15 @@ function UpdateCategory({ category, onSuccess, mode }: UpdateCategoryProps) {
         placeholder="할인 정책 ID"
       />
 
-      <label>
+      {/* <label>
         <input
           type="checkbox"
-          checked={isActive}
-          onChange={(e) => setIsActive(e.target.checked)}
+          readOnly
+          checked={isActive === true}
+          onChange={(e) => e.preventDefault}
         />
         활성 상태
-      </label>
+      </label> */}
 
       { mode === "update" && <button type="submit">수정</button>}
       { mode === "delete" && <button type="button" onClick={handleDeactivate} style={{

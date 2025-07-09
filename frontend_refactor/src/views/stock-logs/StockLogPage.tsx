@@ -42,63 +42,9 @@ const StockLogPage = () => {
     <div style={{ padding: '24px' }}>
       <h2 style={{ marginBottom: '24px' }}>재고 로그 메인</h2>
       <div className="button-group">
-        <button className="stock-button" onClick={() => navigate(`/stock-logs/branch/${branchId}`)}>지점재고로그 전체 조회</button>
-        <button className="stock-button" onClick={() => navigate(`/stock-logs/branch/${branchId}/type`)}>유형별 조회</button>
-        <button className="stock-button" onClick={() => setShowDateModal(true)}>날짜별 조회</button>
+        <button className="stock-button" onClick={() => navigate(`/stock-logs/branch/${branchId}`)}>지점 재고로그 조회</button>
         <button className="stock-button" onClick={() => navigate(`/stock-logs/employee/${employeeId}`)}>나의 재고로그 조회</button>
-        <button className="stock-button" onClick={() => setShowIsbnModal(true)}>도서별 조회</button>
       </div>
-
-      {/* 도서별 모달 */}
-      {showIsbnModal && (
-        <div style={modalBackdropStyle}>
-          <div style={modalStyle}>
-            <h3 style={{ marginBottom: '12px' }}>ISBN 입력</h3>
-            <input
-              type="text"
-              value={isbnInput}
-              onChange={(e) => setIsbnInput(e.target.value)}
-              placeholder="예: 9781234567890"
-              style={inputStyle}
-            />
-            <div style={modalButtonWrapperStyle}>
-              <button onClick={handleIsbnConfirm} style={confirmButtonStyle}>확인</button>
-              <button onClick={() => setShowIsbnModal(false)} style={cancelButtonStyle}>취소</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 날짜별 모달 */}
-      {showDateModal && (
-        <div style={modalBackdropStyle}>
-          <div style={modalStyle}>
-            <h3 style={{ marginBottom: '12px' }}>조회할 날짜 범위 선택</h3>
-            <label style={{ display: 'block', marginBottom: '8px' }}>
-              시작일:
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                style={{ ...inputStyle, marginTop: '4px' }}
-              />
-            </label>
-            <label style={{ display: 'block', marginBottom: '16px' }}>
-              종료일:
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                style={{ ...inputStyle, marginTop: '4px' }}
-              />
-            </label>
-            <div style={modalButtonWrapperStyle}>
-              <button onClick={handleDateConfirm} style={confirmButtonStyle}>확인</button>
-              <button onClick={() => setShowDateModal(false)} style={cancelButtonStyle}>취소</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

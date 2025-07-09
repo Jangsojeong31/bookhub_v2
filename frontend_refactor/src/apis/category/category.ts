@@ -62,7 +62,7 @@ export const deleteCategory = async (
   accessToken: string
 ): Promise<ResponseDto<void>> => {
   try {
-    const response = await axiosInstance.delete(DELETE_CATEGORY_URL(categoryId), bearerAuthorization(accessToken));
+    const response = await axiosInstance.put(DELETE_CATEGORY_URL(categoryId), null, bearerAuthorization(accessToken));
     return responseSuccessHandler(response);
   } catch (error) {
     return responseErrorHandler(error as AxiosError<ResponseDto>)

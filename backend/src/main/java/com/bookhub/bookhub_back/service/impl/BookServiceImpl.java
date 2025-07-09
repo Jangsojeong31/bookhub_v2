@@ -87,7 +87,8 @@ public class BookServiceImpl implements BookService {
 
         BookResponseDto responseDto = toResponseDto(savedBook);
 
-//        bookLogService.logCreate(savedBook, employee);
+        // 책 등록 로그
+        bookLogService.logCreate(savedBook, employee);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
@@ -144,20 +145,20 @@ public class BookServiceImpl implements BookService {
 
         BookResponseDto responseDto = toResponseDto(updatedBook);
 
-        // 로그 기록
-//        if (!oldPrice.equals(dto.getBookPrice())) {
-//            bookLogService.logPriceChange(updatedBook, oldPrice, employee);
-//        }
-//
-//        DiscountPolicy newPolicy = updatedBook.getDiscountPolicyId();
-//        Integer newRate = newPolicy != null ? newPolicy.getDiscountPercent() : null;
-//        if ((oldRate != null && !oldRate.equals(newRate)) || (oldRate == null && newRate != null)) {
-//            bookLogService.logDiscountChange(updatedBook, oldRate != null ? oldRate : 0, newPolicy, employee);
-//        }
-//
-//        if (!oldStatus.equals(dto.getBookStatus())) {
-//            bookLogService.logStatusChange(updatedBook, employee);
-//        }
+         // 로그 기록
+        if (!oldPrice.equals(dto.getBookPrice())) {
+            bookLogService.logPriceChange(updatedBook, oldPrice, employee);
+        }
+
+        DiscountPolicy newPolicy = updatedBook.getDiscountPolicyId();
+        Integer newRate = newPolicy != null ? newPolicy.getDiscountPercent() : null;
+        if ((oldRate != null && !oldRate.equals(newRate)) || (oldRate == null && newRate != null)) {
+            bookLogService.logDiscountChange(updatedBook, oldRate != null ? oldRate : 0, newPolicy, employee);
+        }
+
+        if (!oldStatus.equals(dto.getBookStatus())) {
+            bookLogService.logStatusChange(updatedBook, employee);
+        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
@@ -175,7 +176,8 @@ public class BookServiceImpl implements BookService {
         book.setBookStatus(BookStatus.HIDDEN);
         bookRepository.save(book);
 
-//        bookLogService.logHidden(book, employee);
+        // 로그 기록
+        bookLogService.logHidden(book, employee);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

@@ -9,6 +9,7 @@ import com.bookhub.bookhub_back.common.enums.IsApproved;
 import com.bookhub.bookhub_back.common.util.DateUtils;
 
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
 import com.bookhub.bookhub_back.dto.employee.request.EmployeeOrganizationUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.employee.request.EmployeeSignUpApprovalRequestDto;
 import com.bookhub.bookhub_back.dto.employee.request.EmployeeStatusUpdateRequestDto;
@@ -166,6 +167,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setBranchId(branchRepository.findById(dto.getBranchId())
                     .orElseThrow(() -> new EntityNotFoundException("지점 정보가 정확하지 않습니다.")));
 
+            // 직원 정보 변경 로그 생성
             EmployeeChangeLog employeeChangeLog = EmployeeChangeLog.builder()
                     .employeeId(employee)
                     .authorizerId(authorizer)
@@ -176,14 +178,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             employeeChangeLogRepository.save(employeeChangeLog);
 
-//            alertService.createAlert(AlertCreateRequestDto.builder()
-//                    .employeeId(employee.getEmployeeId())
-//                    .alertType(String.valueOf(AlertType.CHANGE_BRANCH_SUCCESS))
-//                    .alertTargetTable("EMPLOYEES")
-//                    .targetPk(employee.getEmployeeId())
-//                    .message("지점이 [" + employee.getBranchId().getBranchName() + "]로 변경되었습니다.")
-//                    .build()
-//            );
+            // 알림 생성
+            alertService.createAlert(AlertCreateRequestDto.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .alertType(String.valueOf(AlertType.CHANGE_BRANCH_SUCCESS))
+                    .alertTargetTable("EMPLOYEES")
+                    .targetPk(employee.getEmployeeId())
+                    .message("지점이 [" + employee.getBranchId().getBranchName() + "]로 변경되었습니다.")
+                    .build()
+            );
         }
 
         // 직급 변경 시
@@ -191,6 +194,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setPositionId(positionRepository.findById(dto.getPositionId())
                     .orElseThrow(() -> new EntityNotFoundException("직급 정보가 정확하지 않습니다.")));
 
+            // 직원 정보 변경 로그 생성
             EmployeeChangeLog employeeChangeLog = EmployeeChangeLog.builder()
                     .employeeId(employee)
                     .authorizerId(authorizer)
@@ -201,14 +205,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             employeeChangeLogRepository.save(employeeChangeLog);
 
-//            alertService.createAlert(AlertCreateRequestDto.builder()
-//                    .employeeId(employee.getEmployeeId())
-//                    .alertType(String.valueOf(AlertType.CHANGE_POSITION_SUCCESS))
-//                    .alertTargetTable("EMPLOYEES")
-//                    .targetPk(employee.getEmployeeId())
-//                    .message("직급이 [" + employee.getPositionId().getPositionName() + "]로 변경되었습니다.")
-//                    .build()
-//            );
+            // 알림 생성
+            alertService.createAlert(AlertCreateRequestDto.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .alertType(String.valueOf(AlertType.CHANGE_POSITION_SUCCESS))
+                    .alertTargetTable("EMPLOYEES")
+                    .targetPk(employee.getEmployeeId())
+                    .message("직급이 [" + employee.getPositionId().getPositionName() + "]로 변경되었습니다.")
+                    .build()
+            );
         }
 
         // 권한 변경 시
@@ -216,6 +221,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employee.setAuthorityId(authorityRepository.findById(dto.getAuthorityId())
                     .orElseThrow(() -> new EntityNotFoundException("권한 정보가 정확하지 않습니다.")));
 
+            // 직원 정보 변경 로그 생성
             EmployeeChangeLog employeeChangeLog = EmployeeChangeLog.builder()
                     .employeeId(employee)
                     .authorizerId(authorizer)
@@ -226,14 +232,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             employeeChangeLogRepository.save(employeeChangeLog);
 
-//            alertService.createAlert(AlertCreateRequestDto.builder()
-//                    .employeeId(employee.getEmployeeId())
-//                    .alertType(String.valueOf(AlertType.CHANGE_PERMISSION_SUCCESS))
-//                    .alertTargetTable("EMPLOYEES")
-//                    .targetPk(employee.getEmployeeId())
-//                    .message("권한이 [" + employee.getAuthorityId().getAuthorityName() + "]로 변경되었습니다.")
-//                    .build()
-//            );
+            // 알림 생성
+            alertService.createAlert(AlertCreateRequestDto.builder()
+                    .employeeId(employee.getEmployeeId())
+                    .alertType(String.valueOf(AlertType.CHANGE_PERMISSION_SUCCESS))
+                    .alertTargetTable("EMPLOYEES")
+                    .targetPk(employee.getEmployeeId())
+                    .message("권한이 [" + employee.getAuthorityId().getAuthorityName() + "]로 변경되었습니다.")
+                    .build()
+            );
         }
 
         employeeRepository.save(employee);

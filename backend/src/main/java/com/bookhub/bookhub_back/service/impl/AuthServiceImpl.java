@@ -2,13 +2,15 @@ package com.bookhub.bookhub_back.service.impl;
 
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
+import com.bookhub.bookhub_back.common.enums.AlertType;
 import com.bookhub.bookhub_back.common.enums.EmployeeStatus;
 import com.bookhub.bookhub_back.common.enums.IsApproved;
 import com.bookhub.bookhub_back.dto.ResponseDto;
-import com.bookhub.bookhub_back.dto.employee.request.EmployeeSignInRequestDto;
-import com.bookhub.bookhub_back.dto.employee.request.EmployeeSignUpRequestDto;
+import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
+import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignInRequestDto;
+import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignUpRequestDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
-import com.bookhub.bookhub_back.dto.employee.response.EmployeeSignInResponseDto;
+import com.bookhub.bookhub_back.dto.auth.response.EmployeeSignInResponseDto;
 import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.provider.JwtProvider;
 import com.bookhub.bookhub_back.repository.*;
@@ -20,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Random;
@@ -86,15 +87,12 @@ public class AuthServiceImpl implements AuthService {
         Random random = new Random();
         Long employeeNumber;
 
-        while (true) {
+        do {
             int randomSixDigits = 100000 + random.nextInt(900000); // 100000~999999 범위
             String resultStr = String.format("%02d", LocalDate.now().getYear() % 100) + randomSixDigits;
             employeeNumber = Long.parseLong(resultStr);
 
-            if (!employeeRepository.existsByEmployeeNumber(employeeNumber)) {
-                break;
-            }
-        }
+        } while (employeeRepository.existsByEmployeeNumber(employeeNumber));
 
         Employee newEmployee = Employee.builder()
                 .loginId(loginId)
@@ -113,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
 
         employeeRepository.save(newEmployee);
 
+        // 회원가입 승인 로그 생성
         EmployeeSignUpApproval employeeSignUpApproval = EmployeeSignUpApproval.builder()
                 .employeeId(newEmployee)
                 .appliedAt(newEmployee.getCreatedAt())
@@ -120,6 +119,26 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         employeeSignupApprovalRepository.save(employeeSignUpApproval);
+
+        // 본사 관리자(ADMIN 권한)에게 알림 전송
+        Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
+
+        final Employee finalEmployee = newEmployee;
+
+        employeeRepository.findAll().stream()
+                .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
+                .forEach(admin -> {
+                    AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
+                            .employeeId(admin.getEmployeeId())
+                            .alertType(String.valueOf(AlertType.SIGNUP_APPROVAL))
+                            .alertTargetTable("EMPLOYEES")
+                            .targetPk(finalEmployee.getEmployeeId())
+                            .message(finalEmployee.getName() + " 님의 회원가입 승인 요청이 도착했습니다.")
+                            .build();
+
+                    alertService.createAlert(alertDto);
+                });
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS);
     }
@@ -177,5 +196,27 @@ public class AuthServiceImpl implements AuthService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS, responseDto);
 
+    }
+
+    // 아이디 중복 체크
+    @Override
+    public ResponseDto<Void> checkLoginIdDuplicate(String loginId) {
+        if (employeeRepository.existsByLoginId(loginId)) {
+            return ResponseDto.fail(ResponseCode.DUPLICATED_USER_ID, ResponseMessageKorean.DUPLICATED_USER_ID);
+        }
+        return ResponseDto.success(ResponseCode.SUCCESS, "사용 가능한 아이디입니다.");
+    }
+
+    // 로그아웃
+    @Override
+    public ResponseDto<Void> logout(HttpServletResponse response) {
+        ResponseCookie accessTokenCookie = ResponseCookie.from("accessToken", "")
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader("Set-Cookie", accessTokenCookie.toString());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS);
     }
 }

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { StockLogResponseDto } from '@/dtos/stock/StockLog.response.dto'
 import { getStockLogsByEmployee } from '@/apis/stock/stockLog'
 import './StockLogPage.css' // 여기에서 테이블 클래스도 같이 적용됨을 전제
+import { useEmployeeStore } from '@/stores/employee.store'
 
 const StockLogByEmployeePage = () => {
-  const { employeeId } = useParams()
   const [cookies] = useCookies(['accessToken'])
   const [logs, setLogs] = useState<StockLogResponseDto[]>([])
+  const navigate = useNavigate();
+    const employee = useEmployeeStore((state) => state.employee)
+    
+      const branchId = employee?.branchId ?? null
+      const employeeId = employee?.employeeId ?? null
 
   useEffect(() => {
     if (!employeeId) return
@@ -19,7 +24,14 @@ const StockLogByEmployeePage = () => {
 
   return (
     <div className="stock-log-wrapper">
-      <h2 className="stock-log-title">사원별 재고 로그 (employeeId: {employeeId})</h2>
+      <div style={{marginTop: 10, marginBottom: 20}}>
+
+      <div className="button-group">
+        <button className="stock-button" onClick={() => navigate(`/stock-logs/branch`)}>지점 재고로그 조회</button>
+        <button className="stock-button" onClick={() => navigate(`/stock-logs/employee/${employeeId}`)}>나의 재고로그 조회</button>
+      </div>
+      </div>
+      <h2 className="stock-log-title">나의 재고 로그 (employeeId: {employeeId})</h2>
 
       <table className="stock-log-table">
         <thead>

@@ -46,5 +46,5 @@ public class BookLog {
 
     @CreatedDate
     @Column(name = "changed_at", nullable = false, updatable = false)
-    private LocalDateTime changedAt;
+    private LocalDate changedAt;
 }

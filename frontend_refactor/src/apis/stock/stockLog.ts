@@ -9,25 +9,14 @@ import {
 
 
 // branch 전체
-export const getStockLogsByBranch = async (branchId: number, accessToken: string) => {
-  const res = await axiosInstance.get(urls.STOCK_LOGS_BY_BRANCH(branchId), bearerAuthorization(accessToken));
-  return res.data;
-};
-
-// branch + 유형
-export const getStockLogsByType = async (branchId: number, type: string, accessToken: string) => {
-  const res = await axiosInstance.get(urls.STOCK_LOGS_BY_TYPE(branchId, type), bearerAuthorization(accessToken));
-  return res.data;
-};
-
-// branch + 날짜
-export const getStockLogsByDate = async (
-  branchId: number,
+export const getStockLogsByBranch = async (
+  branchId: number, 
+  type: string,
+  bookIsbn: string,
   start: string,
   end: string,
-  accessToken: string
-) => {
-  const res = await axiosInstance.get(urls.STOCK_LOGS_BY_DATE(branchId, start, end), bearerAuthorization(accessToken));
+  accessToken: string) => {
+  const res = await axiosInstance.get(urls.STOCK_LOGS_BY_BRANCH(branchId, type, bookIsbn, start, end), bearerAuthorization(accessToken));
   return res.data;
 };
 
@@ -37,9 +26,4 @@ export const getStockLogsByEmployee = async (employeeId: number, accessToken: st
   return res.data;
 };
 
-// book
-export const getStockLogsByBook = async (branchId: number, bookIsbn: string, accessToken: string) => {
-  const res = await axiosInstance.get(urls.STOCK_LOGS_BY_BOOK(branchId, bookIsbn), bearerAuthorization(accessToken));
-  return res.data;
-};
 

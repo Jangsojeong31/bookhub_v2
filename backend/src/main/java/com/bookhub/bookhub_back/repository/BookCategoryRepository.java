@@ -17,7 +17,7 @@ public interface BookCategoryRepository extends JpaRepository<BookCategory, Long
     List<BookCategory> findByParentId(@Param("parentId") Long parentId);
 
     @Query("SELECT bc FROM BookCategory bc WHERE bc.categoryType = :type AND bc.categoryLevel = :level AND bc.isActive = true")
-    List<BookCategory> findByTypeAndLevel(CategoryType type, int i);
+    List<BookCategory> findByTypeAndLevel(CategoryType type, int level);
 
     @Query("SELECT bc FROM BookCategory bc WHERE bc.parentCategoryId IS NULL AND bc.isActive = true")
     List<BookCategory> findRootCategories();

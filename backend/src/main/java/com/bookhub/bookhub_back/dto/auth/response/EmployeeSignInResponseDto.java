@@ -1,5 +1,6 @@
-package com.bookhub.bookhub_back.dto.employee.response;
+package com.bookhub.bookhub_back.dto.auth.response;
 
+import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

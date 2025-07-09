@@ -95,7 +95,7 @@ public class BookLocationServiceImpl implements BookLocationService {
         Branch branch = branchRepository.findById(branchId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID + ResponseMessage.NO_EXIST_ID));
 
-        List<Book> books = bookRepository.findAllByKeywordContaining(keyword);
+        List<Book> books = bookRepository.findAllByBookTitleContaining(keyword);
 
         if (books.isEmpty()) {
             throw new EntityNotFoundException(ResponseCode.NO_EXIST_ID + ResponseMessage.NO_EXIST_ID);

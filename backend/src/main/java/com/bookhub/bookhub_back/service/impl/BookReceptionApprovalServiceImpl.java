@@ -3,8 +3,12 @@ package com.bookhub.bookhub_back.service.impl;
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 
+import com.bookhub.bookhub_back.common.enums.AlertType;
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
+import com.bookhub.bookhub_back.dto.reception.request.ReceptionCreateRequestDto;
 import com.bookhub.bookhub_back.dto.reception.response.ReceptionResponseDto;
+import com.bookhub.bookhub_back.dto.stock.request.StockUpdateRequestDto;
 import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.provider.JwtProvider;
 import com.bookhub.bookhub_back.repository.*;
@@ -29,6 +33,28 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
     private final AlertService alertService;
     private final AuthorityRepository authorityRepository;
 
+    @Override
+    @Transactional
+    public ResponseDto<Void> createReception(ReceptionCreateRequestDto dto) {
+        PurchaseOrderApproval purchaseOrderApproval = purchaseOrderApprovalRepository.findById(dto.getPurchaseOrderApprovalId())
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 발주 승인 입니다."));
+
+        BookReceptionApproval bookReceptionApproval = BookReceptionApproval.builder()
+                .bookIsbn(purchaseOrderApproval.getPurchaseOrderId().getBookIsbn().getBookIsbn())
+                .receptionEmployeeId(null)
+                .branchName(dto.getReceivingBranch().getBranchName())
+                .bookTitle(purchaseOrderApproval.getPurchaseOrderId().getBookIsbn().getBookTitle())
+                .purchaseOrderAmount(purchaseOrderApproval.getPurchaseOrderId().getPurchaseOrderAmount())
+                .isReceptionApproved(false)
+                .createdAt(null)
+                .purchaseOrderApprovalId(purchaseOrderApproval)
+                .build();
+
+        bookReceptionApprovalRepository.save(bookReceptionApproval);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS) ;
+    }
+
     // 수령 확인
     @Override
     @Transactional
@@ -42,6 +68,36 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
         bookReceptionApproval.setIsReceptionApproved(true);
         bookReceptionApproval.setReceptionEmployeeId(employee);
         bookReceptionApproval.setCreatedAt(LocalDateTime.now());
+
+        // 재고 증가
+        StockUpdateRequestDto stockUpdateRequestDto = StockUpdateRequestDto.builder()
+                .type("IN")
+                .employeeId(employee.getEmployeeId())
+                .bookIsbn(bookReceptionApproval.getBookIsbn())
+                .branchId(bookReceptionApproval.getPurchaseOrderApprovalId().getPurchaseOrderId().getBranchId().getBranchId())
+                .amount((long) bookReceptionApproval.getPurchaseOrderAmount())
+                .description("입고-수령확인")
+                .build();
+
+        stockService.updateStock(null, stockUpdateRequestDto);
+
+         // 알림 기능: 관리자에게 수령 확인 성공 알림 보내기
+        Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
+
+        for (Employee admin : employeeRepository.findAll().stream()
+                .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
+                .toList()) {
+
+            alertService.createAlert(AlertCreateRequestDto.builder()
+                    .employeeId(admin.getEmployeeId())
+                    .alertType(String.valueOf(AlertType.BOOK_RECEIVED_SUCCESS))
+                    .alertTargetTable("BOOK_RECEPTION_APPROVALS")
+                    .targetPk(bookReceptionApproval.getBookReceptionApprovalId())
+                    .message("지점 " + bookReceptionApproval.getBranchName() +
+                            "에서 [" + bookReceptionApproval.getBookTitle() + "] 수령 확정 되었습니다.")
+                    .build());
+        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS) ;
     }
@@ -102,7 +158,7 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
                 .purchaseOrderAmount(approval.getPurchaseOrderAmount())
                 .isReceptionApproved(approval.getIsReceptionApproved())
                 .receptionDateAt(approval.getCreatedAt())
-                .receptionEmployeeName(approval.getReceptionEmployeeId().getName() == null ? null: approval.getReceptionEmployeeId().getName())
+                .receptionEmployeeName(approval.getReceptionEmployeeId() == null ? null: approval.getReceptionEmployeeId().getName())
                 .build();
     }
 }
