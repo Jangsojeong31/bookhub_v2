@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StockLogController {
     private final StockLogService stockLogService;
-    
+
     // branch 의 재고 로그 조회
     @GetMapping("/branch/{branchId}")
     public ResponseEntity<ResponseDto<List<StockLogResponseDto>>> searchStockLogsByBranch(
