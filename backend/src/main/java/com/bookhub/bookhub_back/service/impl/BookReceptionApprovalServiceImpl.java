@@ -3,7 +3,9 @@ package com.bookhub.bookhub_back.service.impl;
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 
+import com.bookhub.bookhub_back.common.enums.AlertType;
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
 import com.bookhub.bookhub_back.dto.reception.response.ReceptionResponseDto;
 import com.bookhub.bookhub_back.dto.stock.request.StockUpdateRequestDto;
 import com.bookhub.bookhub_back.entity.*;
@@ -56,23 +58,23 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
 
         stockService.updateStock(null, stockUpdateRequestDto);
 
-        // 알림 기능: 관리자에게 수령 확인 성공 알림 보내기
-//        Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
-//                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
-//
-//        for (Employee admin : employeeRepository.findAll().stream()
-//                .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
-//                .toList()) {
-//
-//            alertService.createAlert(AlertCreateRequestDto.builder()
-//                    .employeeId(admin.getEmployeeId())
-//                    .alertType("BOOK_RECEIVED_SUCCESS")
-//                    .alertTargetTable("BOOK_RECEPTION_APPROVALS")
-//                    .targetPk(bookReceptionApproval.getBookReceptionApprovalId())
-//                    .message("지점 " + bookReceptionApproval.getBranchName() +
-//                            "에서 [" + bookReceptionApproval.getBookTitle() + "] 수령 확정 되었습니다.")
-//                    .build());
-//        }
+         // 알림 기능: 관리자에게 수령 확인 성공 알림 보내기
+        Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
+
+        for (Employee admin : employeeRepository.findAll().stream()
+                .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
+                .toList()) {
+
+            alertService.createAlert(AlertCreateRequestDto.builder()
+                    .employeeId(admin.getEmployeeId())
+                    .alertType(String.valueOf(AlertType.BOOK_RECEIVED_SUCCESS))
+                    .alertTargetTable("BOOK_RECEPTION_APPROVALS")
+                    .targetPk(bookReceptionApproval.getBookReceptionApprovalId())
+                    .message("지점 " + bookReceptionApproval.getBranchName() +
+                            "에서 [" + bookReceptionApproval.getBookTitle() + "] 수령 확정 되었습니다.")
+                    .build());
+        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS) ;
     }

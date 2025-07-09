@@ -5,7 +5,6 @@ import {
   getAlertTargetUrl,
 } from "@/apis/alert/alert";
 import { useCookies } from "react-cookie";
-import { useEmployeeStore } from "@/stores/employee.store";
 import { AlertResponseDto } from "@/dtos/alert/response/alert.response.dto";
 import { Link } from "react-router-dom";
 import "./AlertPage.css";
@@ -17,11 +16,8 @@ function AlertPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
 
-  const employee = useEmployeeStore((state) => state.employee);
-
   const fetchAlerts = async () => {
-    if (!employee) return;
-    const res = await getUnreadAlerts(employee.employeeId, cookies.accessToken);
+    const res = await getUnreadAlerts(cookies.accessToken);
     if (res.code === "SU" && res.data) {
       setAlerts(res.data);
     }
@@ -29,7 +25,7 @@ function AlertPage() {
 
   useEffect(() => {
     fetchAlerts();
-  }, [employee]);
+  }, []);
 
   const handleCheckboxChange = (alertId: number) => {
     setSelectedAlerts((prev) =>

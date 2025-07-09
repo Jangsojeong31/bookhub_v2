@@ -2,9 +2,11 @@ package com.bookhub.bookhub_back.service.impl;
 
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
+import com.bookhub.bookhub_back.common.enums.AlertType;
 import com.bookhub.bookhub_back.common.enums.EmployeeStatus;
 import com.bookhub.bookhub_back.common.enums.IsApproved;
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
 import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignInRequestDto;
 import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignUpRequestDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
@@ -109,6 +111,7 @@ public class AuthServiceImpl implements AuthService {
 
         employeeRepository.save(newEmployee);
 
+        // 회원가입 승인 로그 생성
         EmployeeSignUpApproval employeeSignUpApproval = EmployeeSignUpApproval.builder()
                 .employeeId(newEmployee)
                 .appliedAt(newEmployee.getCreatedAt())
@@ -116,6 +119,26 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         employeeSignupApprovalRepository.save(employeeSignUpApproval);
+
+        // 본사 관리자(ADMIN 권한)에게 알림 전송
+        Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
+
+        final Employee finalEmployee = newEmployee;
+
+        employeeRepository.findAll().stream()
+                .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
+                .forEach(admin -> {
+                    AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
+                            .employeeId(admin.getEmployeeId())
+                            .alertType(String.valueOf(AlertType.SIGNUP_APPROVAL))
+                            .alertTargetTable("EMPLOYEES")
+                            .targetPk(finalEmployee.getEmployeeId())
+                            .message(finalEmployee.getName() + " 님의 회원가입 승인 요청이 도착했습니다.")
+                            .build();
+
+                    alertService.createAlert(alertDto);
+                });
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS);
     }

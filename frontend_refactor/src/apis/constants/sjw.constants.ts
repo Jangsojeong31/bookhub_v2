@@ -80,7 +80,7 @@ const ALERT_COMMON_MODULE_URL = `${API_DOMAIN}/api/v1/common/alerts`;
 export const GET_ALERT_URL = `${ALERT_COMMON_MODULE_URL}/all/{employeeId}`;
 
 // 읽지 않은 알람 전체 조회
-export const GET_UNREAD_ALERT_URL = `${ALERT_COMMON_MODULE_URL}/unread/{employeeId}`;
+export const GET_UNREAD_ALERT_URL = `${ALERT_COMMON_MODULE_URL}/unread`;
 
 // 알람 읽음 처리
 export const PUT_ALERT_URL = `${ALERT_COMMON_MODULE_URL}/read`;

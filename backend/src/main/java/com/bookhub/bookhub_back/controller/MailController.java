@@ -26,7 +26,7 @@ public class MailController {
         return mailService.sendEmailFindId(dto);
     }
 
-    // 아이디 찾기 시 이메일 인증 (토큰 검증)
+    // 아이디 찾기 시 이메일 인증 (토큰 검증), 아이디 제공
     @GetMapping("/login-id-find")
     public Mono<ResponseEntity<ResponseDto<String>>> verifyEmailId(@RequestParam String token) {
         return mailService.verifyEmailId(token);

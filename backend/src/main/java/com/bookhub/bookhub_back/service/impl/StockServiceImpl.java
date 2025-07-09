@@ -5,6 +5,7 @@ import com.bookhub.bookhub_back.common.constants.ResponseMessage;
 import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 import com.bookhub.bookhub_back.common.enums.StockActionType;
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
 import com.bookhub.bookhub_back.dto.stock.request.StockUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockListResponseDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockUpdateResponseDto;
@@ -99,30 +100,30 @@ public class StockServiceImpl implements StockService {
         stockLogRepository.save(log);
 
         // 알림 기능: 매니저에게 STOCK_LOW 알림
-//        if ((actionType == StockActionType.OUT || actionType == StockActionType.LOSS) && updatedAmount <= 5) {
-//            Authority managerAuthority = authorityRepository.findByAuthorityName("MANAGER")
-//                    .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
-//
-//            final Stock finalStock = stock;
-//
-//            String alertType = (updatedAmount == 0) ? "STOCK_OUT" : "STOCK_LOW";
-//            String message = "[" + stock.getBookIsbn().getBookTitle() + "] 도서의 재고가 "
-//                    + (updatedAmount == 0 ? "모두 소진되었습니다." : "부족합니다 (남은 수량: " + updatedAmount + "권)");
-//
-//            employeeRepository.findAll().stream()
-//                    .filter(emp -> emp.getAuthorityId().equals(managerAuthority) && emp.getBranchId().equals(finalStock.getBranchId()))
-//                    .forEach(manager -> {
-//                        AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
-//                                .employeeId(manager.getEmployeeId())
-//                                .alertType(alertType)
-//                                .message(message)
-//                                .alertTargetTable("STOCKS")
-//                                .targetPk(stock.getStockId())
-//                                .targetIsbn(String.valueOf(stock.getBookIsbn()))
-//                                .build();
-//                        alertService.createAlert(alertDto);
-//                    });
-//        }
+        if ((actionType == StockActionType.OUT || actionType == StockActionType.LOSS) && updatedAmount <= 5) {
+            Authority managerAuthority = authorityRepository.findByAuthorityName("MANAGER")
+                    .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
+
+            final Stock finalStock = stock;
+
+            String alertType = (updatedAmount == 0) ? "STOCK_OUT" : "STOCK_LOW";
+            String message = "[" + stock.getBookIsbn().getBookTitle() + "] 도서의 재고가 "
+                    + (updatedAmount == 0 ? "모두 소진되었습니다." : "부족합니다 (남은 수량: " + updatedAmount + "권)");
+
+            employeeRepository.findAll().stream()
+                    .filter(emp -> emp.getAuthorityId().equals(managerAuthority) && emp.getBranchId().equals(finalStock.getBranchId()))
+                    .forEach(manager -> {
+                        AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
+                                .employeeId(manager.getEmployeeId())
+                                .alertType(alertType)
+                                .message(message)
+                                .alertTargetTable("STOCKS")
+                                .targetPk(finalStock.getStockId())
+                                .targetIsbn(String.valueOf(finalStock.getBookIsbn()))
+                                .build();
+                        alertService.createAlert(alertDto);
+                    });
+        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }

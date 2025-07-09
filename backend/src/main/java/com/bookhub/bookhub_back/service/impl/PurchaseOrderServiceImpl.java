@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.common.enums.AlertType;
 import com.bookhub.bookhub_back.common.enums.PurchaseOrderStatus;
 import com.bookhub.bookhub_back.common.util.DateUtils;
 import com.bookhub.bookhub_back.dto.ResponseDto;
+import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.request.PurchaseOrderApproveRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.request.PurchaseOrderRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.response.PurchaseOrderResponseDto;
@@ -77,6 +78,26 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         List<PurchaseOrderResponseDto> responseDtos = purchaseOrders.stream()
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
+
+        // 알림 기능
+        Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
+
+        for (PurchaseOrder savedOrder : purchaseOrders) {
+            for (Employee admin : employeeRepository.findAll().stream()
+                    .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
+                    .toList()) {
+
+                alertService.createAlert(AlertCreateRequestDto.builder()
+                        .employeeId(admin.getEmployeeId())
+                        .alertType(String.valueOf(AlertType.PURCHASE_REQUESTED))
+                        .alertTargetTable("PURCHASE_ORDERS")
+                        .targetPk(savedOrder.getPurchaseOrderId())
+                        .message("지점 " + savedOrder.getBranchId().getBranchName() +
+                                "에서 [" + savedOrder.getBookIsbn().getBookTitle() + "] 발주 요청이 있습니다.")
+                        .build());
+            }
+        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
     }
@@ -151,8 +172,16 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
         PurchaseOrderApproval savedApproval = purchaseOrderApprovalRepository.save(pOA);
 
-        // 수령 확인 자동 생성 (승인됐을때 자동 생성)
+        // 알림 기능
+        alertService.createAlert(AlertCreateRequestDto.builder()
+                .employeeId(approvedPurchaseOrder.getEmployeeId().getEmployeeId()) // 발주 요청 담당자
+                .alertType(String.valueOf(AlertType.PURCHASE_APPROVED))
+                .alertTargetTable("PURCHASE_APPROVALS")
+                .targetPk(approvedPurchaseOrder.getPurchaseOrderId()) // 각 발주 ID
+                .message("["+approvedPurchaseOrder.getBookIsbn().getBookTitle()+"]에 대한 발주 요청이 승인되었습니다.")
+                .build());
 
+        // 수령 확인 자동 생성 (승인됐을때 자동 생성)
 //        if(savedApproval.isApproved()) {
             BookReceptionApproval reception = BookReceptionApproval.builder()
                     .bookIsbn(approvedPurchaseOrder.getBookIsbn().getBookIsbn())

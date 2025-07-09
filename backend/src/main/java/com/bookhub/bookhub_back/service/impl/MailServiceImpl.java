@@ -81,7 +81,7 @@ public class MailServiceImpl implements MailService {
         });
     }
 
-    // 아이디 찾기 시 이메일 인증 (토큰 검증)
+    // 아이디 찾기 시 이메일 인증 (토큰 검증), 아이디 제공
     @Override
     public Mono<ResponseEntity<ResponseDto<String>>> verifyEmailId(String token) {
         return Mono.fromCallable(() -> {

@@ -6,32 +6,17 @@ import { AlertResponseDto } from "@/dtos/alert/response/alert.response.dto";
 
 // 미확인 알림 목록 조회
 export const getUnreadAlerts = async (
-  employeeId: number,
   accessToken: string
 ): Promise<ResponseDto<any[]>> => {
   try {
-    const url = GET_UNREAD_ALERT_URL.replace("{employeeId}", String(employeeId));
-    const response = await axiosInstance.get(url, bearerAuthorization(accessToken));
+    const response = await axiosInstance.get(GET_UNREAD_ALERT_URL, bearerAuthorization(accessToken));
     return responseSuccessHandler(response);
   } catch (error) {
     return responseErrorHandler(error as AxiosError<ResponseDto>);
   }
 };
 
-// 모든 알림 조회
-export const getAllAlerts = async (
-  employeeId: number,
-  accessToken: string
-): Promise<ResponseDto<AlertResponseDto[]>> => {
-  try {
-    const url = GET_ALERT_URL.replace("{employeeId}", String(employeeId));
-    const response = await axiosInstance.get(url, bearerAuthorization(accessToken));
-    return responseSuccessHandler(response);
-  } catch (error) {
-    return responseErrorHandler(error as AxiosError<ResponseDto>);
-  }
-};
-
+// 알림 읽음 처리
 export const markAlertsAsRead = async (
   alertIds: number[],
   accessToken: string
@@ -48,6 +33,7 @@ export const markAlertsAsRead = async (
   }
 };
 
+// 안읽은 알림 개수 
 export async function getUnreadAlertCount(employeeId: number, token: string): Promise<ResponseDto<number>> {
   const res = await axios.get(`/api/alerts/unread-count?employeeId=${employeeId}`, {
     headers: {
