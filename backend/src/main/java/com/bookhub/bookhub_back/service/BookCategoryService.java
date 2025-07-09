@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.dto.category.request.CategoryUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryCreateResponseDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryTreeResponseDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryUpdateResponseDto;
+import com.bookhub.bookhub_back.dto.policy.response.DiscountPolicyDetailResponseDto;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface BookCategoryService {
     ResponseDto<CategoryUpdateResponseDto> updateCategory(Long categoryId, CategoryUpdateRequestDto dto);
 
     ResponseDto<Void> deleteCategory(Long categoryId);
+
+    ResponseDto<DiscountPolicyDetailResponseDto> getPolicyByCategoryId(Long categoryId);
 }

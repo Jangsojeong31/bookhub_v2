@@ -48,7 +48,7 @@ export const GET_PARENT_CATEGORY_URL = `${CATEGORY_MODULE_URL}/roots`;
 export const PUT_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}`;
 
 // 카테고리 삭제
-export const DELETE_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}`;
+export const DELETE_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}/isInactive`;
 
 // 카테고리 ID로 연결된 할인정책 조회
 export const GET_POLICY_BY_CATEGORYID_URL = (categoryId : number) => `${API_DOMAIN}/api/v1/${COMMON}/categories/${categoryId}/policy`

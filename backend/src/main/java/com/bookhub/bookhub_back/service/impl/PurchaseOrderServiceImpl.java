@@ -11,9 +11,11 @@ import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.request.PurchaseOrderApproveRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.request.PurchaseOrderRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.response.PurchaseOrderResponseDto;
+import com.bookhub.bookhub_back.dto.reception.request.ReceptionCreateRequestDto;
 import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.repository.*;
 import com.bookhub.bookhub_back.service.AlertService;
+import com.bookhub.bookhub_back.service.BookReceptionApprovalService;
 import com.bookhub.bookhub_back.service.PurchaseOrderService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -33,7 +35,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final EmployeeRepository employeeRepository;
     private final BookRepository bookRepository;
     private final AlertService alertService;
-    private final BookReceptionApprovalRepository bookReceptionApprovalRepository;
+    private final BookReceptionApprovalService bookReceptionApprovalService;
     private final AuthorityRepository authorityRepository;
 
     // 발주 요청서 작성
@@ -135,7 +137,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findRequestedPurchaseOrders();
 
         List<PurchaseOrderResponseDto> responseDtos = purchaseOrders.stream()
-                .map(order -> toResponseDto(order))
+                .map(this::toResponseDto)
                 .collect(Collectors.toList());
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
@@ -181,21 +183,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                 .message("["+approvedPurchaseOrder.getBookIsbn().getBookTitle()+"]에 대한 발주 요청이 승인되었습니다.")
                 .build());
 
-        // 수령 확인 자동 생성 (승인됐을때 자동 생성)
-//        if(savedApproval.isApproved()) {
-            BookReceptionApproval reception = BookReceptionApproval.builder()
-                    .bookIsbn(approvedPurchaseOrder.getBookIsbn().getBookIsbn())
-                    .receptionEmployeeId(null)
-                    .branchName(approvedPurchaseOrder.getBranchId().getBranchName())
-                    .bookTitle(approvedPurchaseOrder.getBookIsbn().getBookTitle())
-                    .purchaseOrderAmount(approvedPurchaseOrder.getPurchaseOrderAmount())
-                    .isReceptionApproved(false)
-                    .createdAt(null)
-                    .purchaseOrderApprovalId(savedApproval)
+        // 수령 확인 생성 (승인됐을때 자동 생성)
+        if(savedApproval.isApproved()) {
+            ReceptionCreateRequestDto requestDto = ReceptionCreateRequestDto.builder()
+                    .purchaseOrderApprovalId(savedApproval.getPurchaseOrderApprovalId())
+                    .receivingBranch(approvedPurchaseOrder.getBranchId())
                     .build();
 
-            bookReceptionApprovalRepository.save(reception);
-//        }
+            bookReceptionApprovalService.createReception(requestDto);
+        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
@@ -203,7 +199,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     // responseDto 변환 메서드
     public PurchaseOrderResponseDto toResponseDto(PurchaseOrder order) {
 
-        PurchaseOrderResponseDto responseDto = PurchaseOrderResponseDto.builder()
+        return PurchaseOrderResponseDto.builder()
                 .purchaseOrderId(order.getPurchaseOrderId())
                 .branchName(order.getBranchId().getBranchName())
                 .branchLocation(order.getBranchId().getBranchLocation())
@@ -216,7 +212,5 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                 .purchaseOrderAt(DateUtils.format(order.getPurchaseOrderAt()))
                 .purchaseOrderStatus(order.getPurchaseOrderStatus())
                 .build();
-
-        return responseDto;
     }
 }

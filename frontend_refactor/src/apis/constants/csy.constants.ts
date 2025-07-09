@@ -91,7 +91,7 @@ export const STOCK_SEARCH_BOOK_URL = (
   if (isbn) queryParams.append("isbn", isbn);
   if (branchName) queryParams.append("branchName", branchName);
 
-  return `${STOCK_BASE_URL}/?${queryParams.toString()}`;
+  return `${STOCK_BASE_URL}?${queryParams.toString()}`;
 }
 
 //&StockLog
@@ -112,7 +112,7 @@ export const STOCK_LOGS_BY_BRANCH = (
   if (start) queryParams.append("start", start);
   if (end) queryParams.append("end", end);
 
-  return `${STOCK_LOG_BASE_URL}/branch/${branchId}/?${queryParams.toString()}`;
+  return `${STOCK_LOG_BASE_URL}/branch/${branchId}?${queryParams.toString()}`;
 }
 
 // 담당 사원별 재고 로그 조회

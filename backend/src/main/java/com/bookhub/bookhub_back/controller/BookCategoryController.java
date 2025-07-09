@@ -8,6 +8,7 @@ import com.bookhub.bookhub_back.dto.category.request.CategoryUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryCreateResponseDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryTreeResponseDto;
 import com.bookhub.bookhub_back.dto.category.response.CategoryUpdateResponseDto;
+import com.bookhub.bookhub_back.dto.policy.response.DiscountPolicyDetailResponseDto;
 import com.bookhub.bookhub_back.service.BookCategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.V1 + ApiMappingPattern.ADMIN + "/categories")
+@RequestMapping(ApiMappingPattern.V1)
 @RequiredArgsConstructor
 public class BookCategoryController {
     private final BookCategoryService bookCategoryService;
@@ -62,7 +63,7 @@ public class BookCategoryController {
     }
 
     // 카테고리 삭제
-    @DeleteMapping(BOOK_CATEGORY_ADMIN + "/{categoryId}")
+    @PutMapping(BOOK_CATEGORY_ADMIN + "/{categoryId}/isInactive")
     public ResponseEntity<ResponseDto<Void>> deleteCategory(
             @PathVariable Long categoryId
     ) {
@@ -70,11 +71,12 @@ public class BookCategoryController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
-//    // 카테고리 ID로 적용된 할인 정책 조회
-//    @GetMapping("/{categoryId}/policy")
-//    public ResponseDto<?> getPolicyByCategory(
-//            @PathVariable("categoryId") Long categoryId
-//    ) {
-//        return bookCategoryService.getPolicyByCategoryId(categoryId);
-//    }
+    // 카테고리 ID로 적용된 할인 정책 조회
+    @GetMapping(BOOK_CATEGORY_COMMON + "/{categoryId}/policy")
+    public ResponseEntity<ResponseDto<DiscountPolicyDetailResponseDto>> getPolicyByCategory(
+            @PathVariable("categoryId") Long categoryId
+    ) {
+        ResponseDto<DiscountPolicyDetailResponseDto> response = bookCategoryService.getPolicyByCategoryId(categoryId);
+        return ResponseDto.toResponseEntity(HttpStatus.OK, response);
+    }
 }

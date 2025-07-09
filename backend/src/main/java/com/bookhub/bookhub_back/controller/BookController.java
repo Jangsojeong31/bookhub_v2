@@ -32,7 +32,7 @@ public class BookController {
     @PostMapping(BOOK_ADMIN)
     public ResponseEntity<ResponseDto<BookResponseDto>> createBook(
             @AuthenticationPrincipal String loginId,
-            @Valid @RequestBody BookCreateRequestDto dto,
+            @RequestPart("dto") @Valid BookCreateRequestDto dto,
             @RequestPart(value = "coverImageFile", required = false) MultipartFile coverImageFile
     ) throws Exception {
         ResponseDto<BookResponseDto> response = bookService.createBook(dto, loginId, coverImageFile);
@@ -53,7 +53,7 @@ public class BookController {
     public ResponseEntity<ResponseDto<BookResponseDto>> updateBook(
             @PathVariable String isbn,
             @AuthenticationPrincipal String loginId,
-            @Valid @RequestBody BookUpdateRequestDto dto,
+            @RequestPart("dto") @Valid BookUpdateRequestDto dto,
             @RequestPart(value = "coverImageFile", required = false) MultipartFile coverImageFile
     ) throws Exception {
         ResponseDto<BookResponseDto> response = bookService.updateBook(isbn, dto, loginId, coverImageFile);

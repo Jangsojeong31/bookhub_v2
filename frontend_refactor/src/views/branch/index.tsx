@@ -8,14 +8,6 @@ function Branch() {
   return (
     <>
       <Route
-        path="/branches"
-        element={
-          <RequireAuth allowedRoles={["ADMIN"]}>
-            <BranchSearch />
-          </RequireAuth>
-        }
-      />
-      <Route
         path="/branches/manage"
         element={
           <RequireAuth allowedRoles={["ADMIN"]}>

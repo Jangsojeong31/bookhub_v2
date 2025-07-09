@@ -13,18 +13,21 @@ public interface BookRepository extends JpaRepository<Book, String> {
 
     @Query("""
     SELECT b FROM Book b
-    JOIN b.authorId a
-    JOIN b.publisherId p
-    JOIN b.categoryId c
     WHERE
         b.bookStatus != com.bookhub.bookhub_back.common.enums.BookStatus.HIDDEN AND (
             b.bookIsbn = :keyword OR
             LOWER(b.bookTitle) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
-            LOWER(a.authorName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
-            LOWER(p.publisherName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
-            LOWER(c.categoryName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
-            LOWER(c.categoryType) LIKE LOWER(CONCAT('%', :keyword, '%'))
+            LOWER(b.authorId.authorName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+            LOWER(b.publisherId.publisherName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+            LOWER(b.categoryId.categoryName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR
+            LOWER(b.categoryId.categoryType) LIKE LOWER(CONCAT('%', :keyword, '%'))
         )
 """)
     List<Book> findAllByKeywordContaining(@Param("keyword") String keyword);
+
+    @Query("""
+    SELECT b FROM Book b
+    WHERE LOWER(b.bookTitle) LIKE LOWER(CONCAT('%', :bookTitle, '%'))
+""")
+    List<Book> findAllByBookTitleContaining(@Param("bookTitle") String bookTitle);
 }

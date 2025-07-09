@@ -6,6 +6,7 @@ import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 import com.bookhub.bookhub_back.common.enums.AlertType;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
+import com.bookhub.bookhub_back.dto.reception.request.ReceptionCreateRequestDto;
 import com.bookhub.bookhub_back.dto.reception.response.ReceptionResponseDto;
 import com.bookhub.bookhub_back.dto.stock.request.StockUpdateRequestDto;
 import com.bookhub.bookhub_back.entity.*;
@@ -31,6 +32,28 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
     private final StockService stockService;
     private final AlertService alertService;
     private final AuthorityRepository authorityRepository;
+
+    @Override
+    @Transactional
+    public ResponseDto<Void> createReception(ReceptionCreateRequestDto dto) {
+        PurchaseOrderApproval purchaseOrderApproval = purchaseOrderApprovalRepository.findById(dto.getPurchaseOrderApprovalId())
+                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 발주 승인 입니다."));
+
+        BookReceptionApproval bookReceptionApproval = BookReceptionApproval.builder()
+                .bookIsbn(purchaseOrderApproval.getPurchaseOrderId().getBookIsbn().getBookIsbn())
+                .receptionEmployeeId(null)
+                .branchName(dto.getReceivingBranch().getBranchName())
+                .bookTitle(purchaseOrderApproval.getPurchaseOrderId().getBookIsbn().getBookTitle())
+                .purchaseOrderAmount(purchaseOrderApproval.getPurchaseOrderId().getPurchaseOrderAmount())
+                .isReceptionApproved(false)
+                .createdAt(null)
+                .purchaseOrderApprovalId(purchaseOrderApproval)
+                .build();
+
+        bookReceptionApprovalRepository.save(bookReceptionApproval);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS) ;
+    }
 
     // 수령 확인
     @Override
@@ -135,7 +158,7 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
                 .purchaseOrderAmount(approval.getPurchaseOrderAmount())
                 .isReceptionApproved(approval.getIsReceptionApproved())
                 .receptionDateAt(approval.getCreatedAt())
-                .receptionEmployeeName(approval.getReceptionEmployeeId().getName() == null ? null: approval.getReceptionEmployeeId().getName())
+                .receptionEmployeeName(approval.getReceptionEmployeeId() == null ? null: approval.getReceptionEmployeeId().getName())
                 .build();
     }
 }
