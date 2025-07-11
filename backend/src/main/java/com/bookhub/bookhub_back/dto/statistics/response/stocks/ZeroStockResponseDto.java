@@ -1,17 +1,13 @@
 package com.bookhub.bookhub_back.dto.statistics.response.stocks;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 @AllArgsConstructor
-@Setter
-public class TimeStockChartResponseDto {
+public class ZeroStockResponseDto {
     private String branchName;
-    private int month;
-    private Long inAmount;
-    private Long lossAmount;
+    private Long zeroStockCount;
 }

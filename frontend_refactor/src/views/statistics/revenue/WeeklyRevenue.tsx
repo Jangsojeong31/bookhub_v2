@@ -65,9 +65,9 @@ function WeeklyRevenue() {
     }
 
     data.forEach((item) => {
-      if (!item.orderDate) return;
+      if (!item.orderedDate) return;
 
-      const date = parseISO(item.orderDate);
+      const date = parseISO(item.orderedDate);
       if (date.getMonth() + 1 !== selectedMonth) return;
 
       const week = getWeekOfMonth(date);

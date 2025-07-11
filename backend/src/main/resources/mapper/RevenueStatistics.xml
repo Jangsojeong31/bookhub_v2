@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bookhub.bookhub_back.mapper.RevenueStatisticsMapper">
+
+<!--1.-->
+    <select id="findRevenueGroupedByWeekday" resultType="WeekdayRevenueResponseDto">
+        SELECT
+            weekday,
+            COALESCE(SUM(totalRevenue), 0) AS totalRevenue
+        FROM (
+            SELECT
+                CASE DAYOFWEEK(co.ordered_at)
+                WHEN 1 THEN '일'
+                WHEN 2 THEN '월'
+                WHEN 3 THEN '화'
+                WHEN 4 THEN '수'
+                WHEN 5 THEN '목'
+                WHEN 6 THEN '금'
+                WHEN 7 THEN '토'
+                END AS weekday,
+                co.customer_order_total_price AS totalRevenue
+            FROM customer_orders co
+            WHERE YEAR(co.ordered_at) = #{year}
+            AND MONTH(co.ordered_at) BETWEEN #{startMonth} AND #{endMonth}
+         ) AS sub
+        GROUP BY weekday
+        ORDER BY FIELD(weekday, '월', '화', '수', '목', '금', '토', '일');
+    </select>
+
+<!--2. 주간 매출-->
+    <select id="findWeeklyRevenue" resultType="WeeklyRevenueStatisticsDto">
+        SELECT
+            DATE(co.ordered_at) AS orderedDate,
+            SUM(co.customer_order_total_price) AS totalRevenue
+        FROM customer_orders co
+            LEFT JOIN refund_orders r
+        ON r.customer_order_id = co.customer_order_id
+        WHERE YEAR(co.ordered_at) = #{year}
+          AND MONTH(co.ordered_at) = #{month}
+          AND r.customer_order_id IS NULL
+        GROUP BY orderedDate
+        ORDER BY orderedDate ASC;
+    </select>
+
+<!--3. 월간 매출 -->
+    <select id="findMonthlyRevenue" resultType="MonthlyRevenueStatisticsDto">
+        SELECT
+            MONTH(co.ordered_at) AS orderedMonth,
+            SUM(co.customer_order_total_price) AS totalRevenue
+        FROM customer_orders co
+            LEFT JOIN refund_orders r
+        ON r.customer_order_id = co.customer_order_id
+        WHERE YEAR(co.ordered_at) = #{year}
+          AND r.customer_order_id IS NULL
+        GROUP BY orderedMonth
+        ORDER BY orderedMonth ASC;
+    </select>
+
+<!--4.-->
+    <select id="findByBranchByDate" resultType="BranchRevenueResponseDto">
+        SELECT
+            br.branch_id,
+            br.branch_name,
+            bc.category_name,
+        SUM(cod.price * cod.amount) AS totalRevenue
+        FROM customer_orders co
+        JOIN branches br ON br.branch_id = co.branch_id
+        JOIN customer_order_details cod ON cod.customer_order_id = co.customer_order_id
+        JOIN books b ON b.book_isbn = cod.book_isbn
+        JOIN book_categories bc ON bc.category_id = b.category_id
+        WHERE DATE(ordered_at) BETWEEN #{startDate} AND #{endDate}
+        GROUP BY br.branch_id, br.branch_name, bc.category_name
+        ORDER BY br.branch_id;
+    </select>
+</mapper>

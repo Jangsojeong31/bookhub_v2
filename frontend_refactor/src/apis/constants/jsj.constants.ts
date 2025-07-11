@@ -101,7 +101,7 @@ export const GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL = (
 
 // & 4. sales-quantity statistics
 // 베이스 URL
-const BEST_SELLER_API = `${API_DOMAIN}/api/v1/${MANAGER}/statistics/sales-quantity/bestseller`;
+const BEST_SELLER_API = `${API_DOMAIN}/api/v1/${COMMON}/statistics/bestSeller`;
 const SALES_QUANTITY_API = `${API_DOMAIN}/api/v1/${ADMIN}/statistics/sales-quantity`;
 
 // 베스트셀러
