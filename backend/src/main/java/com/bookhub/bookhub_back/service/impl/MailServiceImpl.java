@@ -12,7 +12,7 @@ import com.bookhub.bookhub_back.dto.mail.request.PasswordResetRequestDto;
 import com.bookhub.bookhub_back.entity.Branch;
 import com.bookhub.bookhub_back.entity.Employee;
 import com.bookhub.bookhub_back.entity.EmployeeSignUpApproval;
-import com.bookhub.bookhub_back.provider.JwtProvider;
+import com.bookhub.bookhub_back.security.JwtProvider;
 import com.bookhub.bookhub_back.repository.BranchRepository;
 import com.bookhub.bookhub_back.repository.EmployeeRepository;
 import com.bookhub.bookhub_back.repository.EmployeeSignUpApprovalRepository;

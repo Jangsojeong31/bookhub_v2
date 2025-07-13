@@ -1,4 +1,4 @@
-package com.bookhub.bookhub_back.service.impl;
+package com.bookhub.bookhub_back.service.statistics.Impl;
 
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessage;

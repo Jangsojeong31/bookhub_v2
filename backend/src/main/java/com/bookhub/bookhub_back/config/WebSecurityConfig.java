@@ -1,6 +1,6 @@
 package com.bookhub.bookhub_back.config;
 
-import com.bookhub.bookhub_back.filter.JwtAuthenticationFilter;
+import com.bookhub.bookhub_back.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

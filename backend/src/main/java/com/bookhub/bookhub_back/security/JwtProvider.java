@@ -1,4 +1,4 @@
-package com.bookhub.bookhub_back.provider;
+package com.bookhub.bookhub_back.security;
 
 import com.bookhub.bookhub_back.entity.Authority;
 import io.jsonwebtoken.Claims;

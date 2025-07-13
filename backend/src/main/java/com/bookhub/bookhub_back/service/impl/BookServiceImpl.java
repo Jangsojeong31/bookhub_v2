@@ -9,7 +9,6 @@ import com.bookhub.bookhub_back.dto.book.request.BookCreateRequestDto;
 import com.bookhub.bookhub_back.dto.book.request.BookUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.book.response.BookResponseDto;
 import com.bookhub.bookhub_back.entity.*;
-import com.bookhub.bookhub_back.provider.JwtProvider;
 import com.bookhub.bookhub_back.repository.*;
 import com.bookhub.bookhub_back.service.BookLogService;
 import com.bookhub.bookhub_back.service.BookService;

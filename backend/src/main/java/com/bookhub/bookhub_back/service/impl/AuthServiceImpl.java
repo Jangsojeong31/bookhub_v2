@@ -12,7 +12,7 @@ import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignUpRequestDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import com.bookhub.bookhub_back.dto.auth.response.EmployeeSignInResponseDto;
 import com.bookhub.bookhub_back.entity.*;
-import com.bookhub.bookhub_back.provider.JwtProvider;
+import com.bookhub.bookhub_back.security.JwtProvider;
 import com.bookhub.bookhub_back.repository.*;
 import com.bookhub.bookhub_back.service.AlertService;
 import com.bookhub.bookhub_back.service.AuthService;

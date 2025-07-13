@@ -6,6 +6,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.request.PurchaseOrderApproveRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.request.PurchaseOrderRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.response.PurchaseOrderResponseDto;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.PurchaseOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,10 @@ public class PurchaseOrderController {
     // 발주 요청서 작성
     @PostMapping(PURCHASE_ORDER_MANAGER)
     public ResponseEntity<ResponseDto<PurchaseOrderResponseDto>> createPurchaseOrder(
-            @AuthenticationPrincipal String loginId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody PurchaseOrderRequestDto dto
     ) {
+        String loginId = userPrincipal.getLoginId();
         ResponseDto<PurchaseOrderResponseDto> response = purchaseOrderService.createPurchaseOrder(loginId, dto);
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
