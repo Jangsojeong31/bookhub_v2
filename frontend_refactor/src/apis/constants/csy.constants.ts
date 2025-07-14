@@ -109,11 +109,29 @@ export const SEARCH_STOCKS_URL = (
 }
 
 //&StockLog
-export const STOCK_LOG_BASE_URL =  `${API_DOMAIN}/api/v1/${ADMIN}/stock-logs`;
+export const STOCK_LOG_ADMIN_URL =  `${API_DOMAIN}/api/v1/${ADMIN}/stock-logs`;
+export const STOCK_LOG_MANAGER_URL =  `${API_DOMAIN}/api/v1/${MANAGER}/stock-logs`;
+// 조건별 재고 로그 조회 
+export const SEARCH_STOCK_LOGS_URL = (
+  branchName: string,
+  type: string,
+  bookIsbn: string,
+  start: string,
+  end: string
+) => {
+  const queryParams = new URLSearchParams();
+  
+  if (branchName) queryParams.append("branchName", branchName);
+  if (type) queryParams.append("type", type);
+  if (bookIsbn) queryParams.append("bookIsbn", bookIsbn);
+  if (start) queryParams.append("start", start);
+  if (end) queryParams.append("end", end);
+
+  return `${STOCK_LOG_ADMIN_URL}?${queryParams.toString()}`;
+}
 
 // 지점별 재고 로그 조회
 export const STOCK_LOGS_BY_BRANCH = (
-  branchId: number,
   type: string,
   bookIsbn: string,
   start: string,
@@ -126,12 +144,9 @@ export const STOCK_LOGS_BY_BRANCH = (
   if (start) queryParams.append("start", start);
   if (end) queryParams.append("end", end);
 
-  return `${STOCK_LOG_BASE_URL}/branch/${branchId}?${queryParams.toString()}`;
+  return `${STOCK_LOG_MANAGER_URL}?${queryParams.toString()}`;
 }
 
-// 담당 사원별 재고 로그 조회
-export const STOCK_LOGS_BY_EMPLOYEE = (employeeId: number) =>
-  `${STOCK_LOG_BASE_URL}/employee/${employeeId}`;
 
 // & 그 외
 // 통계 베이스 URL

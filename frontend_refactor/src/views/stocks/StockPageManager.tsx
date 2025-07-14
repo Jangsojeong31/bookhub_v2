@@ -73,6 +73,8 @@ function StockPage() {
 
   return (
     <div className="stock-page-container">
+                <h2>재고 관리 [ {branchName} ]</h2>
+
       <div className="topBar">
         {/* <div style={{ display: "flex", gap: 12 }}> */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
@@ -97,10 +99,7 @@ function StockPage() {
             검색
           </button>
           </div>
-          <div style={{flexGrow: 1, textAlign: "right"}}>
-
-          <h3 style={{margin: 0}}>[{branchName}] 재고 검색</h3>
-          </div>
+        
         
           </div>
       </div>

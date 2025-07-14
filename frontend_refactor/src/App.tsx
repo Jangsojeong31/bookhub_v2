@@ -77,9 +77,9 @@ function App() {
               <Route
                 path="/stock-logs/*"
                 element={
-                  <RequireAuth allowedRoles={["ADMIN"]}>
+                  
                     <StockLog />
-                  </RequireAuth>
+                  
                 }
               />
               <Route path="/stocks/*" element={<Stock />} />

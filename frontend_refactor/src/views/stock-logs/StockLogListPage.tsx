@@ -9,19 +9,20 @@ import { useEmployeeStore } from "@/stores/employee.store";
 const StockLogListPage = () => {
   // const { branchId } = useParams();
   const navigate = useNavigate();
-  const employee = useEmployeeStore((state) => state.employee)
-  
-    const branchId = employee?.branchId ?? null
-    const employeeId = employee?.employeeId ?? null
   const [cookies] = useCookies(["accessToken"]);
   const [logs, setLogs] = useState<StockLogResponseDto[]>([]);
 
+  const [branchName, setBranchName] = useState("");
   const [searchForm, setSearchForm] = useState({
     type: "",
     bookIsbn: "",
     start: "",
     end: "",
   });
+
+  useEffect(() => {
+    onSearchLogs();
+  }, [])
 
   const onSearchLogs = async() => {
     setLogs([]);
@@ -32,11 +33,8 @@ const StockLogListPage = () => {
           alert("인증 토큰이 없습니다.");
           return;
         }
-
-        if (!branchId) return;
     
         const response = await getStockLogsByBranch(
-          Number(branchId),
           type,
           bookIsbn,
           start,
@@ -52,6 +50,7 @@ const StockLogListPage = () => {
     
         if (Array.isArray(data)) {
           setLogs(data);
+          setBranchName(data[0].branchName);
           // setMessage("");
         } else {
           alert("올바른 검색 조건을 입력해주세요.");
@@ -61,14 +60,9 @@ const StockLogListPage = () => {
 
   return (
     <div className="stock-log-wrapper">
-      <div style={{marginTop: 10, marginBottom: 20}}>
-
-       <div className="button-group">
-        <button className="stock-button" onClick={() => navigate(`/stock-logs/branch`)}>지점 재고로그 조회</button>
-        <button className="stock-button" onClick={() => navigate(`/stock-logs/employee/${employeeId}`)}>나의 재고로그 조회</button>
-      </div>
-      </div>
-      <h2 className="stock-log-title">지점 재고로그 (branchId: {branchId})</h2>
+  
+    
+      <h2 className="stock-log-title">지점 재고로그 [{branchName}]</h2>
 
 
       <div style={{ display: "flex", gap: 20, height: 40 }}>

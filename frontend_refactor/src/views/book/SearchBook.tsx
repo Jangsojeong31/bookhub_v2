@@ -15,6 +15,12 @@ function SearchBook() {
 
   const [bookPolicyMap, setBookPolicyMap] = useState<Record<number, PolicyDetailResponseDto>>({});
   const [categoryPolicyMap, setCategoryPolicyMap] = useState<Record<number, PolicyDetailResponseDto>>({});
+  
+  const mapInput = (input: string) => {
+    if (input === "국내") return "DOMESTIC";
+    if (input === "해외") return "FOREIGN";
+    return input;
+  }
 
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 10;
@@ -26,8 +32,10 @@ function SearchBook() {
       return;
     }
 
+    const mappedKeyword = mapInput(keyword.trim());
+
     try {
-    const res = await searchBook(keyword, token);
+    const res = await searchBook(mappedKeyword, token);
     if (res.code !== "SU") throw new Error(res.message);
 
     const fetchedBooks = res.data || [];
@@ -125,8 +133,10 @@ function SearchBook() {
         <input
           className="book-input"
           value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="검색어를 입력하세요"
+          onChange={(e) => {
+            setKeyword(e.target.value)}
+          }
+          placeholder="검색어를 입력하세요(책 제목, 저자명, 출판사명, 카테고리명, 카테고리(국내/해외))"
         />
         <button type="button" className="button" onClick={handleSearch}>
           검색

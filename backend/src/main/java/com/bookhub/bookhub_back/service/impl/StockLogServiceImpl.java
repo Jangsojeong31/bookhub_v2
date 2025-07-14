@@ -13,11 +13,13 @@ import com.bookhub.bookhub_back.repository.BookRepository;
 import com.bookhub.bookhub_back.repository.BranchRepository;
 import com.bookhub.bookhub_back.repository.EmployeeRepository;
 import com.bookhub.bookhub_back.repository.StockLogRepository;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.StockLogService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,13 +33,15 @@ public class StockLogServiceImpl implements StockLogService {
     private final EmployeeRepository employeeRepository;
 
     @Override
-    public ResponseDto<List<StockLogResponseDto>> searchStockLogsByBranch(
-            Long branchId, StockActionType type, String bookIsbn, LocalDateTime start, LocalDateTime end
+    public ResponseDto<List<StockLogResponseDto>> searchStockLogs(
+            String branchName, String type, String bookIsbn, LocalDate start, LocalDate end
     ) {
-        Branch branch = branchRepository.findById(branchId)
-                .orElseThrow(EntityNotFoundException::new);
+        StockActionType enumType = null;
+        if (type != null && !type.isBlank()) {
+            enumType = StockActionType.valueOf(type.trim().toUpperCase());
+        }
 
-        List<StockLog> logs = stockLogRepository.searchStockLogsByConditions(branch, type, bookIsbn, start, end);
+        List<StockLog> logs = stockLogRepository.searchStockLogsByConditions(branchName, enumType, bookIsbn, start, end);
 
         List<StockLogResponseDto> responseDtos = logs.stream()
                 .map(stockLog -> StockLogResponseDto.builder()
@@ -54,11 +58,19 @@ public class StockLogServiceImpl implements StockLogService {
     }
 
     @Override
-    public ResponseDto<List<StockLogResponseDto>> searchStockLogsByEmployee(Long employeeId) {
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
+    public ResponseDto<List<StockLogResponseDto>> searchStockLogsByBranch(
+            UserPrincipal userPrincipal, String type, String bookIsbn, LocalDate start, LocalDate end
+    ) {
+        Branch branch = branchRepository.findById(userPrincipal.getBranchId())
+                .orElseThrow(EntityNotFoundException::new);
+        String branchName = branch.getBranchName();
 
-        List<StockLog> logs = stockLogRepository.findByEmployeeId(employee);
+        StockActionType enumType = null;
+        if (type != null && !type.isBlank()) {
+            enumType = StockActionType.valueOf(type.trim().toUpperCase());
+        }
+
+        List<StockLog> logs = stockLogRepository.searchStockLogsByConditions(branchName, enumType, bookIsbn, start, end);
 
         List<StockLogResponseDto> responseDtos = logs.stream()
                 .map(stockLog -> StockLogResponseDto.builder()
@@ -74,4 +86,5 @@ public class StockLogServiceImpl implements StockLogService {
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
     }
+
 }
