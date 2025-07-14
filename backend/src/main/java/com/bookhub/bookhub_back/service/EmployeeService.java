@@ -8,6 +8,7 @@ import com.bookhub.bookhub_back.dto.employee.request.EmployeeStatusUpdateRequest
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeListResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeSignUpApprovalsResponseDto;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public interface EmployeeService {
 
     ResponseDto<EmployeeResponseDto> getEmployeeById(Long employeeId);
 
-    ResponseDto<EmployeeSignUpApprovalsResponseDto> updateApproval(Long employeeId, @Valid EmployeeSignUpApprovalRequestDto dto, String loginId);
+    ResponseDto<EmployeeSignUpApprovalsResponseDto> updateApproval(Long employeeId, @Valid EmployeeSignUpApprovalRequestDto dto, UserPrincipal userPrincipal);
 
-    ResponseDto<Void> updateOrganization(Long employeeId, @Valid EmployeeOrganizationUpdateRequestDto dto, String loginId);
+    ResponseDto<Void> updateOrganization(Long employeeId, @Valid EmployeeOrganizationUpdateRequestDto dto, UserPrincipal userPrincipal);
 
-    ResponseDto<Void> updateStatus(Long employeeId, @Valid EmployeeStatusUpdateRequestDto dto, String loginId);
+    ResponseDto<Void> updateStatus(Long employeeId, @Valid EmployeeStatusUpdateRequestDto dto, UserPrincipal userPrincipal);
 }

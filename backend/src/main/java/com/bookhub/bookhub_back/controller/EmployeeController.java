@@ -9,6 +9,7 @@ import com.bookhub.bookhub_back.dto.employee.request.EmployeeStatusUpdateRequest
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeListResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeSignUpApprovalsResponseDto;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -57,9 +58,9 @@ public class EmployeeController {
     public ResponseEntity<ResponseDto<EmployeeSignUpApprovalsResponseDto>> updateApproval(
             @PathVariable Long employeeId,
             @Valid @RequestBody EmployeeSignUpApprovalRequestDto dto,
-            @AuthenticationPrincipal String loginId
-    ) {
-        ResponseDto<EmployeeSignUpApprovalsResponseDto> responseDto = employeeService.updateApproval(employeeId, dto, loginId);
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+            ) {
+        ResponseDto<EmployeeSignUpApprovalsResponseDto> responseDto = employeeService.updateApproval(employeeId, dto, userPrincipal);
         return ResponseDto.toResponseEntity(HttpStatus.OK, responseDto);
     }
 
@@ -68,9 +69,9 @@ public class EmployeeController {
     public ResponseEntity<ResponseDto<Void>> updateOrganization(
             @PathVariable Long employeeId,
             @Valid @RequestBody EmployeeOrganizationUpdateRequestDto dto,
-            @AuthenticationPrincipal String loginId
+            @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        ResponseDto<Void> responseDto = employeeService.updateOrganization(employeeId, dto, loginId);
+        ResponseDto<Void> responseDto = employeeService.updateOrganization(employeeId, dto, userPrincipal);
         return ResponseDto.toResponseEntity(HttpStatus.OK, responseDto);
     }
 
@@ -79,9 +80,9 @@ public class EmployeeController {
     public ResponseEntity<ResponseDto<Void>> updateStatus(
             @PathVariable Long employeeId,
             @Valid @RequestBody EmployeeStatusUpdateRequestDto dto,
-            @AuthenticationPrincipal String LoginId
+            @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        ResponseDto<Void> responseDto = employeeService.updateStatus(employeeId, dto, LoginId);
+        ResponseDto<Void> responseDto = employeeService.updateStatus(employeeId, dto, userPrincipal);
         return ResponseDto.toResponseEntity(HttpStatus.OK, responseDto);
     }
 

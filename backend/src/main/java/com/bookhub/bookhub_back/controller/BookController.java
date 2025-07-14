@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.dto.author.response.AuthorResponseDto;
 import com.bookhub.bookhub_back.dto.book.request.BookCreateRequestDto;
 import com.bookhub.bookhub_back.dto.book.request.BookUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.book.response.BookResponseDto;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.BookService;
 import jakarta.validation.Valid;
 import lombok.Getter;
@@ -31,11 +32,11 @@ public class BookController {
     // 도서 등록
     @PostMapping(BOOK_ADMIN)
     public ResponseEntity<ResponseDto<BookResponseDto>> createBook(
-            @AuthenticationPrincipal String loginId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart("dto") @Valid BookCreateRequestDto dto,
             @RequestPart(value = "coverImageFile", required = false) MultipartFile coverImageFile
     ) throws Exception {
-        ResponseDto<BookResponseDto> response = bookService.createBook(dto, loginId, coverImageFile);
+        ResponseDto<BookResponseDto> response = bookService.createBook(dto, userPrincipal, coverImageFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -52,11 +53,11 @@ public class BookController {
     @PutMapping(BOOK_ADMIN + "/{isbn}")
     public ResponseEntity<ResponseDto<BookResponseDto>> updateBook(
             @PathVariable String isbn,
-            @AuthenticationPrincipal String loginId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart("dto") @Valid BookUpdateRequestDto dto,
             @RequestPart(value = "coverImageFile", required = false) MultipartFile coverImageFile
     ) throws Exception {
-        ResponseDto<BookResponseDto> response = bookService.updateBook(isbn, dto, loginId, coverImageFile);
+        ResponseDto<BookResponseDto> response = bookService.updateBook(isbn, dto, userPrincipal, coverImageFile);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -64,9 +65,9 @@ public class BookController {
     @PutMapping(BOOK_ADMIN + "/{isbn}/hidden")
     public ResponseEntity<ResponseDto<Void>> hideBook(
             @PathVariable String isbn,
-            @AuthenticationPrincipal String loginId
+            @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        ResponseDto<Void> response = bookService.hideBook(isbn, loginId);
+        ResponseDto<Void> response = bookService.hideBook(isbn, userPrincipal);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

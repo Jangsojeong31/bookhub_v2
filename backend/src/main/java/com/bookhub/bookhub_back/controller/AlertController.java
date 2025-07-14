@@ -4,6 +4,7 @@ import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.alert.request.AlertReadRequestDto;
 import com.bookhub.bookhub_back.dto.alert.response.AlertResponseDto;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.AlertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,9 @@ public class AlertController {
     // 안읽은 알림 조회
     @GetMapping("/unread")
     public ResponseEntity<ResponseDto<List<AlertResponseDto>>> getUnreadAlert(
-            @AuthenticationPrincipal String loginId
-    ) {
-        ResponseDto<List<AlertResponseDto>> responseDto = alertService.getUnreadAlert(loginId);
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+            ) {
+        ResponseDto<List<AlertResponseDto>> responseDto = alertService.getUnreadAlert(userPrincipal.getLoginId());
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 

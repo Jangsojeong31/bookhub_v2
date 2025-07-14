@@ -10,6 +10,7 @@ import com.bookhub.bookhub_back.dto.book.request.BookUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.book.response.BookResponseDto;
 import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.repository.*;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.BookLogService;
 import com.bookhub.bookhub_back.service.BookService;
 import jakarta.persistence.EntityNotFoundException;
@@ -44,8 +45,8 @@ public class BookServiceImpl implements BookService {
     // 도서 등록
     @Override
     @Transactional
-    public ResponseDto<BookResponseDto> createBook(BookCreateRequestDto dto, String loginId, MultipartFile coverImageFile) throws IOException {
-        Employee employee = employeeRepository.findByLoginId(loginId)
+    public ResponseDto<BookResponseDto> createBook(BookCreateRequestDto dto, UserPrincipal userPrincipal, MultipartFile coverImageFile) throws IOException {
+        Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
         BookCategory category = categoryRepository.findById(dto.getCategoryId())
@@ -107,11 +108,11 @@ public class BookServiceImpl implements BookService {
     // 도서 수정
     @Override
     @Transactional
-    public ResponseDto<BookResponseDto> updateBook(String isbn, BookUpdateRequestDto dto, String loginId, MultipartFile coverImageFile) throws IOException {
-        Employee employee = employeeRepository.findByLoginId(loginId)
+    public ResponseDto<BookResponseDto> updateBook(String isbn, BookUpdateRequestDto dto, UserPrincipal userPrincipal, MultipartFile coverImageFile) throws IOException {
+        Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Book book = bookRepository.findById(dto.getIsbn())
+        Book book = bookRepository.findById(isbn)
                 .orElseThrow(EntityNotFoundException::new);
 
         BookCategory category = categoryRepository.findById(dto.getCategoryId())
@@ -155,7 +156,7 @@ public class BookServiceImpl implements BookService {
             bookLogService.logDiscountChange(updatedBook, oldRate != null ? oldRate : 0, newPolicy, employee);
         }
 
-        if (!oldStatus.equals(dto.getBookStatus())) {
+        if (oldStatus != BookStatus.valueOf(dto.getBookStatus().toUpperCase())) {
             bookLogService.logStatusChange(updatedBook, employee);
         }
 
@@ -165,8 +166,8 @@ public class BookServiceImpl implements BookService {
     // 도서 삭제(hidden 처리)
     @Override
     @Transactional
-    public ResponseDto<Void> hideBook(String isbn, String loginId) {
-        Employee employee = employeeRepository.findByLoginId(loginId)
+    public ResponseDto<Void> hideBook(String isbn, UserPrincipal userPrincipal) {
+        Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
         Book book = bookRepository.findById(isbn)

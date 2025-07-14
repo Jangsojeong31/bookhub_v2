@@ -14,6 +14,7 @@ import com.bookhub.bookhub_back.dto.purchaseOrder.response.PurchaseOrderResponse
 import com.bookhub.bookhub_back.dto.reception.request.ReceptionCreateRequestDto;
 import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.repository.*;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.AlertService;
 import com.bookhub.bookhub_back.service.BookReceptionApprovalService;
 import com.bookhub.bookhub_back.service.PurchaseOrderService;
@@ -22,8 +23,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +32,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final PurchaseOrderApprovalRepository purchaseOrderApprovalRepository;
     private final EmployeeRepository employeeRepository;
+    private final BranchRepository branchRepository;
     private final BookRepository bookRepository;
     private final AlertService alertService;
     private final BookReceptionApprovalService bookReceptionApprovalService;
@@ -41,11 +41,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     // 발주 요청서 작성
     @Override
     @Transactional
-    public ResponseDto<PurchaseOrderResponseDto> createPurchaseOrder(String loginId, PurchaseOrderRequestDto dto) {
-        Employee employee = employeeRepository.findByLoginId(loginId)
+    public ResponseDto<PurchaseOrderResponseDto> createPurchaseOrder(UserPrincipal userPrincipal, PurchaseOrderRequestDto dto) {
+        Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Branch branch = employee.getBranchId();
+        Branch branch = branchRepository.findById(userPrincipal.getBranchId())
+                .orElseThrow(EntityNotFoundException::new);
 
         Book book = bookRepository.findById(dto.getIsbn())
                 .orElseThrow(EntityNotFoundException::new);
@@ -68,12 +69,9 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     // 발주 요청서 조회
     @Override
     public ResponseDto<List<PurchaseOrderResponseDto>> searchPurchaseOrder(
-            String loginId, String employeeName, String bookIsbn, PurchaseOrderStatus purchaseOrderStatus
+            UserPrincipal userPrincipal, String employeeName, String bookIsbn, PurchaseOrderStatus purchaseOrderStatus
     ) {
-        Employee employee = employeeRepository.findByLoginId(loginId)
-                .orElseThrow(EntityNotFoundException::new);
-
-        Long branchId = employee.getBranchId().getBranchId();
+        Long branchId = userPrincipal.getBranchId();
 
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findByConditions(employeeName, bookIsbn, purchaseOrderStatus, branchId);
 
@@ -147,12 +145,12 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Override
     @Transactional
     public ResponseDto<PurchaseOrderResponseDto> approvePurchaseOrder(
-            String loginId, Long purchaseOrderId, PurchaseOrderApproveRequestDto dto
+            UserPrincipal userPrincipal, Long purchaseOrderId, PurchaseOrderApproveRequestDto dto
     ) {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        Employee employee = employeeRepository.findByLoginId(loginId)
+        Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
         if(purchaseOrder.getPurchaseOrderStatus() == PurchaseOrderStatus.REQUESTED) {

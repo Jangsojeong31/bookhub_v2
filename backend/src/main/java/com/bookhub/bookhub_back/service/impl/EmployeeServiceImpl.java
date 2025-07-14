@@ -21,6 +21,7 @@ import com.bookhub.bookhub_back.entity.EmployeeChangeLog;
 import com.bookhub.bookhub_back.entity.EmployeeExitLog;
 import com.bookhub.bookhub_back.entity.EmployeeSignUpApproval;
 import com.bookhub.bookhub_back.repository.*;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.AlertService;
 import com.bookhub.bookhub_back.service.EmployeeService;
 import jakarta.persistence.EntityNotFoundException;
@@ -117,7 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public ResponseDto<EmployeeSignUpApprovalsResponseDto> updateApproval(Long employeeId, EmployeeSignUpApprovalRequestDto dto, String loginId) {
+    public ResponseDto<EmployeeSignUpApprovalsResponseDto> updateApproval(Long employeeId, EmployeeSignUpApprovalRequestDto dto, UserPrincipal userPrincipal) {
         EmployeeListResponseDto responseDto = null;
 
         Employee employee = employeeRepository.findById(employeeId)
@@ -127,7 +128,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeSignUpApproval employeeSignUpApproval = employeeSignUpApprovalRepository.findAllByEmployeeIdAndIsApproved(employee, IsApproved.PENDING)
                 .orElseThrow(() -> new EntityNotFoundException("회원가입 승인 대기 상태인 사원이 없습니다."));
 
-        Employee authorizerEmployee = employeeRepository.findByLoginId(loginId)
+        Employee authorizerEmployee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(() -> new EntityNotFoundException("관리자를 찾을 수 없습니다."));
 
         if (dto.getIsApproved().equals(IsApproved.APPROVED) && dto.getDeniedReason().isBlank()) {
@@ -151,11 +152,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public ResponseDto<Void> updateOrganization(Long employeeId, EmployeeOrganizationUpdateRequestDto dto, String loginId) {
+    public ResponseDto<Void> updateOrganization(Long employeeId, EmployeeOrganizationUpdateRequestDto dto, UserPrincipal userPrincipal) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("직원 정보를 찾을 수 없습니다."));
 
-        Employee authorizer = employeeRepository.findByLoginId(loginId)
+        Employee authorizer = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(() -> new EntityNotFoundException("직원 정보를 찾을 수 없습니다."));
 
         Long preBranchId = employee.getBranchId().getBranchId();
@@ -249,12 +250,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseDto<Void> updateStatus(Long employeeId, EmployeeStatusUpdateRequestDto dto, String loginId) {
+    public ResponseDto<Void> updateStatus(Long employeeId, EmployeeStatusUpdateRequestDto dto, UserPrincipal userPrincipal) {
 
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new EntityNotFoundException("사원이 존재하지 않습니다."));
 
-        Employee authorizer = employeeRepository.findByLoginId(loginId)
+        Employee authorizer = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(() -> new EntityNotFoundException("관리자가 존재하지 않습니다."));
 
         EmployeeStatus status = employee.getStatus();

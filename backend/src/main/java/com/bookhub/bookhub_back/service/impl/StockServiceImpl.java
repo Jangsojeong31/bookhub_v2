@@ -11,6 +11,7 @@ import com.bookhub.bookhub_back.dto.stock.response.StockListResponseDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockUpdateResponseDto;
 import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.repository.*;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.AlertService;
 import com.bookhub.bookhub_back.service.StockService;
 import jakarta.persistence.EntityNotFoundException;
@@ -128,7 +129,31 @@ public class StockServiceImpl implements StockService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
-    // 재고 조회
+    // manager 재고 조회
+    @Override
+    public ResponseDto<List<StockListResponseDto>> searchStocksByBranch(UserPrincipal userPrincipal, String bookTitle, String isbn) {
+        Branch branch = branchRepository.findById(userPrincipal.getBranchId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        String branchName = branch.getBranchName();
+
+        List<Stock> stocks = stockRepository.searchStocksByConditions(bookTitle, isbn, branchName);
+
+        List<StockListResponseDto> responseDtos = stocks.stream()
+                .map(stock -> StockListResponseDto.builder()
+                        .stockId(stock.getStockId())
+                        .branchId(stock.getBranchId().getBranchId())
+                        .bookIsbn(stock.getBookIsbn().getBookIsbn())
+                        .branchName(stock.getBranchId().getBranchName())
+                        .bookTitle(stock.getBookIsbn().getBookTitle())
+                        .amount(stock.getBookAmount())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
+    }
+
+    // admin 재고 조회
     @Override
     public ResponseDto<List<StockListResponseDto>> searchStocks(String bookTitle, String isbn, String branchName) {
         List<Stock> stocks = stockRepository.searchStocksByConditions(bookTitle, isbn, branchName);

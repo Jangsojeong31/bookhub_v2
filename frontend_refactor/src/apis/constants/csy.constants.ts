@@ -74,13 +74,27 @@ export const DELETE_POLICY_URL = (PolicyId : number) => `${POLICY_URL_ADMIN}/${P
 
 //&Stock
 //1> Stock base Url
-const STOCK_BASE_URL =  `${API_DOMAIN}/api/v1/${MANAGER}/stocks`;
-//Stock update Url
-//export const UPDATE_STOCK_URL = (branchId : number, stockId : number) => `${STOCK_BASE_URL}/branch/${branchId}/${stockId}`;
-export const UPDATE_STOCK_URL = ( stockId : number) => `${STOCK_BASE_URL}/${stockId}`;
+const STOCK_MANAGER_URL =  `${API_DOMAIN}/api/v1/${MANAGER}/stocks`;
+const STOCK_ADMIN_URL =  `${API_DOMAIN}/api/v1/${ADMIN}/stocks`;
 
-// 재고 조회
-export const STOCK_SEARCH_BOOK_URL = (
+// 재고 수정
+export const UPDATE_STOCK_URL = ( stockId : number) => `${STOCK_MANAGER_URL}/${stockId}`;
+
+// 재고 조회 (해당 지점 재고만) - manager
+export const SEARCH_STOCKS_BY_BRANCH_URL = (
+  bookTitle: string,
+  isbn : string,
+) => {
+  const queryParams = new URLSearchParams();
+  
+  if (bookTitle) queryParams.append("bookTitle", bookTitle);
+  if (isbn) queryParams.append("isbn", isbn);
+
+  return `${STOCK_MANAGER_URL}?${queryParams.toString()}`;
+}
+
+// 재고 조회 (조건별) - admin
+export const SEARCH_STOCKS_URL = (
   bookTitle: string,
   isbn : string,
   branchName: string
@@ -91,7 +105,7 @@ export const STOCK_SEARCH_BOOK_URL = (
   if (isbn) queryParams.append("isbn", isbn);
   if (branchName) queryParams.append("branchName", branchName);
 
-  return `${STOCK_BASE_URL}?${queryParams.toString()}`;
+  return `${STOCK_ADMIN_URL}?${queryParams.toString()}`;
 }
 
 //&StockLog

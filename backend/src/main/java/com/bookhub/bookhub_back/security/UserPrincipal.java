@@ -1,9 +1,11 @@
 package com.bookhub.bookhub_back.security;
 
+import com.bookhub.bookhub_back.entity.Branch;
 import com.bookhub.bookhub_back.entity.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -16,28 +18,31 @@ public class UserPrincipal implements UserDetails {
     private final String loginId;
     @JsonIgnore
     private final String password;
+    private final Long branchId;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(Employee employee) {
         this.employeeId = employee.getEmployeeId();
         this.loginId = employee.getLoginId();
         this.password = employee.getPassword();
-        this.authorities = Collections.singleton(() -> "ROLE_" + employee.getAuthorityId().getAuthorityName());
+        this.branchId = employee.getBranchId().getBranchId();
+        String role = "ROLE_" + employee.getAuthorityId().getAuthorityName();
+        this.authorities = Collections.singleton(new SimpleGrantedAuthority(role));
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return this.authorities;
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return this.password;
     }
 
     @Override
     public String getUsername() {
-        return loginId;
+        return this.loginId;
     }
 
     @Override
