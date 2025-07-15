@@ -266,10 +266,10 @@ function ElseAuthor() {
 
   return (
     <>
-      {/* <h2>저자 조회</h2>
-       */}
       <div className="topBar">
         <CreateAuthor />
+        <div style={{display: "flex", gap: 12}}>
+          
         <input
           type="text"
           name="authorName"
@@ -278,7 +278,9 @@ function ElseAuthor() {
           onChange={onSearchInputChange}
           onKeyDown={handleKeyDown}
           css={style.searchInput}
-        />
+          />
+        <button onClick={onGetAllAuthorsByNameClick}>검색</button>
+          </div>
       </div>
       <table>
         <thead>
