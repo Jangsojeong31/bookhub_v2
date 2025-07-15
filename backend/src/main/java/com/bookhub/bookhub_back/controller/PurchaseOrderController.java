@@ -6,6 +6,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.request.PurchaseOrderApproveRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.request.PurchaseOrderRequestDto;
 import com.bookhub.bookhub_back.dto.purchaseOrder.response.PurchaseOrderResponseDto;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.PurchaseOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +29,23 @@ public class PurchaseOrderController {
     // 발주 요청서 작성
     @PostMapping(PURCHASE_ORDER_MANAGER)
     public ResponseEntity<ResponseDto<PurchaseOrderResponseDto>> createPurchaseOrder(
-            @AuthenticationPrincipal String loginId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody PurchaseOrderRequestDto dto
     ) {
-        ResponseDto<PurchaseOrderResponseDto> response = purchaseOrderService.createPurchaseOrder(loginId, dto);
+//        String loginId = userPrincipal.getLoginId();
+        ResponseDto<PurchaseOrderResponseDto> response = purchaseOrderService.createPurchaseOrder(userPrincipal, dto);
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
     // 발주 요청서 조회 - 조회 조건 없을 시 전체 조회 기능, 사용자 소속 지점 해당 발주서만 필터링
     @GetMapping(PURCHASE_ORDER_MANAGER)
     public ResponseEntity<ResponseDto<List<PurchaseOrderResponseDto>>> searchPurchaseOrder(
-            @AuthenticationPrincipal String loginId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam(required = false) String employeeName,
             @RequestParam(required = false) String bookIsbn,
             @RequestParam(required = false) PurchaseOrderStatus purchaseOrderStatus
     ) {
-        ResponseDto<List<PurchaseOrderResponseDto>> response = purchaseOrderService.searchPurchaseOrder(loginId, employeeName, bookIsbn, purchaseOrderStatus);
+        ResponseDto<List<PurchaseOrderResponseDto>> response = purchaseOrderService.searchPurchaseOrder(userPrincipal, employeeName, bookIsbn, purchaseOrderStatus);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
@@ -77,11 +79,11 @@ public class PurchaseOrderController {
     // 발주 요청서 수정 - 발주 승인 기능 (승인 또는 승인 거절) -> purchaseOrderApproval 생성
     @PutMapping(PURCHASE_ORDER_ADMIN + "/{purchaseOrderId}/approval")
     public ResponseEntity<ResponseDto<PurchaseOrderResponseDto>> approvePurchaseOrder(
-            @AuthenticationPrincipal String loginId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long purchaseOrderId,
             @RequestBody PurchaseOrderApproveRequestDto dto
     ){
-        ResponseDto<PurchaseOrderResponseDto> response = purchaseOrderService.approvePurchaseOrder(loginId, purchaseOrderId, dto);
+        ResponseDto<PurchaseOrderResponseDto> response = purchaseOrderService.approvePurchaseOrder(userPrincipal, purchaseOrderId, dto);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 

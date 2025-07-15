@@ -25,11 +25,11 @@ const COLORS = [
 ];
 
 function calculatePercentages(data: CategoryStockResponseDto[]) {
-  const total = data.reduce((sum, item) => sum + item.quantity, 0);
+  const total = data.reduce((sum, item) => sum + item.totalAmount, 0);
   return data
     .map((item) => ({
       ...item,
-      percent: total === 0 ? 0 : (item.quantity / total) * 100,
+      percent: total === 0 ? 0 : (item.totalAmount / total) * 100,
     }))
     .sort((a, b) => b.percent - a.percent)
     .map((item, index) => ({

@@ -11,7 +11,7 @@ export interface BranchRevenueResponseDto{
 }
 
 export interface MonthlyRevenueResponseDto{
-  orderMonth : number;
+  orderedMonth : number;
   totalRevenue : number;
 }
 
@@ -21,5 +21,5 @@ export interface WeeklyRevenueResponseDto{
   // weekIndex : number;
   // weekStartDate : Date;
   totalRevenue: number;
-  orderDate: string;
+  orderedDate: string;
 }

@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 public class CategoryStockResponseDto {
     private String categoryName;
-    private Long quantity;
+    private Long totalAmount;
 }

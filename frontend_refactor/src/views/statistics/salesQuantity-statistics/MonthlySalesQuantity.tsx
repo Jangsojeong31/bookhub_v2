@@ -45,7 +45,7 @@ function MonthlySalesQuantity() {
 
     if (Array.isArray(data)) {
       const mapped = monthRange.map((month) => {
-        const foundData = data.find((item) => item.orderMonth === month);
+        const foundData = data.find((item) => item.orderedMonth === month);
         return {
           name: `${month}월`,
           total: foundData ? foundData.totalSales : 0,

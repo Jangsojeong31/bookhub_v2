@@ -3,6 +3,7 @@ package com.bookhub.bookhub_back.controller;
 import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.reception.response.ReceptionResponseDto;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.BookReceptionApprovalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,27 +27,27 @@ public class BookReceptionApprovalController {
     @PutMapping(RECEPTION_MANAGER + "/{id}/approve")
     public ResponseEntity<ResponseDto<Void>> approveReception(
             @PathVariable Long id,
-            @AuthenticationPrincipal String loginId
-    ) {
-        ResponseDto<Void> response = bookReceptionApprovalService.approveReception(id, loginId);
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+            ) {
+        ResponseDto<Void> response = bookReceptionApprovalService.approveReception(id, userPrincipal);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 수령 대기 목록 조회(지점 관리자 전용)
     @GetMapping(RECEPTION_MANAGER + "/pending")
     public ResponseEntity<ResponseDto<List<ReceptionResponseDto>>> getPendingReceptions(
-            @AuthenticationPrincipal String loginId
+            @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        ResponseDto<List<ReceptionResponseDto>> response = bookReceptionApprovalService.getPendingReceptions(loginId);
+        ResponseDto<List<ReceptionResponseDto>> response = bookReceptionApprovalService.getPendingReceptions(userPrincipal);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
     // 수령 완료 목록 조회(지점 관리자)
     @GetMapping(RECEPTION_MANAGER + "/confirmed")
     public ResponseEntity<ResponseDto<List<ReceptionResponseDto>>> getManagerConfirmedReceptions(
-            @AuthenticationPrincipal String loginId
+            @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        ResponseDto<List<ReceptionResponseDto>> response = bookReceptionApprovalService.getManagerConfirmedReceptions(loginId);
+        ResponseDto<List<ReceptionResponseDto>> response = bookReceptionApprovalService.getManagerConfirmedReceptions(userPrincipal);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 

@@ -10,8 +10,8 @@ import com.bookhub.bookhub_back.dto.reception.request.ReceptionCreateRequestDto;
 import com.bookhub.bookhub_back.dto.reception.response.ReceptionResponseDto;
 import com.bookhub.bookhub_back.dto.stock.request.StockUpdateRequestDto;
 import com.bookhub.bookhub_back.entity.*;
-import com.bookhub.bookhub_back.provider.JwtProvider;
 import com.bookhub.bookhub_back.repository.*;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.AlertService;
 import com.bookhub.bookhub_back.service.BookReceptionApprovalService;
 import com.bookhub.bookhub_back.service.StockService;
@@ -27,6 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalService {
     private final EmployeeRepository employeeRepository;
+    private final BranchRepository branchRepository;
     private final BookReceptionApprovalRepository bookReceptionApprovalRepository;
     private final PurchaseOrderApprovalRepository purchaseOrderApprovalRepository;
     private final StockService stockService;
@@ -58,8 +59,8 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
     // 수령 확인
     @Override
     @Transactional
-    public ResponseDto<Void> approveReception(Long id, String loginId) {
-        Employee employee = employeeRepository.findByLoginId(loginId)
+    public ResponseDto<Void> approveReception(Long id, UserPrincipal userPrincipal) {
+        Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
         BookReceptionApproval bookReceptionApproval = bookReceptionApprovalRepository.findById(id)
@@ -104,13 +105,12 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
 
     // 수령 대기 목록 조회(지점 관리자 전용)
     @Override
-    public ResponseDto<List<ReceptionResponseDto>> getPendingReceptions(String loginId) {
-        Employee employee = employeeRepository.findByLoginId(loginId)
+    public ResponseDto<List<ReceptionResponseDto>> getPendingReceptions(UserPrincipal userPrincipal) {
+
+        Branch branch = branchRepository.findById(userPrincipal.getBranchId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        String branchName = employee.getBranchId().getBranchName();
-
-        List<BookReceptionApproval> pendingList = bookReceptionApprovalRepository.findPendingByBranchName(branchName);
+        List<BookReceptionApproval> pendingList = bookReceptionApprovalRepository.findPendingByBranchName(branch.getBranchName());
 
         List<ReceptionResponseDto> responseDtos = pendingList.stream()
                 .map(this::toResponseDto)
@@ -121,13 +121,12 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
 
     // 수령 완료 목록 조회(지점 관리자)
     @Override
-    public ResponseDto<List<ReceptionResponseDto>> getManagerConfirmedReceptions(String loginId) {
-        Employee employee = employeeRepository.findByLoginId(loginId)
+    public ResponseDto<List<ReceptionResponseDto>> getManagerConfirmedReceptions(UserPrincipal userPrincipal) {
+
+        Branch branch = branchRepository.findById(userPrincipal.getBranchId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        String branchName = employee.getBranchId().getBranchName();
-
-        List<BookReceptionApproval> confirmedList = bookReceptionApprovalRepository.findConfirmedByBranchName(branchName);
+        List<BookReceptionApproval> confirmedList = bookReceptionApprovalRepository.findConfirmedByBranchName(branch.getBranchName());
 
         List<ReceptionResponseDto> responseDtos = confirmedList.stream()
                 .map(this::toResponseDto)

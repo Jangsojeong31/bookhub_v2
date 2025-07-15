@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,19 +18,17 @@ public interface StockLogRepository extends JpaRepository<StockLog, Long> {
 
     @Query("""
             SELECT sl FROM StockLog sl
-            WHERE sl.branchId = :branch
-            AND (:type IS NULL OR sl.stockActionType = :type)
+            WHERE (:branchName IS NULL OR sl.branchId.branchName LIKE CONCAT("%", :branchName, "%"))
+            AND (:enumType IS NULL OR sl.stockActionType = :enumType)
             AND (:bookIsbn IS NULL OR sl.bookIsbn.bookIsbn = :bookIsbn)
             AND (:start IS NULL OR sl.actionedAt >= :start)
             AND (:end IS NULL OR sl.actionedAt <= :end)
         """)
     List<StockLog> searchStockLogsByConditions(
-            @Param("branch") Branch branch,
-            @Param("type") StockActionType type,
+            @Param("branchName") String branchName,
+            @Param("enumType") StockActionType enumType,
             @Param("bookIsbn") String bookIsbn,
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end
+            @Param("start") LocalDate start,
+            @Param("end") LocalDate  end
     );
-
-    List<StockLog> findByEmployeeId(Employee employeeId);
 }

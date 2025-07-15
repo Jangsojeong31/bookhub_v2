@@ -9,26 +9,23 @@ import { UpdateLocation } from "./UpdateLocation";
 
 export default function LocationPage() {
   const [cookies] = useCookies(["accessToken"]);
-  const branchId = useEmployeeStore((state) => state.employee?.branchId);
   const [data, setData] = useState<LocationResponseDto[]>([]);
   const [keyword, setKeyword] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
   const [detailOpen, setDetailOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const employee = useEmployeeStore((state) => state.employee);
 
   // 지점별 진열 위치 조회
   const fetchData = async () => {
-    if (!branchId) return;
-    const res = await getLocations(cookies.accessToken, branchId, keyword);
+    const res = await getLocations(cookies.accessToken, keyword);
     if (res.data) setData(res.data);
   };
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [branchId]);
+  }, []);
 
   // 검색 핸들러
   const handleSearch = (e: React.FormEvent) => {
@@ -38,9 +35,8 @@ export default function LocationPage() {
 
   // 삭제 핸들러
   const handleDelete = async (id: number) => {
-    if (!branchId) return;
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
-    await deleteLocation(id, cookies.accessToken, branchId);
+    await deleteLocation(id, cookies.accessToken);
     fetchData();
   };
 
@@ -61,16 +57,7 @@ export default function LocationPage() {
         </button>
         <button
           type="button"
-          onClick={() => {
-            if (
-              employee?.authorityName == "MANAGER" ||
-              employee?.authorityName == "ADMIN"
-            ) {
-              setCreateOpen(true);
-            } else {
-              alert("권한이 없습니다.");
-            }
-          }}
+          onClick={() => { setCreateOpen(true);}}
         >
           등록
         </button>
@@ -87,7 +74,7 @@ export default function LocationPage() {
           setSelectedId(id);
           setUpdateOpen(true);
         }}
-        onDelete={handleDelete}
+        onDelete={(id) => handleDelete(id)}
       />
 
       {/* 모달 컴포넌트들 */}

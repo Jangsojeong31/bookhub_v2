@@ -10,14 +10,12 @@ import com.bookhub.bookhub_back.dto.alert.request.AlertReadRequestDto;
 import com.bookhub.bookhub_back.dto.alert.response.AlertResponseDto;
 import com.bookhub.bookhub_back.entity.Alert;
 import com.bookhub.bookhub_back.entity.Employee;
-import com.bookhub.bookhub_back.provider.JwtProvider;
 import com.bookhub.bookhub_back.repository.AlertRepository;
 import com.bookhub.bookhub_back.repository.EmployeeRepository;
 import com.bookhub.bookhub_back.service.AlertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -36,13 +36,16 @@ function BranchStockStatistics() {
   const onSearchClick = async () => {
     setLoading(true);
 
-    const response = await branchStockBarChartRequest(
-      {
-        year: parseInt(searchParams.year),
-        month: parseInt(searchParams.month),
-      },
-      token
-    );
+    const year = parseInt(searchParams.year);
+    const month = parseInt(searchParams.month);
+
+    if (isNaN(year) || isNaN(month)) {
+      alert("날짜를 선택해주세요.");
+      setLoading(false);
+      return;
+    }
+
+    const response = await branchStockBarChartRequest({ year, month }, token);
     const { code, message, data } = response;
 
     if (code == "SU" && data) {
@@ -104,7 +107,15 @@ function BranchStockStatistics() {
       {loading ? (
         <div>불러오는 중...</div>
       ) : (
-        <div style={{ overflowX: "auto", width: "100%", overflowY: "clip", display: 'flex', justifyContent: "center"}}>
+        <div
+          style={{
+            overflowX: "auto",
+            width: "100%",
+            overflowY: "clip",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <div style={{ width: `${data.length * 100}px`, height: 700 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart

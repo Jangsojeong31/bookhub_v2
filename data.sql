@@ -48,3 +48,9 @@ FOREIGN KEY (previous_authority_id) REFERENCES authorities(authority_id);
 ALTER TABLE employee_change_logs
 ADD CONSTRAINT fk_previous_position
 FOREIGN KEY (previous_position_id) REFERENCES positions(position_id);
+
+SELECT * FROM customers;
+
+SELECT * FROM discount_policies;
+
+ 

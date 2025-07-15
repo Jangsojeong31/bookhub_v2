@@ -50,7 +50,7 @@ function DailySalesQuantity() {
     if (Array.isArray(data)) {
       const mapped = dayRange.map((day) => {
         const foundData = data.find((item) => {
-          const d = new Date(item.orderDate!);
+          const d = new Date(item.orderedDate!);
           return d.toDateString() === day.toDateString(); // 날짜 완전 일치
         });
 

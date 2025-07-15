@@ -6,24 +6,27 @@ import {
   StockLogDetailResponseDto,
 } from '@/dtos/stock/StockLog.response.dto';
 
-
-
-// branch 전체
-export const getStockLogsByBranch = async (
-  branchId: number, 
+// 조건별 조회
+export const getStockLogs = async (
+  branchName: string, 
   type: string,
   bookIsbn: string,
   start: string,
   end: string,
   accessToken: string) => {
-  const res = await axiosInstance.get(urls.STOCK_LOGS_BY_BRANCH(branchId, type, bookIsbn, start, end), bearerAuthorization(accessToken));
+  const res = await axiosInstance.get(urls.SEARCH_STOCK_LOGS_URL(branchName, type, bookIsbn, start, end), bearerAuthorization(accessToken));
   return res.data;
 };
 
-// employee
-export const getStockLogsByEmployee = async (employeeId: number, accessToken: string) => {
-  const res = await axiosInstance.get(urls.STOCK_LOGS_BY_EMPLOYEE(employeeId), bearerAuthorization(accessToken));
+
+// branch 전체
+export const getStockLogsByBranch = async (
+  type: string,
+  bookIsbn: string,
+  start: string,
+  end: string,
+  accessToken: string) => {
+  const res = await axiosInstance.get(urls.STOCK_LOGS_BY_BRANCH(type, bookIsbn, start, end), bearerAuthorization(accessToken));
   return res.data;
 };
-
 

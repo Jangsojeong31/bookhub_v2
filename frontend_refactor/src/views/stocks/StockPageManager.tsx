@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useCookies } from "react-cookie";
-import { searchStocks } from "@/apis/stock/stock";
+import { searchStocks, searchStocksByBranch } from "@/apis/stock/stock";
 import { StockListResponseDto } from "@/dtos/stock/Stock.response.dto";
 import StockUpdateModal from "./StockUpdateModal";
 import "./stockmodal.css";
@@ -12,11 +12,11 @@ function StockPage() {
   const [selectedStock, setSelectedStock] =
     useState<StockListResponseDto | null>(null);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
+  const [branchName, setBranchName] = useState("");
 
   const [searchForm, setSearchForm] = useState({
     bookTitle: "",
     isbn: "",
-    branchName: "",
   });
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,9 +24,13 @@ function StockPage() {
     setSearchForm({ ...searchForm, [name]: value });
   };
 
-  const fetchStocks = async () => {
+  useEffect(() => {
+    searchStocks();
+  }, [])
+
+  const searchStocks = async () => {
     setStocks([]);
-    const { bookTitle, isbn, branchName } = searchForm;
+    const { bookTitle, isbn } = searchForm;
     const token = cookies.accessToken;
 
     if (!token) {
@@ -34,7 +38,7 @@ function StockPage() {
       return;
     }
 
-    const response = await searchStocks(bookTitle, isbn, branchName, token);
+    const response = await searchStocksByBranch(bookTitle, isbn, token);
 
     const { code, message, data } = response;
 
@@ -45,6 +49,7 @@ function StockPage() {
 
     if (Array.isArray(data)) {
       setStocks(data);
+      setBranchName(data[0].branchName);
       // setMessage("");
     } else {
       alert("올바른 검색 조건을 입력해주세요.");
@@ -63,14 +68,18 @@ function StockPage() {
 
   const handleUpdated = () => {
     closeUpdateModal();
-    fetchStocks();
+    searchStocks();
   };
 
   return (
     <div className="stock-page-container">
+                <h2>재고 관리 [ {branchName} ]</h2>
+
       <div className="topBar">
-        <div style={{ display: "flex", gap: 12 }}>
-          <input
+        {/* <div style={{ display: "flex", gap: 12 }}> */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
+          <div style={{display: "flex", gap: 12, height: 35}}>
+            <input
             type="text"
             name="bookTitle"
             value={searchForm.bookTitle}
@@ -86,18 +95,13 @@ function StockPage() {
             onInput={onInputChange}
             style={{ border: "1px solid #ccc", textAlign: "center" }}
           />
-          <input
-            type="text"
-            name="branchName"
-            value={searchForm.branchName}
-            placeholder="지점 이름"
-            onInput={onInputChange}
-            style={{ border: "1px solid #ccc", textAlign: "center" }}
-          />
-          <button className="modifyBtn" onClick={fetchStocks}>
+          <button className="modifyBtn" onClick={searchStocks}>
             검색
           </button>
-        </div>
+          </div>
+        
+        
+          </div>
       </div>
 
       {/* Results Table */}

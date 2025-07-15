@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class TimeStockChartResponseDto {
     private String branchName;
-    private Long month;
+    private int month;
     private Long inAmount;
     private Long lossAmount;
 }

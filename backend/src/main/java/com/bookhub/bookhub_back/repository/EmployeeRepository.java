@@ -1,6 +1,7 @@
 package com.bookhub.bookhub_back.repository;
 
 import com.bookhub.bookhub_back.common.enums.EmployeeStatus;
+import com.bookhub.bookhub_back.entity.Branch;
 import com.bookhub.bookhub_back.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -40,4 +41,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     );
 
     Optional<Employee> findByEmail(String email);
+
+    Branch findByBranchId(Branch branchId);
 }

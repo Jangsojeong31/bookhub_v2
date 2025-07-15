@@ -3,7 +3,7 @@ import { SidebarMenu } from './types';
 
 export const adminMenu: SidebarMenu[] = [
   {
-    title: '책 정보관리',
+    title: '도서 정보 관리',
     submenu: [
       { label: '작가 관리', path: '/authors' },       
       { label: '출판사 관리', path: '/publishers' },  
@@ -17,7 +17,7 @@ export const adminMenu: SidebarMenu[] = [
   {
     title: '정책 관리',
     submenu: [
-      { label: '정책 전체조회', path: '/policies' },
+      { label: '정책 조회', path: '/policies' },
       { label: '정책 관리', path: '/policies/admin' },
     ],
   },
@@ -48,15 +48,22 @@ export const adminMenu: SidebarMenu[] = [
     ],
   },
   {
-    title: '수령 확인 관리',
+    title: '수령 관리',
     submenu: [
-      { label: '수령 확인 내역', path: '/reception/logs' },
+      { label: '수령 내역 조회', path: '/reception/logs' },
+    ],
+  },
+  {
+    title: '재고 검색',
+    submenu: [
+      { label: '전체 재고 검색', path: '/stocks/admin' },
+  
     ],
   },
   {
     title: '재고 로그 관리',
     submenu: [
-      {label: '재고 로그 관리', path: '/stock-logs/branch'}
+      {label: '재고 로그 검색', path: '/stock-logs/admin'}
     ]
   },
   {

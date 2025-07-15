@@ -12,14 +12,18 @@ import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignUpRequestDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import com.bookhub.bookhub_back.dto.auth.response.EmployeeSignInResponseDto;
 import com.bookhub.bookhub_back.entity.*;
-import com.bookhub.bookhub_back.provider.JwtProvider;
+import com.bookhub.bookhub_back.security.JwtProvider;
 import com.bookhub.bookhub_back.repository.*;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.AlertService;
 import com.bookhub.bookhub_back.service.AuthService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtProvider jwtProvider;
     private final AlertService alertService;
+    private final AuthenticationManager authenticationManager;
 
     // 회원가입
     @Override
@@ -149,25 +154,20 @@ public class AuthServiceImpl implements AuthService {
         String loginId = dto.getLoginId();
         String password = dto.getPassword();
 
-        // 아이디에 해당하는 사용자 유무 확인
-        Employee employee = employeeRepository.findByLoginId(loginId)
-                .orElse(null);
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginId, password));
 
-        if (employee == null) {
-            return ResponseDto.fail(ResponseCode.NO_EXIST_USER_ID, ResponseMessageKorean.NO_EXIST_USER_ID);
-        }
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        // 비밀번호 일치 여부 확인
-        if (!bCryptPasswordEncoder.matches(password, employee.getPassword())) {
-            return ResponseDto.fail(ResponseCode.NOT_MATCH_PASSWORD, ResponseMessageKorean.NOT_MATCH_PASSWORD);
-        }
+        Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
+                .orElseThrow(EntityNotFoundException::new);
 
         // 사원의 승인 상태가 PENDING이거나 DENIED일 경우
         if (employee.getIsApproved().equals(IsApproved.PENDING) || employee.getIsApproved().equals(IsApproved.DENIED)) {
             return ResponseDto.fail(ResponseCode.NO_PERMISSION, ResponseMessageKorean.NO_PERMISSION);
         }
 
-        String token = jwtProvider.generateJwtToken(loginId, employee.getAuthorityId());
+        String token = jwtProvider.generateJwtToken(authentication);
         int exprTime = jwtProvider.getExpiration();
 
         EmployeeResponseDto employeeResponseDto = EmployeeResponseDto.builder()

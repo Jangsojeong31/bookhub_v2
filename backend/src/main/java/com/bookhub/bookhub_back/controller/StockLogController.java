@@ -4,41 +4,53 @@ import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.common.enums.StockActionType;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockLogResponseDto;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.StockLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.V1 + ApiMappingPattern.ADMIN + "/stock-logs")
+@RequestMapping(ApiMappingPattern.V1)
 @RequiredArgsConstructor
 public class StockLogController {
     private final StockLogService stockLogService;
 
-    // branch 의 재고 로그 조회
-    @GetMapping("/branch/{branchId}")
-    public ResponseEntity<ResponseDto<List<StockLogResponseDto>>> searchStockLogsByBranch(
-            @PathVariable(required = false) Long branchId,
-            @RequestParam(required = false) StockActionType type,
+    private final String STOCK_LOGS_ADMIN = ApiMappingPattern.ADMIN + "/stock-logs";
+    private final String STOCK_LOGS_MANAGER = ApiMappingPattern.MANAGER + "/stock-logs";
+
+    // 재고 로그 조회 (조건별) - admin
+    @GetMapping(STOCK_LOGS_ADMIN)
+    public ResponseEntity<ResponseDto<List<StockLogResponseDto>>> searchStockLogs(
+            @RequestParam(required = false) String branchName,
+            @RequestParam(required = false) String type,
             @RequestParam(required = false) String bookIsbn,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end
     ){
-        ResponseDto<List<StockLogResponseDto>> stockLogs = stockLogService.searchStockLogsByBranch(
-                branchId, type, bookIsbn, start, end);
+        ResponseDto<List<StockLogResponseDto>> stockLogs = stockLogService.searchStockLogs(
+                branchName, type, bookIsbn, start, end);
         return ResponseEntity.status(HttpStatus.OK).body(stockLogs);
     }
 
-    // employeeId로 로그 조회
-    @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<ResponseDto<List<StockLogResponseDto>>> searchStockLogsByEmployee(
-            @PathVariable Long employeeId){
-        ResponseDto<List<StockLogResponseDto>> stockLogs = stockLogService.searchStockLogsByEmployee(employeeId);
+    // 재고 로그 조회 (소속 지점만) - manager
+    @GetMapping(STOCK_LOGS_MANAGER)
+    public ResponseEntity<ResponseDto<List<StockLogResponseDto>>> searchStockLogsByBranch(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String bookIsbn,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end
+    ){
+        ResponseDto<List<StockLogResponseDto>> stockLogs = stockLogService.searchStockLogsByBranch(
+                userPrincipal, type, bookIsbn, start, end);
         return ResponseEntity.status(HttpStatus.OK).body(stockLogs);
     }
 

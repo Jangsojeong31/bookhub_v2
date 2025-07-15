@@ -1,11 +1,13 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import StockPage from './StockPage'
+import StockPageManager from './StockPageManager'
+import StockPageAdmin from './StockPageAdmin'
 
 function Stock() {
   return (
     <Routes>
-      <Route path = "/" element = {<StockPage/>}/>
+      <Route path = "/manager" element = {<StockPageManager/>}/>
+      <Route path = "/admin" element = {<StockPageAdmin/>}/>
 
     </Routes>
   )
