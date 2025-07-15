@@ -1,8 +1,8 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import TotalBestSeller from "./BestSellerTotal";
-import BestSellerByPeriod from "./BestSellerByPeriod";
-import BestSellerByCategory from "./BestSellerByCategory";
+import TotalBestSeller from "../bestSeller/BestSellerTotal";
+import BestSellerByPeriod from "../bestSeller/BestSellerByPeriod";
+import BestSellerByCategory from "../bestSeller/BestSellerByCategory";
 import SalesQuantityByPeriod from "./SalesQuantityByPeriod";
 import SaleQuantityByBranch from "./SalesQauntityByBranch";
 import SalesQuantityByDiscountPolicy from "./SalesQuantityByDiscountPolicy";

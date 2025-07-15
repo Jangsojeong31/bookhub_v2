@@ -14,8 +14,6 @@ interface Props {
 export function CreateLocation({ open, onClose, onSuccess }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [cookies] = useCookies(["accessToken"]);
-  // 로그인된 직원에서 branchId 꺼내기
-  const branchId = useEmployeeStore(state => state.employee?.branchId);
 
   const [form, setForm] = useState<LocationCreateRequestDto>({
     bookIsbn: "",
@@ -31,18 +29,26 @@ export function CreateLocation({ open, onClose, onSuccess }: Props) {
     else dialogRef.current?.close();
   }, [open]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!branchId) {
-      alert("지점 정보가 없습니다.");
-      return;
+    try {
+      const response = await createLocation(form, cookies.accessToken);
+      const { code, message } = response;
+
+      if (code != "SU") return alert(message);
+
+      alert("등록되었습니다.");
+    } catch (error) {
+      console.error(error);
+      alert("수정 중 오류가 발생했습니다.");
     }
-    await createLocation(form, cookies.accessToken, branchId);
     await onSuccess();
     onClose();
   };
@@ -77,7 +83,11 @@ export function CreateLocation({ open, onClose, onSuccess }: Props) {
         <div>
           <label>
             섹션:
-            <input name="section" value={form.section} onChange={handleChange} />
+            <input
+              name="section"
+              value={form.section}
+              onChange={handleChange}
+            />
           </label>
         </div>
         <div>

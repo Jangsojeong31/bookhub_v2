@@ -16,6 +16,7 @@ import com.bookhub.bookhub_back.entity.Branch;
 import com.bookhub.bookhub_back.repository.BookDisplayLocationRepository;
 import com.bookhub.bookhub_back.repository.BookRepository;
 import com.bookhub.bookhub_back.repository.BranchRepository;
+import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.BookLocationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,8 @@ public class BookLocationServiceImpl implements BookLocationService {
     private final BookDisplayLocationRepository bookLocationRepository;
 
     @Override
-    public ResponseDto<LocationCreateResponseDto> createLocation(Long branchId, LocationCreateRequestDto dto) {
-        Branch branch = branchRepository.findById(branchId)
+    public ResponseDto<LocationCreateResponseDto> createLocation(UserPrincipal userPrincipal, LocationCreateRequestDto dto) {
+        Branch branch = branchRepository.findById(userPrincipal.getBranchId())
                 .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
 
         Book book = bookRepository.findById(dto.getBookIsbn())
@@ -64,9 +65,7 @@ public class BookLocationServiceImpl implements BookLocationService {
     }
 
     @Override
-    public ResponseDto<LocationUpdateResponseDto> updateLocation(Long branchId, Long locationId, LocationUpdateRequestDto dto) {
-        Branch branch = branchRepository.findById(branchId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
+    public ResponseDto<LocationUpdateResponseDto> updateLocation(Long locationId, LocationUpdateRequestDto dto) {
 
         BookDisplayLocation location = bookLocationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
@@ -91,8 +90,8 @@ public class BookLocationServiceImpl implements BookLocationService {
     }
 
     @Override
-    public ResponseDto<List<LocationResponseDto>> searchBranchBooksByTitle(Long branchId, String keyword) {
-        Branch branch = branchRepository.findById(branchId)
+    public ResponseDto<List<LocationResponseDto>> searchBranchBooksByTitle(UserPrincipal userPrincipal, String keyword) {
+        Branch branch = branchRepository.findById(userPrincipal.getBranchId())
                 .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID + ResponseMessage.NO_EXIST_ID));
 
         List<Book> books = bookRepository.findAllByBookTitleContaining(keyword);
@@ -112,6 +111,10 @@ public class BookLocationServiceImpl implements BookLocationService {
                         .locationId(location.getLocationId())
                         .bookTitle(location.getBookIsbn().getBookTitle())
                         .floor(location.getFloor())
+                        .hall(location.getHall())
+                        .section(location.getSection())
+                        .displayType(location.getDisplayType())
+                        .note(location.getNote())
                         .build())
                 .collect(Collectors.toList());
 
@@ -119,7 +122,7 @@ public class BookLocationServiceImpl implements BookLocationService {
     }
 
     @Override
-    public ResponseDto<LocationDetailResponseDto> getLocation(Long branchId, Long locationId) {
+    public ResponseDto<LocationDetailResponseDto> getLocation(Long locationId) {
         BookDisplayLocation location = bookLocationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
 
@@ -137,7 +140,7 @@ public class BookLocationServiceImpl implements BookLocationService {
     }
 
     @Override
-    public ResponseDto<Void> deleteLocation(Long branchId, Long locationId) {
+    public ResponseDto<Void> deleteLocation(Long locationId) {
         BookDisplayLocation location = bookLocationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
 

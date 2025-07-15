@@ -21,6 +21,10 @@ export interface LocationResponseDto {
   locationId: number;
   bookTitle: string;
   floor: string;
+  hall: string;
+  section: string;
+  displayType: string;
+  note: string;
 }
 
 export interface LocationDetailResponseDto {

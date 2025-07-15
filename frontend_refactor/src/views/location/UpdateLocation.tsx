@@ -20,8 +20,6 @@ export function UpdateLocation({
 }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [cookies] = useCookies(["accessToken"]);
-  const employee = useEmployeeStore((state) => state.employee);
-  const branchId = employee?.branchId ?? null;
 
   const [form, setForm] = useState<LocationUpdateRequestDto>({
     floor: undefined,
@@ -33,12 +31,11 @@ export function UpdateLocation({
 
   // 1) 모달이 열릴 때 기존 상세 데이터를 불러와서 form에 채워주기
   useEffect(() => {
-    if (open && locationId != null && branchId != null) {
+    if (open && locationId != null) {
       (async () => {
         try {
           const res = await getLocationDetail(
             cookies.accessToken,
-            branchId,
             locationId
           );
           if (res.data) {
@@ -55,7 +52,7 @@ export function UpdateLocation({
         }
       })();
     }
-  }, [open, locationId, branchId, cookies.accessToken]);
+  }, [open, locationId, cookies.accessToken]);
 
   // 2) open 상태에 따라 dialog 열기/닫기, 닫힐 때는 form 초기화
   useEffect(() => {
@@ -88,19 +85,19 @@ export function UpdateLocation({
     }));
   };
 
-  // 3) 수정 제출 핸들러: branchId까지 넘겨주기
+  // 3) 수정 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (locationId == null || branchId == null) return;
+    if (locationId == null) return;
 
     try {
       await updateLocation(
         locationId,
         form,
         cookies.accessToken,
-        branchId
       );
       await onSuccess();
+      alert("수정이 완료되었습니다.")
       onClose();
     } catch (err) {
       console.error("진열 위치 수정 실패:", err);
@@ -153,18 +150,24 @@ export function UpdateLocation({
           </div>
           <div>
             <label className="block mb-1">
-              진열 타입
+              진열 형태
               <select
                 name="displayType"
                 value={form.displayType}
                 onChange={handleChange}
                 className="mt-1 block w-full border rounded px-2 py-1"
               >
-                {Object.entries(DisplayType).map(([key, val]) => (
+                {Object.entries(DisplayType).map(([key, val]) => {
+
+                  const value = val === "BOOK_SHELF" ? "서가" : "평대";
+                  return (
                   <option key={key} value={val}>
-                    {val}
+                    {value}
                   </option>
-                ))}
+
+                  );
+                }
+                )}
               </select>
             </label>
           </div>

@@ -35,13 +35,13 @@ function SaleQuantityByPeriod() {
         ))}
       </div>
 
-      <div style={{ marginTop: 0, marginLeft: 20 }}>
+      <div style={{ marginTop: 0,}}>
         <DailySalesQuantity />
       </div>
       <div
         style={{
           display: "flex",
-          gap: 20,
+          gap: 15,
           marginBottom: 64,
         }}
       >

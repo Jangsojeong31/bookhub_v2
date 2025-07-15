@@ -18,13 +18,12 @@ import { GET_ALL_LOCATIONS_URL, GET_LOCATION_URL, POST_LOCATION_URL, PUT_LOCATIO
  */
 export const getLocations = async (
   accessToken: string,
-  branchId: number,
   keyword?: string,
 ): Promise<ResponseDto<LocationResponseDto[]>> => {
   try {
-    let url = `${GET_ALL_LOCATIONS_URL}?branchId=${branchId}`;
+    let url = `${GET_ALL_LOCATIONS_URL}`;
     if (keyword && keyword.trim() !== "") {
-      url += `&keyword=${encodeURIComponent(keyword.trim())}`;
+      url += `?keyword=${encodeURIComponent(keyword.trim())}`;
     }
     const response = await axiosInstance.get(
       url,
@@ -43,11 +42,10 @@ export const getLocations = async (
  */
 export const getLocationDetail = async (
   accessToken: string,
-  branchId: number,
   locationId: number,
 ): Promise<ResponseDto<LocationDetailResponseDto>> => {
   try {
-    const url = `${GET_LOCATION_URL(locationId)}?branchId=${branchId}`;
+    const url = `${GET_LOCATION_URL(locationId)}`;
     const response = await axiosInstance.get(
       url,
       bearerAuthorization(accessToken),
@@ -66,10 +64,9 @@ export const getLocationDetail = async (
 export const createLocation = async (
   dto: LocationCreateRequestDto,
   accessToken: string,
-  branchId: number,
 ): Promise<ResponseDto<LocationDetailResponseDto>> => {
   try {
-    const url = `${POST_LOCATION_URL}?branchId=${branchId}`;
+    const url = `${POST_LOCATION_URL}`;
     const response = await axiosInstance.post(
       url,
       dto,
@@ -90,10 +87,9 @@ export const updateLocation = async (
   locationId: number,
   dto: LocationUpdateRequestDto,
   accessToken: string,
-  branchId: number,
 ): Promise<ResponseDto<LocationDetailResponseDto>> => {
   try {
-    const url = `${PUT_LOCATION_URL(locationId)}?branchId=${branchId}`;
+    const url = `${PUT_LOCATION_URL(locationId)}`;
     const response = await axiosInstance.put(
       url,
       dto,
@@ -113,10 +109,9 @@ export const updateLocation = async (
 export const deleteLocation = async (
   locationId: number,
   accessToken: string,
-  branchId: number,
 ): Promise<ResponseDto<null>> => {
   try {
-    const url = `${DELETE_LOCATION_URL(locationId)}?branchId=${branchId}`;
+    const url = `${DELETE_LOCATION_URL(locationId)}`;
     const response = await axiosInstance.delete(
       url,
       bearerAuthorization(accessToken),
