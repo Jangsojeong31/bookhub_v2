@@ -46,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String loginId = jwtProvider.getLoginIdFromJwt(token);
-//            String roles = jwtProvider.getRolesFromJwt(token);
             UserPrincipal userPrincipal = userDetailsService.loadUserByUsername(loginId);
 
             setAuthenticationContext(request, userPrincipal);
@@ -58,9 +57,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private void setAuthenticationContext(HttpServletRequest request, UserPrincipal userPrincipal) {
-//        String normalizedRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
-//        GrantedAuthority authority = new SimpleGrantedAuthority(normalizedRole);
-
         AbstractAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
 

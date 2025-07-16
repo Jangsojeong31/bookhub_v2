@@ -19,8 +19,8 @@ import java.util.List;
 public class BranchController {
     private final BranchService branchService;
 
-    private final String BRANCH_ADMIN = ApiMappingPattern.ADMIN + "/branches";
-    private final String BRANCH_AUTH = ApiMappingPattern.AUTH + "/branches";
+    private static final String BRANCH_ADMIN = ApiMappingPattern.ADMIN + "/branches";
+    private static final String BRANCH_AUTH = ApiMappingPattern.AUTH + "/branches";
 
     // 지점 등록
     @PostMapping(BRANCH_ADMIN)

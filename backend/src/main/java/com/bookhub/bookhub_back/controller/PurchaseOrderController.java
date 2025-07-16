@@ -23,8 +23,8 @@ import java.util.List;
 public class PurchaseOrderController {
     private final PurchaseOrderService purchaseOrderService;
 
-    private final String PURCHASE_ORDER_ADMIN = ApiMappingPattern.ADMIN + "/purchase-orders";
-    private final String PURCHASE_ORDER_MANAGER = ApiMappingPattern.MANAGER + "/purchase-orders";
+    private static final String PURCHASE_ORDER_ADMIN = ApiMappingPattern.ADMIN + "/purchase-orders";
+    private static final String PURCHASE_ORDER_MANAGER = ApiMappingPattern.MANAGER + "/purchase-orders";
 
     // 발주 요청서 작성
     @PostMapping(PURCHASE_ORDER_MANAGER)

@@ -24,8 +24,8 @@ import java.util.List;
 public class BookCategoryController {
     private final BookCategoryService bookCategoryService;
 
-    private final String BOOK_CATEGORY_ADMIN = ApiMappingPattern.ADMIN + "/categories";
-    private final String BOOK_CATEGORY_COMMON = ApiMappingPattern.COMMON + "/categories";
+    private static final String BOOK_CATEGORY_ADMIN = ApiMappingPattern.ADMIN + "/categories";
+    private static final String BOOK_CATEGORY_COMMON = ApiMappingPattern.COMMON + "/categories";
 
     // 카테고리 생성
     @PostMapping(BOOK_CATEGORY_ADMIN)

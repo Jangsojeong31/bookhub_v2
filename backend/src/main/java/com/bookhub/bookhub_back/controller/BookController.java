@@ -26,8 +26,8 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-    private final String BOOK_ADMIN = ApiMappingPattern.ADMIN + "/books";
-    private final String BOOK_COMMON = ApiMappingPattern.COMMON + "/books";
+    private static final String BOOK_ADMIN = ApiMappingPattern.ADMIN + "/books";
+    private static final String BOOK_COMMON = ApiMappingPattern.COMMON + "/books";
 
     // 도서 등록
     @PostMapping(BOOK_ADMIN)

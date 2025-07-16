@@ -88,11 +88,6 @@ public class JwtProvider {
         return jwtParser.parseClaimsJws(token).getBody();
     }
 
-//    public String getUsernameFromJwt(String token) {
-//        Claims claims = getClaims(token);
-//        return claims.get("username", String.class);
-//    }
-
     public String getLoginIdFromJwt(String token) {
         Claims claims = getClaims(token);
         return claims.get("loginId", String.class);

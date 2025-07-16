@@ -25,8 +25,8 @@ import java.util.List;
 public class BookLocationController {
     private final BookLocationService bookLocationService;
 
-    private final String BOOK_LOCATION_MANAGER = ApiMappingPattern.MANAGER + "/locations";
-    private final String BOOK_LOCATION_COMMON = ApiMappingPattern.COMMON + "/locations";
+    private static final String BOOK_LOCATION_MANAGER = ApiMappingPattern.MANAGER + "/locations";
+    private static final String BOOK_LOCATION_COMMON = ApiMappingPattern.COMMON + "/locations";
 
     // 진열위치 생성
     @PostMapping(BOOK_LOCATION_MANAGER)
