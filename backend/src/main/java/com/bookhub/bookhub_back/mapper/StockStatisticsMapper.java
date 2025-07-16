@@ -1,6 +1,7 @@
 package com.bookhub.bookhub_back.mapper;
 
 import com.bookhub.bookhub_back.common.enums.StockActionType;
+import com.bookhub.bookhub_back.dto.statistics.response.stocks.BranchStockBarChartDto;
 import com.bookhub.bookhub_back.dto.statistics.response.stocks.CategoryStockResponseDto;
 import com.bookhub.bookhub_back.dto.statistics.response.stocks.TimeStockChartResponseDto;
 import com.bookhub.bookhub_back.dto.statistics.response.stocks.ZeroStockResponseDto;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Mapper
 public interface StockStatisticsMapper {
-    Long findTotalAmountByBranchAndType(Long branchId, StockActionType type, int year, int month);
+    List<BranchStockBarChartDto> findTotalAmountByBranchAndType(int year, int month);
 
     List<CategoryStockResponseDto> findCategoryStockByBranch(String branchName);
 
