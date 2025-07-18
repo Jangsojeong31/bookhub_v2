@@ -66,7 +66,6 @@ function App() {
           >
             <Routes>
               <Route path="/" element={<Navigate to="/main" />} />
-              {/* <Route path="/publishers" element={<Publisher />} /> */}
               <Route path="/alerts/*" element={<AlertPage />} />
               <Route path="/books/*" element={<Book />} />
               <Route path="/booklogs/*" element={<BookLogs />} />
@@ -74,14 +73,7 @@ function App() {
               <Route path="/publishers/*" element={<Publisher />} />
               <Route path="/policies/*" element={<Policy />} />
               <Route path="/branch/locations" element={<LocationPage />} />
-              <Route
-                path="/stock-logs/*"
-                element={
-                  
-                    <StockLog />
-                  
-                }
-              />
+              <Route path="/stock-logs/*" element={ <StockLog />} />
               <Route path="/stocks/*" element={<Stock />} />
               <Route
                 path="/statistics/revenue/*"
@@ -100,19 +92,9 @@ function App() {
                 }
               />
               {Main()}
-              {/* {Alert()} */}
-
-              {/* {Publisher()} */}
-
-              {/*Book()*/}
               {Branch()}
-              {/* {BookLocation() */}
               {Category()}
               {Reception()}
-              {/*Policy()}
-              {Publisher()}
-              {StockStatistics()}
-              {Stocks()} */}
               {Author()}
               {PurchaseOrder()}
               {SalesQuantityStatistics()}
