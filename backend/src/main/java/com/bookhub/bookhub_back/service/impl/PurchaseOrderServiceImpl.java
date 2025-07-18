@@ -36,7 +36,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final BookRepository bookRepository;
     private final AlertService alertService;
     private final BookReceptionApprovalService bookReceptionApprovalService;
-    private final AuthorityRepository authorityRepository;
 
     // 발주 요청서 작성
     @Override
@@ -61,6 +60,18 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
         PurchaseOrder savedOrder = purchaseOrderRepository.save(newOrder);
 
+        // 알림 기능
+        for (Employee admin : employeeRepository.findByAuthorityId_AuthorityName("ADMIN")) {
+            alertService.createAlert(AlertCreateRequestDto.builder()
+                    .employeeId(admin.getEmployeeId())
+                    .alertType(String.valueOf(AlertType.PURCHASE_REQUESTED))
+                    .alertTargetTable("PURCHASE_ORDERS")
+                    .targetPk(savedOrder.getPurchaseOrderId())
+                    .message("지점 " + savedOrder.getBranchId().getBranchName() +
+                            "에서 [" + savedOrder.getBookIsbn().getBookTitle() + "] 발주 요청이 있습니다.")
+                    .build());
+        }
+
         PurchaseOrderResponseDto responseDto = toResponseDto(savedOrder);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
@@ -78,26 +89,6 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         List<PurchaseOrderResponseDto> responseDtos = purchaseOrders.stream()
                 .map(this::toResponseDto)
                 .collect(Collectors.toList());
-
-        // 알림 기능
-        Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
-                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
-
-        for (PurchaseOrder savedOrder : purchaseOrders) {
-            for (Employee admin : employeeRepository.findAll().stream()
-                    .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
-                    .toList()) {
-
-                alertService.createAlert(AlertCreateRequestDto.builder()
-                        .employeeId(admin.getEmployeeId())
-                        .alertType(String.valueOf(AlertType.PURCHASE_REQUESTED))
-                        .alertTargetTable("PURCHASE_ORDERS")
-                        .targetPk(savedOrder.getPurchaseOrderId())
-                        .message("지점 " + savedOrder.getBranchId().getBranchName() +
-                                "에서 [" + savedOrder.getBookIsbn().getBookTitle() + "] 발주 요청이 있습니다.")
-                        .build());
-            }
-        }
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDtos);
     }

@@ -20,8 +20,8 @@ import java.util.List;
 public class BookReceptionApprovalController {
     private final BookReceptionApprovalService bookReceptionApprovalService;
 
-    private final String RECEPTION_ADMIN = ApiMappingPattern.ADMIN + "/receptions";
-    private final String RECEPTION_MANAGER = ApiMappingPattern.MANAGER + "/receptions";
+    private static final String RECEPTION_ADMIN = ApiMappingPattern.ADMIN + "/receptions";
+    private static final String RECEPTION_MANAGER = ApiMappingPattern.MANAGER + "/receptions";
 
     // 수령 확인 (지점 관리자가 확인 버튼 누름)
     @PutMapping(RECEPTION_MANAGER + "/{id}/approve")

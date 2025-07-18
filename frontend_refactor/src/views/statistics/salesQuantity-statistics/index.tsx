@@ -1,4 +1,3 @@
-import React from "react";
 import { Route } from "react-router-dom";
 import TotalBestSeller from "../bestSeller/BestSellerTotal";
 import BestSellerByPeriod from "../bestSeller/BestSellerByPeriod";

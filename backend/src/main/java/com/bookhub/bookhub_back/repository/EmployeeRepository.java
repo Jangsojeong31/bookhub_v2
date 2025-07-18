@@ -43,4 +43,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findByEmail(String email);
 
     Branch findByBranchId(Branch branchId);
+
+    Iterable<? extends Employee> findByAuthorityId_AuthorityName(String authorityIdAuthorityName);
 }

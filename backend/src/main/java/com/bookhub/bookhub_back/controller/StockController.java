@@ -22,8 +22,8 @@ import java.util.List;
 public class StockController {
     private final StockService stockService;
 
-    private final String STOCK_ADMIN = ApiMappingPattern.ADMIN + "/stocks";
-    private final String STOCK_MANAGER = ApiMappingPattern.MANAGER + "/stocks";
+    private static final String STOCK_ADMIN = ApiMappingPattern.ADMIN + "/stocks";
+    private static final String STOCK_MANAGER = ApiMappingPattern.MANAGER + "/stocks";
 
     //책 재고 손실 시 수량 변경(Update)
     @PutMapping(STOCK_MANAGER + "/{stockId}")

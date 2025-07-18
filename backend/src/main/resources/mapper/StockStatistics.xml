@@ -5,36 +5,48 @@
 
 <mapper namespace="com.bookhub.bookhub_back.mapper.StockStatisticsMapper">
 <!-- 1. -->
-    <select id="findTotalAmountByBranchAndType" resultType="Long">
-        SELECT COALESCE(SUM(sl.amount), 0)
-        FROM stock_logs sl
-        JOIN branches br ON sl.branch_id = br.branch_id
-        WHERE br.branch_id = #{branchId}
-        AND sl.action_type = #{type}
-        AND YEAR(sl.actioned_at) = #{year}
-        AND MONTH(sl.actioned_at) = #{month}
+    <select id="findTotalAmountByBranchAndType" resultType="BranchStockBarChartDto">
+        SELECT
+            br.branch_name AS branchName,
+            COALESCE(SUM(CASE WHEN sl.action_type = 'IN' THEN sl.amount ELSE 0 END), 0) AS inAmount,
+            COALESCE(SUM(CASE WHEN sl.action_type = 'OUT' THEN sl.amount ELSE 0 END), 0) AS outAmount,
+            COALESCE(SUM(CASE WHEN sl.action_type = 'LOSS' THEN sl.amount ELSE 0 END), 0) AS lossAmount
+        FROM branches br
+        LEFT JOIN stock_logs sl
+            ON sl.branch_id = br.branch_id
+            AND YEAR(sl.actioned_at) = #{year}
+            AND MONTH(sl.actioned_at) = #{month}
+        GROUP BY branchName
     </select>
 
 <!-- 2. -->
     <select id="findTimeStockStatisticsByYear" resultType="TimeStockChartResponseDto">
         SELECT br.branch_name,
-        MONTH(sl.actioned_at) as month,
-        SUM(CASE WHEN sl.action_type = 'IN' THEN sl.amount ELSE 0 END) AS isAmount,
-        SUM(CASE WHEN sl.action_type = 'LOSS' THEN sl.amount ELSE 0 END) AS lossAmount
-        FROM stock_logs sl
-        JOIN branches br ON br.branch_id = sl.branch_id
-        WHERE YEAR(sl.actioned_at) = #{year}
-        GROUP BY br.branch_name, month
-        ORDER BY month
+        m.month as month,
+        COALESCE(SUM(CASE WHEN sl.action_type = 'IN' THEN sl.amount ELSE 0 END),0) AS isAmount,
+        COALESCE(SUM(CASE WHEN sl.action_type = 'LOSS' THEN sl.amount ELSE 0 END), 0) AS lossAmount
+        FROM branches br
+        CROSS JOIN (
+            SELECT 1 AS month UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+            UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8
+            UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12
+            ) m
+        LEFT JOIN stock_logs sl
+            ON sl.branch_id = br.branch_id
+            AND YEAR(sl.actioned_at) = #{year}
+            AND MONTH(sl.actioned_at) = m.month
+        GROUP BY br.branch_name, m.month
+        ORDER BY br.branch_name, m.month
     </select>
 
 <!-- 3. -->
     <select id="findZeroStockStatistics" resultType="ZeroStockResponseDto">
         SELECT br.branch_name AS branchName,
-               COUNT(*) AS zeroStockCount
-        FROM stocks s
-        JOIN branches br ON br.branch_id = s.branch_id
-        WHERE s.book_amount = 0
+               COUNT(s.stock_id) AS zeroStockCount
+        FROM branches br
+        LEFT JOIN stocks s
+            ON s.branch_id = br.branch_id
+            AND s.book_amount = 0
         GROUP BY branchName
     </select>
 

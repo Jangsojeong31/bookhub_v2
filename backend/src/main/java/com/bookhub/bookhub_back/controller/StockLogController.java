@@ -23,8 +23,8 @@ import java.util.List;
 public class StockLogController {
     private final StockLogService stockLogService;
 
-    private final String STOCK_LOGS_ADMIN = ApiMappingPattern.ADMIN + "/stock-logs";
-    private final String STOCK_LOGS_MANAGER = ApiMappingPattern.MANAGER + "/stock-logs";
+    private static final String STOCK_LOGS_ADMIN = ApiMappingPattern.ADMIN + "/stock-logs";
+    private static final String STOCK_LOGS_MANAGER = ApiMappingPattern.MANAGER + "/stock-logs";
 
     // 재고 로그 조회 (조건별) - admin
     @GetMapping(STOCK_LOGS_ADMIN)

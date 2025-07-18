@@ -9,10 +9,7 @@ import BranchRevenue from './BranchRevenue';
 function Revenue() {
   return (
     <Routes>
-      <Route index element = {<RevenueDashboard/>}/>
-      <Route path="weekday" element={<RevenueWeekday/>}/>
-      <Route path="weekly" element={<WeeklyRevenue/>}/>
-      <Route path="monthly" element={<MonthlyRevenue/>}/>
+      <Route path="period" element = {<RevenueDashboard/>}/>
       <Route path="branch" element={<BranchRevenue/>}/>
     </Routes>
   )
