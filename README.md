@@ -22,7 +22,7 @@
 ## 프로젝트 산출물
 #### 1. 시스템 아키텍처
 #### 2. ERD
-<img width="1656" height="2390" alt="북허브_erd" src="https://github.com/user-attachments/assets/54beb2d1-fd5f-437b-8aec-b3c08f2fb474" />
+![ERD](./북허브_erd.png)
 
 #### 3. API 명세서
 
