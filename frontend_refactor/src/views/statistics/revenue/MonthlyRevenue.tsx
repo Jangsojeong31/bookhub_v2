@@ -51,9 +51,9 @@ function MonthlyRevenue() {
   
     return (
       <div
-        style={{ width: "100%", maxWidth: 800, margin: "0 auto", padding: 32 }}
+        style={{ width: "100%", maxWidth: 1500, margin: "0 auto", padding: 10 }}
       >
-         <h2 className="text-xl font-semibold mb-4">월간 매출 통계</h2>
+         <h3 className="text-xl font-semibold mb-4">월간 매출 통계</h3>
 
   
         <div style={{ margin: 16 }}>

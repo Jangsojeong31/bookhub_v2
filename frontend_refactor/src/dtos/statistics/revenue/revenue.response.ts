@@ -1,6 +1,6 @@
 export interface WeekdayRevenueResponseDto{
   weekday : string;
-  total : number;
+  totalRevenue : number;
 }
 
 export interface BranchRevenueResponseDto{

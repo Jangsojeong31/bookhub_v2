@@ -64,13 +64,7 @@ public class WebSecurityConfig {
                 .build();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(BCryptPasswordEncoder bCryptPasswordEncoder)
-//            throws Exception {
-//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//        authProvider.setPasswordEncoder(bCryptPasswordEncoder);
-//        return new ProviderManager(List.of(authProvider));
-//    }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {

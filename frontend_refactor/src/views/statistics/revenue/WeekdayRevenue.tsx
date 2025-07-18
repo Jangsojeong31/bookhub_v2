@@ -14,6 +14,16 @@ function WeekdayRevenue() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const defaultWeekdays = [
+    {weekday: '월', totalRevenue: 0},
+    {weekday: '화', totalRevenue: 0},
+    {weekday: '수', totalRevenue: 0},
+    {weekday: '목', totalRevenue: 0},
+    {weekday: '금', totalRevenue: 0},
+    {weekday: '토', totalRevenue: 0},
+    {weekday: '일', totalRevenue: 0}
+  ];
+
   const loadData = async () => {
     if (!token) {
       setError('로그인이 필요합니다.');
@@ -23,7 +33,11 @@ function WeekdayRevenue() {
     setError(null);
     const res: ResponseDto<WeekdayRevenueResponseDto[]> = await fetchWeekday(token, year, quarter);
     if (res.code === 'SU') {
-      setData(res.data ?? []);
+      const mergedData = defaultWeekdays.map((d) => {
+        const match = res.data!.find((item) => item.weekday === d.weekday);
+        return {...d, totalRevenue: match ? match.totalRevenue : 0};
+      })
+      setData(mergedData ?? []);
     } else {
       setError(res.message);
     }
@@ -37,8 +51,9 @@ function WeekdayRevenue() {
   }, [year, quarter]);
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">요일별 매출 통계</h2>
+    <div 
+    style={{ width: "100%", maxWidth: 900, height: 300, margin: "0 100px", padding: 20 }}>
+      <h3>요일별 매출 통계</h3>
       <div className="flex items-center gap-4 mb-4">
         <label className="flex items-center">
           연도:
@@ -65,12 +80,12 @@ function WeekdayRevenue() {
       {loading && <p>로딩 중...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && (
-        <BarChart width={600} height={300} data={data} className="mx-auto">{/*여기 */}
+        <BarChart width={600} height={300} data={data} className="mx-auto">
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="weekday" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="total" fill="#8884d8" />
+          <Bar dataKey="totalRevenue" fill="#8884d8" />
         </BarChart>
       )}
     </div>

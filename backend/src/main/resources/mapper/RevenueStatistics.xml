@@ -65,13 +65,12 @@
             br.branch_id,
             br.branch_name,
             bc.category_name,
-        SUM(cod.price * cod.amount) AS totalRevenue
-        FROM customer_orders co
-        JOIN branches br ON br.branch_id = co.branch_id
-        JOIN customer_order_details cod ON cod.customer_order_id = co.customer_order_id
-        JOIN books b ON b.book_isbn = cod.book_isbn
-        JOIN book_categories bc ON bc.category_id = b.category_id
-        WHERE DATE(ordered_at) BETWEEN #{startDate} AND #{endDate}
+            COALESCE(SUM(cod.price * cod.amount), 0) AS totalRevenue
+        FROM branches br
+        LEFT JOIN customer_orders co ON br.branch_id = co.branch_id AND DATE(co.ordered_at) BETWEEN #{startDate} AND #{endDate}
+        LEFT JOIN customer_order_details cod ON cod.customer_order_id = co.customer_order_id
+        LEFT JOIN books b ON b.book_isbn = cod.book_isbn
+        LEFT JOIN book_categories bc ON bc.category_id = b.category_id
         GROUP BY br.branch_id, br.branch_name, bc.category_name
         ORDER BY br.branch_id;
     </select>

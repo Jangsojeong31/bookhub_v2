@@ -3,6 +3,7 @@ import { ResponseDto } from "@/dtos";
 import { BranchRevenueResponseDto } from "@/dtos/statistics/revenue/revenue.response";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
+import { NavLink } from "react-router-dom";
 import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from "recharts";
 
 interface FormData {
@@ -69,8 +70,31 @@ const raw: BranchRevenueResponseDto[] = res.data ?? [];      const branchMap: Re
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">지점별 매출 통계</h2>
+    <div>
+      <h2>매출 통계</h2>
+          <div style={{ marginBottom: 16, display: "flex", gap: 12 }}>
+              {[
+                { to: "/statistics/revenue/period", label: "기간별" },
+                { to: "/statistics/revenue/branch", label: "지점별" },
+              ].map(({ to, label }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? "#265185" : "#f0f0f0",
+                    color: isActive ? "white" : "#333",
+                    padding: "10px 20px",
+                    borderRadius: 6,
+                    textDecoration: "none",
+                    fontWeight: isActive ? "bold" : "normal",
+                    transition: "background-color 0.3s",
+                  })}
+                >
+                  {label}
+                </NavLink>
+              ))}
+            </div>
+
       <div className="flex items-center gap-4 mb-4">
         <label className="flex items-center">
           시작일:
@@ -102,12 +126,15 @@ const raw: BranchRevenueResponseDto[] = res.data ?? [];      const branchMap: Re
       {loading && <p>로딩 중...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && data.length > 0 && (
-        <BarChart width={700} height={400} data={data} className="mx-auto">
+        <BarChart width={1500}
+            height={600}
+            data={data}
+            style={{margin: "40px auto"}}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="branchName" />
-          <YAxis />
+          <XAxis dataKey="branchName" angle={-30} textAnchor="end" height={100} />
+          <YAxis width={100} />
           <Tooltip />
-          <Legend />
+          <Legend layout="vertical" verticalAlign="middle" align="right"/>
           {categories.map((cat,idx) => (
             <Bar key={cat} dataKey={cat} stackId="a"
             fill={COLOR_PALETTE[idx % COLOR_PALETTE.length]} />
