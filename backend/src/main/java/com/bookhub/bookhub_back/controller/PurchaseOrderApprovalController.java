@@ -22,7 +22,7 @@ import java.util.List;
 public class PurchaseOrderApprovalController {
     private final PurchaseOrderApprovalService purchaseOrderApprovalService;
 
-    // 조회 조건으로 조회 - 승인 담당자, 승인 여부, 승인 일자
+    // 발주 승인 기록 조회
     @GetMapping
     public ResponseEntity<ResponseDto<List<PurchaseOrderApprovalResponseDto>>> searchPurchaseOrderApprovals(
             @RequestParam(required = false) String employeeName,

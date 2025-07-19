@@ -19,6 +19,7 @@ import java.util.List;
 public class PositionController {
     private final PositionService positionService;
 
+    // 직급 전체 조회
     @GetMapping
     public ResponseEntity<ResponseDto<List<PositionResponseDto>>> getAllPosition() {
         ResponseDto<List<PositionResponseDto>> responseDto = positionService.getAllPosition();

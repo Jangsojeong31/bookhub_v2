@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiMappingPattern.V1 + ApiMappingPattern.COMMON + "/statistics/bestSeller")
+@RequestMapping(ApiMappingPattern.V1 + ApiMappingPattern.COMMON + "/statistics/best-seller")
 @RequiredArgsConstructor
 public class BestSellerController {
     private final BestSellerService bestSellerService;

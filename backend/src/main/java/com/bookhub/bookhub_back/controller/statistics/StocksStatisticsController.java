@@ -34,7 +34,7 @@ public class StocksStatisticsController {
     }
 
     //시간별 입고량 추이
-    @GetMapping("/time")
+    @GetMapping("/period")
     public ResponseEntity<ResponseDto<List<TimeStockChartResponseDto>>> getTimeStockStatistics(
             @RequestParam int year
     ) {

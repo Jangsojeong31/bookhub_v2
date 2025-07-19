@@ -26,7 +26,7 @@ public class StockLogController {
     private static final String STOCK_LOGS_ADMIN = ApiMappingPattern.ADMIN + "/stock-logs";
     private static final String STOCK_LOGS_MANAGER = ApiMappingPattern.MANAGER + "/stock-logs";
 
-    // 재고 로그 조회 (조건별) - admin
+    // 재고 로그 조회 - admin
     @GetMapping(STOCK_LOGS_ADMIN)
     public ResponseEntity<ResponseDto<List<StockLogResponseDto>>> searchStockLogs(
             @RequestParam(required = false) String branchName,

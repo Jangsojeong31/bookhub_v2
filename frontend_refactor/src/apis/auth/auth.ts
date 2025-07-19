@@ -7,15 +7,17 @@ import {
 } from "../axiosConfig";
 import {
   CHECK_LOGIN_ID_DUPLICATE,
-  EMPLOYEE_UPDATE_URL,
   LOGIN_ID_FIND_EMAIL_URL,
-  LOGIN_ID_FIND_URL,
+  LOGIN_ID_FIND_EMAIL_VERIFY_URL,
   LOGOUT_URL,
-  PASSWORD_CHANGE_EMAIL_URL,
-  PASSWORD_CHANGE_URL,
+  PASSWORD_RESET_EMAIL_URL,
+  PASSWORD_RESET_EMAIL_VERIFY_URL,
+  PASSWORD_RESET_URL,
   SIGN_IN_URL,
-  SIGN_UP_RESULT_URL,
   SIGN_UP_URL,
+  SIGNUP_APPROVAL_EMAIL_URL,
+  SIGNUP_APPROVAL_EMAIL_VERIFY_URL,
+  SIGNUP_APPROVAL_UPDATE_URL,
 } from "../constants/khj.constants";
 import { AxiosError } from "axios";
 import { SignInRequestDto } from "@/dtos/auth/request/sign-in.request.dto";
@@ -41,7 +43,7 @@ export const checkLoginIdDuplicate = async (
 ): Promise<ResponseDto<void>> => {
   try {
     const response = await axiosInstance.get(
-      CHECK_LOGIN_ID_DUPLICATE + `?loginId=${loginId}`
+      CHECK_LOGIN_ID_DUPLICATE(loginId)
     );
     return responseSuccessHandler(response);
   } catch (error) {
@@ -54,6 +56,15 @@ export const signInRequest = async (
 ): Promise<ResponseDto<SignInResponseDto>> => {
   try {
     const response = await axiosInstance.post(SIGN_IN_URL, dto);
+    return responseSuccessHandler(response);
+  } catch (error) {
+    return responseErrorHandler(error as AxiosError<ResponseDto>);
+  }
+};
+
+export const logoutRequest = async (): Promise<ResponseDto<void>> => {
+  try {
+    const response = await axiosInstance.post(LOGOUT_URL);
     return responseSuccessHandler(response);
   } catch (error) {
     return responseErrorHandler(error as AxiosError<ResponseDto>);
@@ -76,7 +87,7 @@ export const loginIdFindRequest = async (
 ): Promise<ResponseDto<string>> => {
   try {
     const response = await axiosInstance.get(
-      LOGIN_ID_FIND_URL + `?token=${token}`
+      LOGIN_ID_FIND_EMAIL_VERIFY_URL + `?token=${token}`
     );
     return responseSuccessHandler(response);
   } catch (error) {
@@ -88,7 +99,7 @@ export const passwordChangeEmailRequest = async (
   dto: PasswordChangeEamilRequestDto
 ): Promise<ResponseDto<string>> => {
   try {
-    const response = await axiosInstance.post(PASSWORD_CHANGE_EMAIL_URL, dto);
+    const response = await axiosInstance.post(PASSWORD_RESET_EMAIL_URL, dto);
     return responseSuccessHandler(response);
   } catch (error) {
     return responseErrorHandler(error as AxiosError<ResponseDto>);
@@ -100,7 +111,7 @@ export const verifyToken = async (
 ): Promise<ResponseDto<string>> => {
   try {
     const response = await axiosInstance.get(
-      PASSWORD_CHANGE_URL + `?token=${token}`
+      PASSWORD_RESET_EMAIL_VERIFY_URL + `?token=${token}`
     );
     return responseSuccessHandler(response);
   } catch (error) {
@@ -114,18 +125,9 @@ export const passwordChangeRequest = async (
 ): Promise<ResponseDto<string>> => {
   try {
     const response = await axiosInstance.put(
-      PASSWORD_CHANGE_URL + `?token=${token}`,
+      PASSWORD_RESET_URL + `?token=${token}`,
       dto
     );
-    return responseSuccessHandler(response);
-  } catch (error) {
-    return responseErrorHandler(error as AxiosError<ResponseDto>);
-  }
-};
-
-export const logoutRequest = async (): Promise<ResponseDto<void>> => {
-  try {
-    const response = await axiosInstance.post(LOGOUT_URL);
     return responseSuccessHandler(response);
   } catch (error) {
     return responseErrorHandler(error as AxiosError<ResponseDto>);
@@ -136,7 +138,7 @@ export const signUpResultRequest = async (
   approvalId: number
 ): Promise<ResponseDto<string>> => {
   try {
-    const response = await axiosInstance.post(SIGN_UP_RESULT_URL(approvalId));
+    const response = await axiosInstance.post(SIGNUP_APPROVAL_EMAIL_URL(approvalId));
     return responseSuccessHandler(response);
   } catch (error) {
     return responseErrorHandler(error as AxiosError<ResponseDto>);
@@ -148,7 +150,7 @@ export const verifyTokenEmployee = async (
 ): Promise<ResponseDto<string>> => {
   try {
     const response = await axiosInstance.get(
-      EMPLOYEE_UPDATE_URL + `?token=${token}`
+      SIGNUP_APPROVAL_EMAIL_VERIFY_URL + `?token=${token}`
     );
     return responseSuccessHandler(response);
   } catch (error) {
@@ -162,7 +164,7 @@ export const employeeUpdateRequest = async (
 ): Promise<ResponseDto<string>> => {
   try {
     const response = await axiosInstance.put(
-      EMPLOYEE_UPDATE_URL + `?token=${token}`,
+      SIGNUP_APPROVAL_UPDATE_URL + `?token=${token}`,
       dto
     );
     return responseSuccessHandler(response);

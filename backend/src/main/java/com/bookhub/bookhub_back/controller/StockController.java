@@ -25,7 +25,7 @@ public class StockController {
     private static final String STOCK_ADMIN = ApiMappingPattern.ADMIN + "/stocks";
     private static final String STOCK_MANAGER = ApiMappingPattern.MANAGER + "/stocks";
 
-    //책 재고 손실 시 수량 변경(Update)
+    // 재고 수정 - 책 재고 손실 시
     @PutMapping(STOCK_MANAGER + "/{stockId}")
     public ResponseEntity<ResponseDto<StockUpdateResponseDto>> updateStock(
             @PathVariable Long stockId,

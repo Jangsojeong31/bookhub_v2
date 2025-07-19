@@ -36,7 +36,7 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
 
     @Override
     @Transactional
-    public ResponseDto<Void> createReception(ReceptionCreateRequestDto dto) {
+    public void createReception(ReceptionCreateRequestDto dto) {
         PurchaseOrderApproval purchaseOrderApproval = purchaseOrderApprovalRepository.findById(dto.getPurchaseOrderApprovalId())
                 .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 발주 승인 입니다."));
 
@@ -53,7 +53,7 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
 
         bookReceptionApprovalRepository.save(bookReceptionApproval);
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS) ;
+        ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS);
     }
 
     // 수령 확인

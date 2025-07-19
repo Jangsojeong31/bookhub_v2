@@ -121,7 +121,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
 
     // 카테고리 삭제(비활성화)
     @Override
-    public ResponseDto<Void> deleteCategory(Long categoryId) {
+    public ResponseDto<Void> updateCategoryStatus(Long categoryId) {
         BookCategory category = bookCategoryRepository.findById(categoryId)
                 .orElseThrow(EntityNotFoundException::new);
 

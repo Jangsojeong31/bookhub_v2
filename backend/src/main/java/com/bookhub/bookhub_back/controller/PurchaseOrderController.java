@@ -32,12 +32,11 @@ public class PurchaseOrderController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody PurchaseOrderRequestDto dto
     ) {
-//        String loginId = userPrincipal.getLoginId();
         ResponseDto<PurchaseOrderResponseDto> response = purchaseOrderService.createPurchaseOrder(userPrincipal, dto);
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
-    // 발주 요청서 조회 - 조회 조건 없을 시 전체 조회 기능, 사용자 소속 지점 해당 발주서만 필터링
+    // 발주 요청서 조회
     @GetMapping(PURCHASE_ORDER_MANAGER)
     public ResponseEntity<ResponseDto<List<PurchaseOrderResponseDto>>> searchPurchaseOrder(
             @AuthenticationPrincipal UserPrincipal userPrincipal,

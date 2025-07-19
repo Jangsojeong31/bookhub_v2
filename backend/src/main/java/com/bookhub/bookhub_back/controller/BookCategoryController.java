@@ -62,12 +62,12 @@ public class BookCategoryController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
-    // 카테고리 삭제
-    @PutMapping(BOOK_CATEGORY_ADMIN + "/{categoryId}/isInactive")
-    public ResponseEntity<ResponseDto<Void>> deleteCategory(
+    // 카테고리 비활성화
+    @PutMapping(BOOK_CATEGORY_ADMIN + "/{categoryId}/status")
+    public ResponseEntity<ResponseDto<Void>> updateCategoryStatus(
             @PathVariable Long categoryId
     ) {
-        ResponseDto<Void> response = bookCategoryService.deleteCategory(categoryId);
+        ResponseDto<Void> response = bookCategoryService.updateCategoryStatus(categoryId);
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 

@@ -64,8 +64,8 @@ public class EmployeeController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, responseDto);
     }
 
-    // 직원 정보 수정
-    @PutMapping("/{employeeId}/organization")
+    // 직원 정보 수정 (직급, 지점, 권한)
+    @PutMapping("/{employeeId}")
     public ResponseEntity<ResponseDto<Void>> updateOrganization(
             @PathVariable Long employeeId,
             @Valid @RequestBody EmployeeOrganizationUpdateRequestDto dto,

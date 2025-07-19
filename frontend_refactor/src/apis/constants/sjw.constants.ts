@@ -13,6 +13,7 @@ const COMMON = 'common';
 //! 1. 책 관련 요청 베이스 URL
 const BOOK_ADMIN_MODULE_URL = `${API_DOMAIN}/api/v1/admin/books`;
 const BOOK_COMMON_MODULE_URL = `${API_DOMAIN}/api/v1/common/books`;
+const BOOK_LOGS_ADMIN_MODULE_URL = `${API_DOMAIN}/api/v1/admin/book-logs`;
 
 //? 책 관련 기능
 
@@ -26,8 +27,10 @@ export const GET_BOOK_URL = `${BOOK_COMMON_MODULE_URL}`;
 export const UPDATE_BOOK_URL = (isbn : string) => `${BOOK_ADMIN_MODULE_URL}/${isbn}`;
 
 // 도서 hidden 처리
-export const HIDE_BOOK_URL = (isbn : string) => `${BOOK_ADMIN_MODULE_URL}/${isbn}/hidden`;
+export const HIDE_BOOK_URL = (isbn : string) => `${BOOK_ADMIN_MODULE_URL}/${isbn}/status`;
 
+// bookLogs 조회
+export const SEARCH_BOOK_LOGS_URL = `${BOOK_LOGS_ADMIN_MODULE_URL}`;
 
 //! 3. 카테고리 관련 요청 베이스 URL
 const CATEGORY_MODULE_URL = `${API_DOMAIN}/api/v1/${ADMIN}/categories`;
@@ -47,8 +50,8 @@ export const GET_PARENT_CATEGORY_URL = `${CATEGORY_MODULE_URL}/roots`;
 // 카테고리 수정
 export const PUT_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}`;
 
-// 카테고리 삭제
-export const DELETE_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}/isInactive`;
+// 카테고리 비활성화
+export const DELETE_CATEGORY_URL = (categoryId : number) => `${CATEGORY_MODULE_URL}/${categoryId}/status`;
 
 // 카테고리 ID로 연결된 할인정책 조회
 export const GET_POLICY_BY_CATEGORYID_URL = (categoryId : number) => `${API_DOMAIN}/api/v1/${COMMON}/categories/${categoryId}/policy`
@@ -66,10 +69,10 @@ export const PUT_RECEPTION_URL = (purchaseOrderApprovalId : number) => `${RECEPT
 export const GET_PENDING_RECEPTION_URL = `${RECEPTION_MANAGER_MODULE_URL}/pending`;
 
 // 수령 완료 목록 조회(지점 관리자)
-export const GET_CONFIRMED_RECEPTION_URL = `${RECEPTION_MANAGER_MODULE_URL}/confirmed`
+export const GET_CONFIRMED_RECEPTION_URL = `${RECEPTION_MANAGER_MODULE_URL}`
 
 // 관리자가 수령 승인 내역 조회(모든 지점)
-export const GET_ADMIN_RECEPTION_URL = `${RECEPTION_ADMIN_MODULE_URL}/logs`;
+export const GET_ADMIN_RECEPTION_URL = `${RECEPTION_ADMIN_MODULE_URL}`;
 
 //! 5. 알람 관련 요청 베이스 URL
 const ALERT_COMMON_MODULE_URL = `${API_DOMAIN}/api/v1/common/alerts`;

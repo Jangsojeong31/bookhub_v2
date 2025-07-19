@@ -62,7 +62,7 @@ public class BookController {
     }
 
     // 도서 hidden 처리
-    @PutMapping(BOOK_ADMIN + "/{isbn}/hidden")
+    @PutMapping(BOOK_ADMIN + "/{isbn}/status")
     public ResponseEntity<ResponseDto<Void>> hideBook(
             @PathVariable String isbn,
             @AuthenticationPrincipal UserPrincipal userPrincipal

@@ -22,7 +22,7 @@ public interface BookCategoryService {
 
     ResponseDto<CategoryUpdateResponseDto> updateCategory(Long categoryId, CategoryUpdateRequestDto dto);
 
-    ResponseDto<Void> deleteCategory(Long categoryId);
+    ResponseDto<Void> updateCategoryStatus(Long categoryId);
 
     ResponseDto<DiscountPolicyDetailResponseDto> getPolicyByCategoryId(Long categoryId);
 }

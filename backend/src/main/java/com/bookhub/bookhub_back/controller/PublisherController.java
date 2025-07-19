@@ -29,7 +29,7 @@ public class PublisherController {
         return ResponseDto.toResponseEntity(HttpStatus.CREATED, response);
     }
 
-    // 출판사 조회 (키워드 없을 경우 전체 조회)
+    // 출판사 조회
     @GetMapping
     public ResponseEntity<ResponseDto<List<PublisherResponseDto>>> getPublishers(
             @RequestParam(required = false) String publisherName
@@ -48,7 +48,7 @@ public class PublisherController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
-    // 출판사 삭제하기
+    // 출판사 삭제
     @DeleteMapping("/{publisherId}")
     public ResponseEntity<ResponseDto<Void>> deletePublisher(
             @PathVariable Long publisherId

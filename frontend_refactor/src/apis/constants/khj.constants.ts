@@ -5,39 +5,49 @@ const MANAGER = "manager";
 const COMMON = "common";
 
 //! 1) 인증 관련 요청 URL
-const AUTH_MODULE_URL = `${API_DOMAIN}/api/v1/auth`;
 
 //? 인증 관련 기능
+const AUTH_MODULE_URL = `${API_DOMAIN}/api/v1/auth`;
+
 // 1) 회원 가입
 export const SIGN_UP_URL = `${AUTH_MODULE_URL}/signup`;
+
+// 5) 아이디 중복 확인
+export const CHECK_LOGIN_ID_DUPLICATE = (loginId: string) => `${AUTH_MODULE_URL}/users/exists/${loginId}`;
 
 // 2) 로그인
 export const SIGN_IN_URL = `${AUTH_MODULE_URL}/login`;
 
-// 3) 아이디 찾기 - 이메일 보내기
-export const LOGIN_ID_FIND_EMAIL_URL = `${AUTH_MODULE_URL}/login-id-find/email`;
-
-// 3) 아이디 찾기
-export const LOGIN_ID_FIND_URL = `${AUTH_MODULE_URL}/login-id-find`;
-
-// 4) 비밀번호 변경 - 이메일 보내기
-export const PASSWORD_CHANGE_EMAIL_URL = `${AUTH_MODULE_URL}/password-change/email`;
-
-// 4) 비밀번호 변경
-export const PASSWORD_CHANGE_URL = `${AUTH_MODULE_URL}/password-change`;
-
-// 5) 아이디 중복 확인
-export const CHECK_LOGIN_ID_DUPLICATE = `${AUTH_MODULE_URL}/login-id-exists`;
-
 // 6) 로그아웃
 export const LOGOUT_URL = `${AUTH_MODULE_URL}/logout`;
 
-// 7) 회원가입 승인 알림 이메일
-export const SIGN_UP_RESULT_URL = (approvalId: number) =>
-  `${AUTH_MODULE_URL}/employees/${approvalId}/approve`;
+// ? 이메일 관련 기능
+const AUTH_EMAIL_MODULE_URL = `${API_DOMAIN}/api/v1/auth/emails`;
 
-// 8) 회원가입 승인 수정
-export const EMPLOYEE_UPDATE_URL = `${AUTH_MODULE_URL}/employees/approve`;
+// 3) 아이디 찾기 - 이메일 전송
+export const LOGIN_ID_FIND_EMAIL_URL = `${AUTH_EMAIL_MODULE_URL}/account-id`;
+
+// 3) 아이디 찾기 - 이메일 인증
+export const LOGIN_ID_FIND_EMAIL_VERIFY_URL = `${AUTH_EMAIL_MODULE_URL}/account-id/verify`;
+
+// 4) 비밀번호 변경 - 이메일 전송
+export const PASSWORD_RESET_EMAIL_URL = `${AUTH_EMAIL_MODULE_URL}/password-reset`;
+
+// 4) 비밀번호 변경 - 이메일 인증
+export const PASSWORD_RESET_EMAIL_VERIFY_URL = `${AUTH_EMAIL_MODULE_URL}/password-reset/verify`;
+
+// 이메일 인증 이후 비밀번호 변경 
+export const PASSWORD_RESET_URL = `${AUTH_EMAIL_MODULE_URL}/password-reset`;
+
+// 7) 회원가입 승인 (또는 승인 거절) 시 - 이메일 전송
+export const SIGNUP_APPROVAL_EMAIL_URL = (approvalId: number) =>
+  `${AUTH_EMAIL_MODULE_URL}/signup-approvals/${approvalId}`;
+
+// 8) 회원가입 승인 (또는 승인 거절) 시 - 이메일 인증
+export const SIGNUP_APPROVAL_EMAIL_VERIFY_URL = `${AUTH_EMAIL_MODULE_URL}/signup-approvals/verify`;
+
+// 이메일 인증 이후 회원 정보 수정
+export const SIGNUP_APPROVAL_UPDATE_URL = `${AUTH_EMAIL_MODULE_URL}/signup-approvals/update`;
 
 //! 2) ADMIN 관련 요청 URL
 const ADMIN_MODULE_URL = `${API_DOMAIN}/api/v1/${ADMIN}`;
@@ -75,7 +85,7 @@ export const GET_EMPLOYEE_URL = (employeeId: number) =>
 
 // 3) 직원 정보 수정
 export const PUT_EMPLOYEE_CHANGE_URL = (employeeId: number) =>
-  `${EMPLOYEE_MODULE_URL}/${employeeId}/organization`;
+  `${EMPLOYEE_MODULE_URL}/${employeeId}`;
 
 // 4) 직원 퇴직 여부 수정
 export const PUT_EMPLOYEE_STATUS_URL = (employeeId: number) =>

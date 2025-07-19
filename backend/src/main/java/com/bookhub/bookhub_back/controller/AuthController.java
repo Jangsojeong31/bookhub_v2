@@ -39,7 +39,7 @@ public class AuthController {
     }
 
     // 아이디 중복 확인
-    @GetMapping("/login-id-exists")
+    @GetMapping("/users/exists/{loginId}")
     public ResponseEntity<ResponseDto<Void>> checkLoginIdDuplicate(@RequestParam String loginId) {
         ResponseDto<Void> responseDto = authService.checkLoginIdDuplicate(loginId);
         return ResponseDto.toResponseEntity(HttpStatus.OK, responseDto);
@@ -51,7 +51,4 @@ public class AuthController {
         ResponseDto<Void> responseDto = authService.logout(response);
         return ResponseDto.toResponseEntity(HttpStatus.OK, responseDto);
     }
-
-
-
 }

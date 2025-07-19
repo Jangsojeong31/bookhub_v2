@@ -23,7 +23,7 @@ public class BookReceptionApprovalController {
     private static final String RECEPTION_ADMIN = ApiMappingPattern.ADMIN + "/receptions";
     private static final String RECEPTION_MANAGER = ApiMappingPattern.MANAGER + "/receptions";
 
-    // 수령 확인 (지점 관리자가 확인 버튼 누름)
+    // 수령 확인
     @PutMapping(RECEPTION_MANAGER + "/{id}/approve")
     public ResponseEntity<ResponseDto<Void>> approveReception(
             @PathVariable Long id,
@@ -33,7 +33,7 @@ public class BookReceptionApprovalController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
-    // 수령 대기 목록 조회(지점 관리자 전용)
+    // 수령 대기 목록 조회 - manager (소속 지점 관련 목록만)
     @GetMapping(RECEPTION_MANAGER + "/pending")
     public ResponseEntity<ResponseDto<List<ReceptionResponseDto>>> getPendingReceptions(
             @AuthenticationPrincipal UserPrincipal userPrincipal
@@ -42,8 +42,8 @@ public class BookReceptionApprovalController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
-    // 수령 완료 목록 조회(지점 관리자)
-    @GetMapping(RECEPTION_MANAGER + "/confirmed")
+    // 수령 완료 목록 조회 - manager (소속 지점 관련 목록만)
+    @GetMapping(RECEPTION_MANAGER)
     public ResponseEntity<ResponseDto<List<ReceptionResponseDto>>> getManagerConfirmedReceptions(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
@@ -51,9 +51,8 @@ public class BookReceptionApprovalController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 
-    // 전체 수령 로그 조회 (관리자)
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(RECEPTION_ADMIN + "/logs")
+    // 전체 수령 완료 목록 조회 - admin
+    @GetMapping(RECEPTION_ADMIN)
     public ResponseEntity<ResponseDto<List<ReceptionResponseDto>>> getAdminConfirmedReceptions(
             @RequestParam(required = false) String branchName,
             @RequestParam(value = "bookIsbn", required = false) String isbn
