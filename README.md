@@ -25,6 +25,10 @@
 ![ERD](./북허브_erd.png)
 
 #### 3. API 명세서
+<img width="994" height="1380" alt="A4 - 1 (2)" src="https://github.com/user-attachments/assets/c22751d0-e1e1-4602-8b1d-5a83a5849367" />
+<img width="994" height="2041" alt="A4 - 2" src="https://github.com/user-attachments/assets/04352c2c-279d-443a-82be-b9a997577503" />
+
+
 
 ---
 
