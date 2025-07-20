@@ -4,6 +4,7 @@ import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.position.response.PositionResponseDto;
 import com.bookhub.bookhub_back.service.PositionService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class PositionController {
 
     // 직급 전체 조회
     @GetMapping
+    @Operation(summary = "직급 전체 조회")
     public ResponseEntity<ResponseDto<List<PositionResponseDto>>> getAllPosition() {
         ResponseDto<List<PositionResponseDto>> responseDto = positionService.getAllPosition();
         return ResponseDto.toResponseEntity(HttpStatus.OK, responseDto);

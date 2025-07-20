@@ -9,6 +9,7 @@ import com.bookhub.bookhub_back.dto.book.request.BookUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.book.response.BookResponseDto;
 import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class BookController {
 
     // 도서 등록
     @PostMapping(BOOK_ADMIN)
+    @Operation(summary = "도서 등록")
     public ResponseEntity<ResponseDto<BookResponseDto>> createBook(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestPart("dto") @Valid BookCreateRequestDto dto,
@@ -42,6 +44,7 @@ public class BookController {
 
     // 도서 통합 검색
     @GetMapping(BOOK_COMMON)
+    @Operation(summary = "도서 조건별 조회")
     public ResponseEntity<ResponseDto<List<BookResponseDto>>> searchBook(
             @RequestParam String keyword
     ) {
@@ -51,6 +54,7 @@ public class BookController {
 
     // 도서 수정
     @PutMapping(BOOK_ADMIN + "/{isbn}")
+    @Operation(summary = "도서 수정")
     public ResponseEntity<ResponseDto<BookResponseDto>> updateBook(
             @PathVariable String isbn,
             @AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -63,6 +67,7 @@ public class BookController {
 
     // 도서 hidden 처리
     @PutMapping(BOOK_ADMIN + "/{isbn}/status")
+    @Operation(summary = "도서 hidden 처리")
     public ResponseEntity<ResponseDto<Void>> hideBook(
             @PathVariable String isbn,
             @AuthenticationPrincipal UserPrincipal userPrincipal

@@ -5,6 +5,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.author.request.AuthorRequestDto;
 import com.bookhub.bookhub_back.dto.author.response.AuthorResponseDto;
 import com.bookhub.bookhub_back.service.AuthorService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class AuthorController {
 
     // 작가 등록
     @PostMapping
+    @Operation(summary = "작가 등록")
     public ResponseEntity<ResponseDto<AuthorResponseDto>> createAuthor(
             @Valid @RequestBody AuthorRequestDto dto
     ) {
@@ -29,6 +31,7 @@ public class AuthorController {
     }
 
     // 작가 이름으로 조회 (동명이인까지 조회)
+    @Operation(summary = "작가 조회 (이름으로)")
     @GetMapping
     public ResponseEntity<ResponseDto<List<AuthorResponseDto>>> getAuthorsByName(
             @RequestParam String authorName
@@ -39,6 +42,7 @@ public class AuthorController {
 
     // 작가 수정
     @PutMapping("/{authorId}")
+    @Operation(summary = "작가 수정")
     public ResponseEntity<ResponseDto<AuthorResponseDto>> updateAuthor(
             @PathVariable Long authorId,
             @Valid @RequestBody AuthorRequestDto dto
@@ -49,6 +53,7 @@ public class AuthorController {
 
     // 작가 삭제
     @DeleteMapping("/{authorId}")
+    @Operation(summary = "작가 삭제")
     public ResponseEntity<ResponseDto<Void>> deleteAuthor(
             @PathVariable Long authorId
     ) {

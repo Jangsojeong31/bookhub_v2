@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.policy.response.DiscountPolicyDetailResponseDto;
 import com.bookhub.bookhub_back.dto.policy.response.DiscountPolicyListResponseDto;
 import com.bookhub.bookhub_back.service.DiscountPolicyService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,6 +25,7 @@ public class DiscountPolicyController {
 
     // 전체 조회
     @GetMapping
+    @Operation(summary = "할인 정책 전체 조회 - common")
     public ResponseEntity<ResponseDto<PageResponseDto<DiscountPolicyListResponseDto>>> getPolicies(
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "10") @Min(1) int size,
@@ -42,6 +44,7 @@ public class DiscountPolicyController {
 
     // 단건 조회
     @GetMapping("/{policyId}")
+    @Operation(summary = "할인 정책 단건 조회 - common")
     public ResponseEntity<ResponseDto<DiscountPolicyDetailResponseDto>> getPolicyById(
             @PathVariable Long policyId
     ){
@@ -49,3 +52,4 @@ public class DiscountPolicyController {
         return ResponseDto.toResponseEntity(HttpStatus.OK, response);
     }
 }
+

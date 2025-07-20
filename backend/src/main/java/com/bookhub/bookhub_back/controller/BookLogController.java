@@ -4,6 +4,7 @@ import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.book.response.BookLogResponseDto;
 import com.bookhub.bookhub_back.service.BookLogService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class BookLogController {
 
     // 로그 목록 조회 (isbn으로)
     @GetMapping
+    @Operation(summary = "책 수정 기록 조회 (isbn으로)")
     public ResponseEntity<ResponseDto<List<BookLogResponseDto>>> getLogsByBook(
             @RequestParam String isbn
     ) {

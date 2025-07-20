@@ -10,6 +10,7 @@ import com.bookhub.bookhub_back.dto.location.response.LocationResponseDto;
 import com.bookhub.bookhub_back.dto.location.response.LocationUpdateResponseDto;
 import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.BookLocationService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class BookLocationController {
 
     // 진열위치 생성
     @PostMapping(BOOK_LOCATION_MANAGER)
+    @Operation(summary = "진열위치 생성")
     public ResponseEntity<ResponseDto<LocationCreateResponseDto>> createLocation(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @Valid @RequestBody LocationCreateRequestDto dto
@@ -40,6 +42,7 @@ public class BookLocationController {
 
     // 진열위치 수정
     @PutMapping(BOOK_LOCATION_MANAGER + "/{locationId}")
+    @Operation(summary = "진열위치 수정")
     public ResponseEntity<ResponseDto<LocationUpdateResponseDto>> updateLocation(
             @PathVariable Long locationId,
             @Valid @RequestBody LocationUpdateRequestDto dto
@@ -50,6 +53,7 @@ public class BookLocationController {
 
     // 지점별 진열위치 전체조회
     @GetMapping(BOOK_LOCATION_COMMON)
+    @Operation(summary = "진열위치 조회 (지점별)")
     public ResponseEntity<ResponseDto<List<LocationResponseDto>>> searchBranchBooksByTitle(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam(required = false, defaultValue = "")  String keyword
@@ -60,6 +64,7 @@ public class BookLocationController {
 
     // 지점별 진열위치 단건조회
     @GetMapping(BOOK_LOCATION_COMMON + "/{locationId}")
+    @Operation(summary = "진열위치 단건 조회")
     public ResponseEntity<ResponseDto<LocationDetailResponseDto>> getLocation(
             @PathVariable Long locationId
     ){
@@ -69,6 +74,7 @@ public class BookLocationController {
 
     // 진열위치 삭제
     @DeleteMapping(BOOK_LOCATION_MANAGER + "/{locationId}")
+    @Operation(summary = "진열위치 삭제")
     public ResponseEntity<ResponseDto<Void>> deleteLocation(
             @PathVariable Long locationId
     ){

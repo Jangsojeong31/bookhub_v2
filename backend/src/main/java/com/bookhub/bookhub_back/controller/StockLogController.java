@@ -6,6 +6,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockLogResponseDto;
 import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.StockLogService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class StockLogController {
 
     // 재고 로그 조회 - admin
     @GetMapping(STOCK_LOGS_ADMIN)
+    @Operation(summary = "재고 로그 조건별 조회 - admin")
     public ResponseEntity<ResponseDto<List<StockLogResponseDto>>> searchStockLogs(
             @RequestParam(required = false) String branchName,
             @RequestParam(required = false) String type,
@@ -42,6 +44,7 @@ public class StockLogController {
 
     // 재고 로그 조회 (소속 지점만) - manager
     @GetMapping(STOCK_LOGS_MANAGER)
+    @Operation(summary = "재고 로그 조건별 조회 (소속 지점) - manager")
     public ResponseEntity<ResponseDto<List<StockLogResponseDto>>> searchStockLogsByBranch(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam(required = false) String type,

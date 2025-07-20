@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.dto.statistics.response.revenue.MonthlyRevenueSt
 import com.bookhub.bookhub_back.dto.statistics.response.revenue.WeekdayRevenueResponseDto;
 import com.bookhub.bookhub_back.dto.statistics.response.revenue.WeeklyRevenueStatisticsDto;
 import com.bookhub.bookhub_back.service.statistics.RevenueStatisticsService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class RevenueStatisticsController {
 
     // 주간
     @GetMapping("/weekly")
+    @Operation(summary = "매출 통계 - 주간 통계")
     public ResponseEntity<ResponseDto<List<WeeklyRevenueStatisticsDto>>> getWeeklyRevenue(
             @RequestParam("year") int year,
             @RequestParam("month") int month
@@ -37,6 +39,7 @@ public class RevenueStatisticsController {
 
     // 월간
     @GetMapping("/monthly")
+    @Operation(summary = "매출 통계 - 월간 통계")
     public ResponseEntity<ResponseDto<List<MonthlyRevenueStatisticsDto>>> getMonthlyRevenue(
             @RequestParam int year
     ){
@@ -46,6 +49,7 @@ public class RevenueStatisticsController {
 
     // 요일별
     @GetMapping("/weekday")
+    @Operation(summary = "매출 통계 - 요일별 통계")
     public ResponseEntity<ResponseDto<List<WeekdayRevenueResponseDto>>> getWeekdayRevenue(
             @RequestParam int year,
             @RequestParam int quarter
@@ -55,6 +59,7 @@ public class RevenueStatisticsController {
     }
 
     @GetMapping("/branch")
+    @Operation(summary = "매출 통계 - 지점별 통계")
     public ResponseEntity<ResponseDto<List<BranchRevenueResponseDto>>> getBranchRevenue(
             @RequestParam("startDate") LocalDate startDate,
             @RequestParam("endDate") LocalDate endDate

@@ -5,6 +5,7 @@ import com.bookhub.bookhub_back.common.enums.ChangeType;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeChangeLogListResponseDto;
 import com.bookhub.bookhub_back.service.EmployeeChangeLogService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class EmployeeChangeLogController {
 
     // 조건별 조회
     @GetMapping
+    @Operation(summary = "직원 정보 변경 기록 조건별 조회")
     public ResponseEntity<ResponseDto<List<EmployeeChangeLogListResponseDto>>> searchEmployeeChangeLogs(
             @RequestParam(required = false) String employeeName,
             @RequestParam(required = false) String authorizerName,
