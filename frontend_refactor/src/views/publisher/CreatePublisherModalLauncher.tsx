@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { PublisherRequestDto } from '@/dtos/publisher/request/publisher.request.dto';
 import { createPublisher } from '@/apis/publisher/publisher';
 import { useCookies } from 'react-cookie';
-import Modal from '@/apis/constants/Modal';
+import Modal from '@/components/Modal';
 import './publisher.css';
 
 interface CreatePublisherModalLauncherProps {

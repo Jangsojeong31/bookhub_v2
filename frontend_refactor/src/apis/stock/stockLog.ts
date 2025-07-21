@@ -1,6 +1,6 @@
 // src/apis/stockLog.ts
 import { axiosInstance, bearerAuthorization } from '@/apis/axiosConfig';
-import * as urls from '@/apis/constants/csy.constants';
+import * as urls from '@/constants/url/csy.constants';
 import {
   StockLogResponseDto,
   StockLogDetailResponseDto,

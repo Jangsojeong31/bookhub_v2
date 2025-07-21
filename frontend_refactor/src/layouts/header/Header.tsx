@@ -4,7 +4,7 @@ import { logoutRequest } from "@/apis/auth/auth";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useEmployeeStore } from "@/stores/useEmployeeStore";
-import AlertIcon from "@/apis/constants/AlertIcon";
+import AlertIcon from "@/components/AlertIcon";
 
 export default function Header() {
   const [cookies, , removeCookie] = useCookies(["accessToken", "tokenExpiresAt"]);
@@ -32,7 +32,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.logo}>
         <img
-          src="/src/apis/constants/북허브_로고_배경제거_navy.png"
+          src="/src/constants/image/북허브_로고_배경제거_navy.png"
           alt="BookHub 로고"
           onClick={onLogoClick}
           className={styles.logoImg}

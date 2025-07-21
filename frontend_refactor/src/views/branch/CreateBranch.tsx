@@ -4,7 +4,7 @@ import {
   branchSearchRequest,
   branchUpdateRequest,
 } from "@/apis/branch/branch";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import { BranchSearchResponseDto } from "@/dtos/branch/response/branch-search.respnse.dto";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";

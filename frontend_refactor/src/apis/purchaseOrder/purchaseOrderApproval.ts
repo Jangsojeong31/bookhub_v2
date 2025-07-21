@@ -2,7 +2,7 @@ import { ResponseDto } from "@/dtos";
 import { PurchaseOrderResponseDto } from "@/dtos/purchaseOrder/response/purchaseOrder.response.dto";
 import { AxiosError } from "axios";
 import { axiosInstance, bearerAuthorization, responseSuccessHandler, responseErrorHandler } from "../axiosConfig";
-import {GET_ALL_PURCHASE_ORDER_REQUESTED_URL, GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL, PUT_PURCHASE_ORDER_STATUS_URL } from "../constants/jsj.constants";
+import {GET_ALL_PURCHASE_ORDER_REQUESTED_URL, GET_PURCHASE_ORDER_APPROVAL_BY_CRITERIA_URL, PUT_PURCHASE_ORDER_STATUS_URL } from "../../constants/url/jsj.constants";
 import { PurchaseOrderApproveRequestDto } from "@/dtos/purchaseOrderApproval/request/purchaseOrder-approve.request.dto";
 import { PurchaseOrderApprovalResponseDto } from "@/dtos/purchaseOrderApproval/response/purchaseOrderApproval.respose.dto";
 

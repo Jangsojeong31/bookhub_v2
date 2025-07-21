@@ -8,7 +8,7 @@ import {
 import { AuthorResponseDto } from "@/dtos/author/response/author.response.dto";
 import { NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import * as style from "@/styles/style";
 import CreateAuthor from "./CreateAuthor";
 

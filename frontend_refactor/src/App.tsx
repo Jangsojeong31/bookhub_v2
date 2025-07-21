@@ -1,5 +1,3 @@
-import Sidebar from "./layouts/sidebar/Sidebar";
-import Header from "./layouts/header/Header";
 import {
   Navigate,
   Outlet,

@@ -3,7 +3,7 @@ import { BookCreateRequestDto } from "@/dtos/book/request/book-create.request.dt
 import { BookResponseDto } from "@/dtos/book/response/book-response.dto";
 import { axiosInstance, bearerAuthorization, responseErrorHandler, responseSuccessHandler } from "../axiosConfig";
 import { AxiosError } from "axios";
-import { GET_BOOK_URL, POST_BOOK_URL, HIDE_BOOK_URL, UPDATE_BOOK_URL, SEARCH_BOOK_LOGS_URL } from "../constants/sjw.constants";
+import { GET_BOOK_URL, POST_BOOK_URL, HIDE_BOOK_URL, UPDATE_BOOK_URL, SEARCH_BOOK_LOGS_URL } from "../../constants/url/sjw.constants";
 import { BookUpdateRequestDto } from "@/dtos/book/request/book-update.request.dto";
 import { BookLogResponseDto } from "@/dtos/book/response/book-log-response.dto";
 

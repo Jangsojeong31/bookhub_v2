@@ -1,5 +1,5 @@
 import { GET_BRANCH_URL } from "@/apis";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import {
   employeeDetailRequest,
   employeeRequest,

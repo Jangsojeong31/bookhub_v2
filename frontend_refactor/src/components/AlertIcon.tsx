@@ -4,7 +4,7 @@ import { getUnreadAlerts } from "@/apis/alert/alert";
 import { useNavigate } from "react-router-dom";
 import { useEmployeeStore } from "@/stores/useEmployeeStore";
 import { Bell } from "lucide-react";
-import styles from "../alert/AlertIcon.module.css";
+import styles from "./AlertIcon.module.css";
 
 export default function AlertIcon() {
   const [unreadCount, setUnreadCount] = useState(0);

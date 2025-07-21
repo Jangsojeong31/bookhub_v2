@@ -2,7 +2,7 @@ import { ResponseDto } from "@/dtos";
 import { StockUpdateRequestDto } from "@/dtos/stock/Stock.request.dto";
 import { StockCreateResponseDto, StockUpdateResponseDto, StockListResponseDto } from "@/dtos/stock/Stock.response.dto";
 import axios, { Axios } from "axios";
-import { UPDATE_STOCK_URL, SEARCH_STOCKS_BY_BRANCH_URL, SEARCH_STOCKS_URL } from "../constants/csy.constants";
+import { UPDATE_STOCK_URL, SEARCH_STOCKS_BY_BRANCH_URL, SEARCH_STOCKS_URL } from "../../constants/url/csy.constants";
 import { bearerAuthorization } from "../axiosConfig";
 import { access } from "fs";
 

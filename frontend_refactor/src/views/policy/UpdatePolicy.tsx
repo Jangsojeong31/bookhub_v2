@@ -1,4 +1,4 @@
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import { PolicyType } from "@/apis/enums/PolicyType";
 import { updatePolicy } from "@/apis/policy/policy";
 import { PolicyUpdateRequestDto } from "@/dtos/policy/policy.request.dto";

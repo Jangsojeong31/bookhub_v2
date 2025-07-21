@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ResponseDto } from "@/dtos";
 import { ReceptionListResponseDto } from "@/dtos/reception/response/receptionlist-response.dto";
-import { GET_ADMIN_RECEPTION_URL, GET_CONFIRMED_RECEPTION_URL, GET_PENDING_RECEPTION_URL, PUT_RECEPTION_URL } from "../constants/sjw.constants";
+import { GET_ADMIN_RECEPTION_URL, GET_CONFIRMED_RECEPTION_URL, GET_PENDING_RECEPTION_URL, PUT_RECEPTION_URL } from "../../constants/url/sjw.constants";
 
 export const getAllReceptionApproval = async (
   token: string
