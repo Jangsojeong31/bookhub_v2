@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import { commonMenu } from "./common";
 import { adminMenu } from "./admin";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 
 export default function Sidebar() {
   const navigate = useNavigate();

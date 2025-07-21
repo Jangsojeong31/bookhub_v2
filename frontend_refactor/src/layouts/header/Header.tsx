@@ -3,7 +3,7 @@ import styles from "./Header.module.css";
 import { logoutRequest } from "@/apis/auth/auth";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 import AlertIcon from "@/apis/constants/AlertIcon";
 
 export default function Header() {
@@ -23,7 +23,6 @@ export default function Header() {
   };
 
   const token = cookies.accessToken;
-  console.log(token);
 
   const onLogoClick = () => {
     navigate("/main");

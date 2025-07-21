@@ -1,4 +1,4 @@
-import { Employee } from "@/stores/employee.store";
+import { Employee } from "@/stores/useEmployeeStore";
 
 export interface SignInResponseDto {
   token: string;

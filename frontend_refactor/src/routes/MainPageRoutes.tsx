@@ -1,8 +1,8 @@
 import { Route } from 'react-router-dom'
-import MainPage from './Main'
+import MainPage from '../views/main/Main'
 
 
-function Main() {
+function MainPageRoutes() {
   return (
     <>
     <Route path = "/main" element = {<MainPage />} />
@@ -10,4 +10,4 @@ function Main() {
   )
 }
 
-export default Main
+export default MainPageRoutes

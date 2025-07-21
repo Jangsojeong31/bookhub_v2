@@ -33,16 +33,6 @@ export const markAlertsAsRead = async (
   }
 };
 
-// 안읽은 알림 개수 
-export async function getUnreadAlertCount(employeeId: number, token: string): Promise<ResponseDto<number>> {
-  const res = await axios.get(`/api/alerts/unread-count?employeeId=${employeeId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return res.data;
-}
-
 export function getAlertTargetUrl(alert: AlertResponseDto): string | null {
   const { alertType } = alert;
 

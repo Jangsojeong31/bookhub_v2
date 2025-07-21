@@ -44,7 +44,7 @@ public class AuthController {
     // 아이디 중복 확인
     @GetMapping("/users/exists/{loginId}")
     @Operation(summary = "아이디 중복 확인")
-    public ResponseEntity<ResponseDto<Void>> checkLoginIdDuplicate(@RequestParam String loginId) {
+    public ResponseEntity<ResponseDto<Void>> checkLoginIdDuplicate(@PathVariable String loginId) {
         ResponseDto<Void> responseDto = authService.checkLoginIdDuplicate(loginId);
         return ResponseDto.toResponseEntity(HttpStatus.OK, responseDto);
     }

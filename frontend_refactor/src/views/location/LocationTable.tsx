@@ -1,5 +1,5 @@
 import { LocationResponseDto } from "@/dtos/location/location.dto";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 
 interface Props {
   data: LocationResponseDto[];

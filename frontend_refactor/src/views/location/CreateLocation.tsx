@@ -1,7 +1,7 @@
 import { DisplayType } from "@/apis/enums/DisplayType";
 import { createLocation } from "@/apis/location/location";
 import { LocationCreateRequestDto } from "@/dtos/location/location.dto";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 import { useRef, useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 

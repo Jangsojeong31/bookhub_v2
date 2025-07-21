@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { getUnreadAlerts } from "@/apis/alert/alert";
 import { useNavigate } from "react-router-dom";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 import { Bell } from "lucide-react";
 import styles from "../alert/AlertIcon.module.css";
 
@@ -17,7 +17,7 @@ export default function AlertIcon() {
       const token = cookies.accessToken;
       if (!employeeId || !token) return;
 
-      const res = await getUnreadAlerts(employeeId, token);
+      const res = await getUnreadAlerts(token);
       if (res.code === "SU" && res.data) {
         setUnreadCount(res.data.length);
       }

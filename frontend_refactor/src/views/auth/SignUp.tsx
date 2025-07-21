@@ -48,7 +48,7 @@ function SignUp() {
   }, [form.password, form.confirmPassword]);
 
   useEffect(() => {
-    fetch(`${GET_BRANCH_URL}?branchLocation`, {
+    fetch(`${GET_BRANCH_URL}`, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -208,7 +208,7 @@ function SignUp() {
         <br />
         <input
           type="tel"
-          placeholder="전화번호"
+          placeholder="전화번호( ' - ' 를 제외하고 입력해주세요)"
           name="phoneNumber"
           value={form.phoneNumber}
           onChange={onInputChange}

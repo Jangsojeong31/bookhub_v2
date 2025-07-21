@@ -14,11 +14,7 @@ import { AuthorResponseDto } from '@/dtos/author/response/author.response.dto';
 import { PageResponseDto } from '@/dtos/page-response.dto';
 import './book.css';
 
-interface CreateBookProps {
-  onSuccess: () => Promise<void>;
-}
-
-function CreateBook({ onSuccess }: CreateBookProps) {
+function CreateBook () {
   const [cookies] = useCookies(["accessToken"]);
 
   const [isbn, setIsbn] = useState("");
@@ -124,7 +120,6 @@ function CreateBook({ onSuccess }: CreateBookProps) {
       if (res.code !== "SU") throw new Error(res.message);
 
       alert("책 등록 성공!");
-      await onSuccess();
     } catch (err: any) {
       alert(err.message || "책 등록 실패");
     }

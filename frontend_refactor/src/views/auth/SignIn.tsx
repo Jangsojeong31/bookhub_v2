@@ -1,6 +1,6 @@
 import { signInRequest } from "@/apis/auth/auth";
 import { SignInRequestDto } from "@/dtos/auth/request/sign-in.request.dto";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";

@@ -1,14 +1,14 @@
 import React from "react";
 import { Navigate, Route } from "react-router-dom";
-import SignIn from "./SignIn";
-import SignUp from "./SignUp";
-import LoginIdFindEmail from "./loginIdFindEmail";
-import LoginIdGet from "./loginIdGet";
-import PasswordChange from "./passwordChange";
-import PasswordChangeSendEmail from "./PasswordChangeSendEmail";
-import EmployeeUpdate from "./EmployeeUpdate";
+import SignIn from "../views/auth/SignIn";
+import SignUp from "../views/auth/SignUp";
+import LoginIdFindEmail from "../views/auth/loginIdFindEmail";
+import LoginIdGet from "../views/auth/loginIdGet";
+import PasswordChange from "../views/auth/passwordChange";
+import PasswordChangeSendEmail from "../views/auth/PasswordChangeSendEmail";
+import EmployeeUpdate from "../views/auth/EmployeeUpdate";
 
-function Auth() {
+function AuthRoutes() {
   return (
     <>
       <Route path="/" element={<Navigate to="/auth/login" />} />
@@ -26,4 +26,4 @@ function Auth() {
   );
 }
 
-export default Auth;
+export default AuthRoutes;
