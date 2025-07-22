@@ -35,7 +35,6 @@ function PublisherPage() {
     };
 
   const fetchPage = async (publisherName: string) => {
-    console.log("넘겨받은 keyword:", publisherName);
     if (!accessToken) return;
   
     try {

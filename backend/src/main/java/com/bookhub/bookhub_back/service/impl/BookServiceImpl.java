@@ -9,6 +9,7 @@ import com.bookhub.bookhub_back.dto.book.request.BookCreateRequestDto;
 import com.bookhub.bookhub_back.dto.book.request.BookUpdateRequestDto;
 import com.bookhub.bookhub_back.dto.book.response.BookResponseDto;
 import com.bookhub.bookhub_back.entity.*;
+import com.bookhub.bookhub_back.exception.DuplicateEntityException;
 import com.bookhub.bookhub_back.repository.*;
 import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.BookLogService;
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
-    private final BookCategoryRepository bookCategoryRepository;
     private final AuthorRepository authorRepository;
     private final PublisherRepository publisherRepository;
     private final DiscountPolicyRepository discountPolicyRepository;
@@ -46,6 +46,10 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public ResponseDto<BookResponseDto> createBook(BookCreateRequestDto dto, UserPrincipal userPrincipal, MultipartFile coverImageFile) throws IOException {
+        if(bookRepository.existsByBookIsbn(dto.getIsbn())) {
+            throw new DuplicateEntityException("이미 존재하는 ISBN 입니다.");
+        }
+
         Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -172,6 +176,10 @@ public class BookServiceImpl implements BookService {
 
         Book book = bookRepository.findById(isbn)
                 .orElseThrow(EntityNotFoundException::new);
+
+        if (book.getBookStatus().equals(BookStatus.HIDDEN)) {
+            throw new IllegalStateException("이미 hidden 처리된 도서입니다.");
+        }
 
         book.setBookStatus(BookStatus.HIDDEN);
         bookRepository.save(book);

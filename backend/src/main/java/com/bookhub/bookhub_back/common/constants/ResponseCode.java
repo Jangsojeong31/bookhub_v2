@@ -73,4 +73,7 @@ public interface ResponseCode {
     String INVALID_STATE_TRANSITION = "IST"; // 현재 상태에서는 요청된 처리 불가
     String ALREADY_APPROVED = "AA"; // 이미 승인된 요청
     String ALREADY_CANCELLED = "AC"; // 이미 취소된 요청
+
+    // 검색어 유효성 검증
+    String INVALID_SEARCH_CONDITION = "ISC.";
 }

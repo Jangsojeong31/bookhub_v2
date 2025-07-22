@@ -21,4 +21,10 @@ public interface BookCategoryRepository extends JpaRepository<BookCategory, Long
 
     @Query("SELECT bc FROM BookCategory bc WHERE bc.parentCategoryId IS NULL AND bc.isActive = true")
     List<BookCategory> findRootCategories();
+
+    boolean existsByCategoryName(String categoryName);
+
+    BookCategory findByCategoryName(String categoryName);
+
+    boolean existsByCategoryNameAndCategoryTypeAndParentCategoryId_CategoryId(String categoryName, CategoryType categoryType, Long parentCategoryIdCategoryId);
 }

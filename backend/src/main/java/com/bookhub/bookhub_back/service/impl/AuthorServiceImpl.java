@@ -9,7 +9,9 @@ import com.bookhub.bookhub_back.dto.author.request.AuthorRequestDto;
 import com.bookhub.bookhub_back.dto.author.response.AuthorResponseDto;
 import com.bookhub.bookhub_back.entity.Author;
 import com.bookhub.bookhub_back.exception.BusinessException;
-import com.bookhub.bookhub_back.exception.DuplicateResourceException;
+import com.bookhub.bookhub_back.exception.DuplicateEntityException;
+import com.bookhub.bookhub_back.exception.InvalidSearchConditionException;
+import com.bookhub.bookhub_back.exception.ReferencedEntityException;
 import com.bookhub.bookhub_back.repository.AuthorRepository;
 import com.bookhub.bookhub_back.repository.BookRepository;
 import com.bookhub.bookhub_back.service.AuthorService;
@@ -30,7 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public ResponseDto<AuthorResponseDto> createAuthor(AuthorRequestDto dto) {
         if (authorRepository.existsByAuthorEmail(dto.getAuthorEmail())) {
-            throw new BusinessException(ResponseCode.DUPLICATED_ENTITY, "이미 존재하는 작가 이메일입니다.");
+            throw new DuplicateEntityException("이미 존재하는 작가 이메일입니다.");
         }
 
         Author newAuthor = Author.builder()
@@ -48,8 +50,9 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public ResponseDto<List<AuthorResponseDto>> getAuthorsByName(String authorName) {
         if (authorName == null || authorName.trim().isEmpty()) {
-            throw new IllegalArgumentException(ResponseMessageKorean.INVALID_SEARCH_CONDITION);
+            throw new InvalidSearchConditionException(ResponseMessageKorean.INVALID_SEARCH_CONDITION);
         }
+
         List<Author> authors = authorRepository.findAllByAuthorNameContaining(authorName);
 
         List<AuthorResponseDto> responseDtos = authors.stream()
@@ -67,7 +70,7 @@ public class AuthorServiceImpl implements AuthorService {
 
         if (!author.getAuthorEmail().equals(dto.getAuthorEmail())
                 && authorRepository.existsByAuthorEmail(dto.getAuthorEmail())) {
-            throw new BusinessException(ResponseCode.DUPLICATED_ENTITY, "이미 존재하는 작가 이메일입니다.");
+            throw new DuplicateEntityException("이미 존재하는 작가 이메일입니다.");
         }
 
         author.setAuthorName(dto.getAuthorName());
@@ -87,7 +90,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .orElseThrow(EntityNotFoundException::new);
 
         if (bookRepository.existsByAuthorId_AuthorId(author.getAuthorId())) {
-            throw new BusinessException(ResponseCode.ENTITY_REFERENCE, "참조 중인 작가는 삭제할 수 없습니다.");
+            throw new ReferencedEntityException();
         }
 
         authorRepository.delete(author);

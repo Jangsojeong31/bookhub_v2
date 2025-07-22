@@ -2,8 +2,10 @@ package com.bookhub.bookhub_back.exception;
 
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessage;
+import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +15,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.nio.file.AccessDeniedException;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({ IllegalArgumentException.class, IllegalStateException.class })
     public ResponseEntity<ResponseDto<?>> handleBadRequest(RuntimeException e) {
-        String errorMessage = e.getMessage() != null ? e.getMessage() : ResponseMessage.INVALID_INPUT;
+        String errorMessage = e.getMessage() != null ? e.getMessage() : ResponseMessageKorean.INVALID_INPUT;
         return logAndRespond(ResponseCode.INVALID_INPUT, errorMessage, HttpStatus.BAD_REQUEST, e);
     }
 
@@ -56,7 +59,7 @@ public class GlobalExceptionHandler {
     }
 
     private ResponseEntity<ResponseDto<?>> logAndRespond(String code, String message, HttpStatus status, Exception e) {
-        e.printStackTrace();
+        log.error("예외 발생: code={}, message={}, HttpStatus={}", code, message, status, e);
         return ResponseDto.failWithStatus(code, message, status);
     }
 }

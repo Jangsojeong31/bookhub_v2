@@ -13,7 +13,11 @@ import com.bookhub.bookhub_back.dto.category.response.CategoryUpdateResponseDto;
 import com.bookhub.bookhub_back.dto.policy.response.DiscountPolicyDetailResponseDto;
 import com.bookhub.bookhub_back.entity.BookCategory;
 import com.bookhub.bookhub_back.entity.DiscountPolicy;
+import com.bookhub.bookhub_back.exception.BusinessException;
+import com.bookhub.bookhub_back.exception.DuplicateEntityException;
+import com.bookhub.bookhub_back.exception.ReferencedEntityException;
 import com.bookhub.bookhub_back.repository.BookCategoryRepository;
+import com.bookhub.bookhub_back.repository.BookRepository;
 import com.bookhub.bookhub_back.repository.DiscountPolicyRepository;
 import com.bookhub.bookhub_back.service.BookCategoryService;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,10 +36,17 @@ import java.util.stream.Collectors;
 public class BookCategoryServiceImpl implements BookCategoryService {
     private final BookCategoryRepository bookCategoryRepository;
     private final DiscountPolicyRepository discountPolicyRepository;
+    private final BookRepository bookRepository;
 
     // 카테고리 등록
     @Override
     public ResponseDto<CategoryCreateResponseDto> createCategory(CategoryCreateRequestDto dto) {
+
+        if (bookCategoryRepository.existsByCategoryNameAndCategoryTypeAndParentCategoryId_CategoryId(
+                dto.getCategoryName(), dto.getCategoryType(), dto.getParentCategoryId()
+        )) {
+            throw new DuplicateEntityException("이미 존재하는 카테고리입니다.");
+        }
 
         BookCategory parent = dto.getParentCategoryId() != null
                 ? bookCategoryRepository.findById(dto.getParentCategoryId())
@@ -90,10 +102,12 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         BookCategory category = bookCategoryRepository.findById(categoryId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        BookCategory parent = dto.getParentCategoryId() != null
-                ? bookCategoryRepository.findById(dto.getParentCategoryId().getCategoryId())
-                .orElseThrow(EntityNotFoundException::new)
-                : null;
+        if (!category.getCategoryName().equals(dto.getCategoryName())
+                && bookCategoryRepository.existsByCategoryNameAndCategoryTypeAndParentCategoryId_CategoryId(
+                dto.getCategoryName(), dto.getCategoryType(), dto.getParentCategoryId().getCategoryId()
+        )) {
+            throw new DuplicateEntityException("이미 존재하는 카테고리입니다.");
+        }
 
         DiscountPolicy policy = dto.getDiscountPolicyId() != null
                 ? discountPolicyRepository.findById(dto.getDiscountPolicyId())
@@ -125,6 +139,14 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         BookCategory category = bookCategoryRepository.findById(categoryId)
                 .orElseThrow(EntityNotFoundException::new);
 
+        if (bookRepository.existsByCategoryId_CategoryId(categoryId)) {
+            throw new ReferencedEntityException("참조 중인 카테고리는 비활성화할 수 없습니다.");
+        }
+
+        if (!category.getIsActive()) {
+            throw new IllegalStateException("이미 비활성화된 카테고리입니다.");
+        }
+
         category.setIsActive(false);
 
         bookCategoryRepository.save(category);
@@ -135,7 +157,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     @Override
     public ResponseDto<DiscountPolicyDetailResponseDto> getPolicyByCategoryId(Long categoryId) {
         BookCategory category = bookCategoryRepository.findById(categoryId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카테고리입니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
         DiscountPolicy policy = category.getDiscountPolicyId();
 

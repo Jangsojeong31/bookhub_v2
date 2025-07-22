@@ -13,6 +13,7 @@ import com.bookhub.bookhub_back.dto.location.response.LocationUpdateResponseDto;
 import com.bookhub.bookhub_back.entity.BookDisplayLocation;
 import com.bookhub.bookhub_back.entity.Book;
 import com.bookhub.bookhub_back.entity.Branch;
+import com.bookhub.bookhub_back.exception.DuplicateEntityException;
 import com.bookhub.bookhub_back.repository.BookDisplayLocationRepository;
 import com.bookhub.bookhub_back.repository.BookRepository;
 import com.bookhub.bookhub_back.repository.BranchRepository;
@@ -20,6 +21,7 @@ import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.BookLocationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.internal.LoadingCache;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,11 @@ public class BookLocationServiceImpl implements BookLocationService {
 
         Book book = bookRepository.findById(dto.getBookIsbn())
                 .orElseThrow(EntityNotFoundException::new);
+
+        if(bookLocationRepository.existsByBookIsbn_BookIsbnAndFloorAndHallAndSectionAndDisplayType(
+                dto.getBookIsbn(), dto.getFloor(), dto.getHall(), dto.getSection(), dto.getDisplayType())) {
+            throw new DuplicateEntityException("해당 조건의 책 위치가 이미 존재합니다.");
+        }
 
         BookDisplayLocation newLocation = BookDisplayLocation.builder()
                 .branchId(branch)
@@ -70,11 +77,17 @@ public class BookLocationServiceImpl implements BookLocationService {
         BookDisplayLocation location = bookLocationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
 
-        if(dto.getFloor() != null) location.setFloor(dto.getFloor());
-        if(dto.getHall() != null) location.setHall(dto.getHall());
-        if(dto.getSection() != null) location.setSection(dto.getSection());
-        if(dto.getDisplayType() != null) location.setDisplayType(dto.getDisplayType());
-        if(dto.getNote() != null) location.setNote(dto.getNote());
+        location.setFloor(dto.getFloor());
+        location.setHall(dto.getHall());
+        location.setSection(dto.getSection());
+        location.setDisplayType(dto.getDisplayType());
+        location.setNote(dto.getNote());
+
+//        if(bookLocationRepository.existsByBookIsbn_BookIsbnAndFloorAndHallAndSectionAndDisplayType(
+//                location.getBookIsbn().getBookIsbn(), location.getFloor(), location.getHall(),
+//                location.getSection(), location.getDisplayType())) {
+//            throw new DuplicateEntityException("해당 조건의 책 위치가 이미 존재합니다.");
+//        }
 
         BookDisplayLocation updatedLocation = bookLocationRepository.save(location);
 
@@ -92,19 +105,15 @@ public class BookLocationServiceImpl implements BookLocationService {
     @Override
     public ResponseDto<List<LocationResponseDto>> searchBranchBooksByTitle(UserPrincipal userPrincipal, String keyword) {
         Branch branch = branchRepository.findById(userPrincipal.getBranchId())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID + ResponseMessage.NO_EXIST_ID));
+                .orElseThrow(EntityNotFoundException::new);
 
         List<Book> books = bookRepository.findAllByBookTitleContaining(keyword);
 
         if (books.isEmpty()) {
-            throw new EntityNotFoundException(ResponseCode.NO_EXIST_ID + ResponseMessage.NO_EXIST_ID);
+            throw new IllegalArgumentException("검색한 도서가 존재하지 않습니다.");
         }
 
         List<BookDisplayLocation> locations = bookLocationRepository.findByBranchAndBooks(branch, books);
-
-        if (locations.isEmpty()) {
-            throw new EntityNotFoundException(ResponseCode.NO_EXIST_ID + ": 해당 지점에 해당 책들이 진열되어 있지 않습니다.");
-        }
 
         List<LocationResponseDto> responseDtos = locations.stream()
                 .map(location -> LocationResponseDto.builder()
@@ -124,7 +133,7 @@ public class BookLocationServiceImpl implements BookLocationService {
     @Override
     public ResponseDto<LocationDetailResponseDto> getLocation(Long locationId) {
         BookDisplayLocation location = bookLocationRepository.findById(locationId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
+                .orElseThrow(EntityNotFoundException::new);
 
         LocationDetailResponseDto responseDto = LocationDetailResponseDto.builder()
                 .locationId(location.getLocationId())
@@ -142,7 +151,7 @@ public class BookLocationServiceImpl implements BookLocationService {
     @Override
     public ResponseDto<Void> deleteLocation(Long locationId) {
         BookDisplayLocation location = bookLocationRepository.findById(locationId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
+                .orElseThrow(EntityNotFoundException::new);
 
         bookLocationRepository.delete(location);
 
