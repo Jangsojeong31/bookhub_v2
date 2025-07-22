@@ -40,6 +40,7 @@ public interface ResponseCode {
     String NO_EXIST_CUSTOMER = "NC"; // 존재하지 않는 고객
     String TOOL_INSUFFICIENT = "TI"; // 도구 부족
     String RESOURCE_NOT_FOUND = "RNF";
+    String ENTITY_REFERENCE = "ER"; // 참조 중인 데이터가 있음
 
     // 인증번호 / 메시지 관련
     String TEL_AUTH_FAIL = "TAF"; // 전화 인증 실패
@@ -66,5 +67,10 @@ public interface ResponseCode {
     String NO_EXIST_BRANCH = "NEB";
     String DUPLICATED_BRANCH = "DB";
     String NO_EXIST_CONTENT = "NEC";
-    String DUPLICATED_RESOURCE = "DR";
+    String DUPLICATED_ENTITY = "DT";
+
+    // 상태 불일치 관련
+    String INVALID_STATE_TRANSITION = "IST"; // 현재 상태에서는 요청된 처리 불가
+    String ALREADY_APPROVED = "AA"; // 이미 승인된 요청
+    String ALREADY_CANCELLED = "AC"; // 이미 취소된 요청
 }

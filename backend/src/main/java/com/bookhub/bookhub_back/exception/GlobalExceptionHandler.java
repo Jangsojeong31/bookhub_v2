@@ -18,7 +18,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ IllegalArgumentException.class, IllegalStateException.class })
     public ResponseEntity<ResponseDto<?>> handleBadRequest(RuntimeException e) {
-        return logAndRespond(ResponseCode.INVALID_INPUT, ResponseMessage.INVALID_INPUT, HttpStatus.BAD_REQUEST, e);
+        String errorMessage = e.getMessage() != null ? e.getMessage() : ResponseMessage.INVALID_INPUT;
+        return logAndRespond(ResponseCode.INVALID_INPUT, errorMessage, HttpStatus.BAD_REQUEST, e);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -49,9 +50,9 @@ public class GlobalExceptionHandler {
         return logAndRespond(ResponseCode.INTERNAL_SERVER_ERROR, ResponseMessage.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 
-    @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ResponseDto<?>> handleDuplicateResource(DuplicateResourceException e) {
-        return logAndRespond(ResponseCode.DUPLICATED_RESOURCE, e.getMessage(), HttpStatus.BAD_REQUEST, e);
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ResponseDto<?>> handleBusinessException(BusinessException e) {
+        return logAndRespond(e.getErrorCode(), e.getMessage(), HttpStatus.BAD_REQUEST, e);
     }
 
     private ResponseEntity<ResponseDto<?>> logAndRespond(String code, String message, HttpStatus status, Exception e) {

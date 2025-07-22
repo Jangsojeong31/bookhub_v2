@@ -1,5 +1,6 @@
 package com.bookhub.bookhub_back.dto.author.response;
 
+import com.bookhub.bookhub_back.entity.Author;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

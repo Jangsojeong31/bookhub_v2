@@ -41,6 +41,7 @@ public interface ResponseMessageKorean {
     String NO_EXIST_CUSTOMER = "존재하지 않는 고객입니다.";
     String RESOURCE_NOT_FOUND = "요청한 리소스를 찾을 수 없습니다.";
     String TOOL_INSUFFICIENT = "도구 수량이 부족합니다.";
+    String ENTITY_REFERENCE = "참조 중인 데이터가 있어 삭제할 수 없습니다.";
 
     // 인증번호 / 메시지
     String TEL_AUTH_FAIL = "전화번호 인증에 실패했습니다.";
@@ -67,4 +68,13 @@ public interface ResponseMessageKorean {
     String NO_EXIST_BRANCH = "지점이 존재하지 않습니다.";
     String DUPLICATED_BRANCH = "이미 지점이 존재합니다.";
     String NO_EXIST_CONTENT = "컨텐츠가 존재하지 않습니다.";
+    String DUPLICATED_ENTITY = "이미 존재하는 데이터입니다.";
+
+    // 상태 불일치 관련
+    String INVALID_STATE_TRANSITION = "현재 상태에서는 요청하신 작업을 수행할 수 없습니다.";
+    String ALREADY_APPROVED = "이미 승인된 요청입니다.";
+    String ALREADY_CANCELLED = "이미 취소된 요청입니다.";
+
+    // 검색어 유효성 검증
+    String INVALID_SEARCH_CONDITION = "올바른 검색어를 입력해주세요.";
 }

@@ -12,6 +12,7 @@ import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignUpRequestDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import com.bookhub.bookhub_back.dto.auth.response.EmployeeSignInResponseDto;
 import com.bookhub.bookhub_back.entity.*;
+import com.bookhub.bookhub_back.exception.DuplicateResourceException;
 import com.bookhub.bookhub_back.security.JwtProvider;
 import com.bookhub.bookhub_back.repository.*;
 import com.bookhub.bookhub_back.security.UserPrincipal;
@@ -54,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 아이디 중복 확인
         if (employeeRepository.existsByLoginId(loginId)) {
-            return ResponseDto.fail(ResponseCode.DUPLICATED_USER_ID, ResponseMessageKorean.DUPLICATED_USER_ID);
+            throw new DuplicateResourceException(ResponseMessageKorean.DUPLICATED_USER_ID);
         }
 
         // 비밀번호 일치 확인
@@ -64,12 +65,12 @@ public class AuthServiceImpl implements AuthService {
 
         // 이메일 중복 확인
         if (employeeRepository.existsByEmail(email)) {
-            return ResponseDto.fail(ResponseCode.DUPLICATED_EMAIL, ResponseMessageKorean.DUPLICATED_EMAIL);
+            throw new DuplicateResourceException(ResponseMessageKorean.DUPLICATED_EMAIL);
         }
 
         // 전화번호 중복 확인
         if (employeeRepository.existsByPhoneNumber(phoneNumber)) {
-            return ResponseDto.fail(ResponseCode.DUPLICATED_TEL_NUMBER, ResponseMessageKorean.DUPLICATED_TEL_NUMBER);
+            throw new DuplicateResourceException(ResponseMessageKorean.DUPLICATED_TEL_NUMBER);
         }
 
         // 비밀번호 암호화

@@ -1,5 +1,6 @@
 package com.bookhub.bookhub_back.repository;
 
+import com.bookhub.bookhub_back.entity.Author;
 import com.bookhub.bookhub_back.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +31,8 @@ public interface BookRepository extends JpaRepository<Book, String> {
     WHERE LOWER(b.bookTitle) LIKE LOWER(CONCAT('%', :bookTitle, '%'))
 """)
     List<Book> findAllByBookTitleContaining(@Param("bookTitle") String bookTitle);
+
+    boolean existsByAuthorId(Author authorId);
+
+    boolean existsByAuthorId_AuthorId(Long authorIdAuthorId);
 }

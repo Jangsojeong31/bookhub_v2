@@ -11,10 +11,12 @@ import { useCookies } from "react-cookie";
 import Modal from "@/components/Modal";
 import * as style from "@/styles/style";
 import CreateAuthor from "./CreateAuthor";
+import Pagination from "@/components/Pagination";
+import usePagination from "@/hooks/usePagination";
 
 // & 기능: 이름으로 조회, 수정, 삭제
 
-function ElseAuthor() {
+function AuthorPage() {
   const [searchForm, setSearchForm] = useState({ authorName: "" });
   const [updateForm, setUpdateForm] = useState({
     authorName: "",
@@ -25,10 +27,8 @@ function ElseAuthor() {
   const [message, setMessage] = useState("");
   const [modalMessage, setModalMessage] = useState("");
   const [modalStatus, setModalStatus] = useState(false);
+  
   const [cookies] = useCookies(["accessToken"]);
-
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 10;
 
   const onSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -52,7 +52,8 @@ function ElseAuthor() {
     const response = await getAllAuthorsByName(authorName, token);
     const { code, message, data } = response;
 
-    if (!code) {
+    if (code != "SU") {
+      setAuthors([]);
       setMessage(message);
       return;
     }
@@ -61,9 +62,11 @@ function ElseAuthor() {
       setAuthors(data);
       setMessage("");
     } else {
-      setMessage("데이터 형식이 올바르지 않습니다.");
+      setAuthors([]);
+      setMessage("검색 결과가 없습니다.");
     }
 
+    // 검색창 초기화
     setSearchForm({ authorName: "" });
   };
 
@@ -133,15 +136,15 @@ function ElseAuthor() {
       return;
     }
 
-    // if (!window.confirm('정말 삭제하시겠습니까?')) return;
+    if (!window.confirm('정말 삭제하시겠습니까?')) return;
 
     try {
       const response = await deleteAuthor(authorId, token);
       const { code, message } = response;
 
-      console.log(code);
       if (code != "SU") {
         setMessage(message);
+        console.log(code, message);
         return;
       }
 
@@ -157,29 +160,16 @@ function ElseAuthor() {
     }
   };
 
-  // 페이지네이션
-  const totalPages = Math.ceil(authors.length / itemsPerPage);
+  const {
+    currentPage,
+    totalPages,
+    pagedItems: pagedAuthors,
+    goToPage,
+    goPrev,
+    goNext,
+  } = usePagination(authors, 10);
 
-  const goToPage = (page: number) => {
-    if (page >= 0 && page < totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const goPrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-  };
-
-  const goNext = () => {
-    if (currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
-  };
-
-  const pagedAuthors = authors.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
-
-  const authorList = authors.map((author) => {
+  const authorList = pagedAuthors.map((author) => {
     return (
       <tr key={author.authorId}>
         <td>{author.authorName}</td>
@@ -304,39 +294,17 @@ function ElseAuthor() {
         ></Modal>
       )}
 
-      {/* 페이지네이션 */}
       {pagedAuthors.length > 0 && (
-        <div className="footer">
-          <button
-            className="pageBtn"
-            onClick={goPrev}
-            disabled={currentPage === 0}
-          >
-            {"<"}
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i).map((i) => (
-            <button
-              key={i}
-              className={`pageBtn${i === currentPage ? " current" : ""}`}
-              onClick={() => goToPage(i)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="pageBtn"
-            onClick={goNext}
-            disabled={currentPage >= totalPages - 1}
-          >
-            {">"}
-          </button>
-          <span className="pageText">
-            {totalPages > 0 ? `${currentPage + 1} / ${totalPages}` : "0 / 0"}
-          </span>
-        </div>
+        <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={goToPage}
+        onPrev={goPrev}
+        onNext={goNext}
+        />
       )}
     </>
   );
 }
 
-export default ElseAuthor;
+export default AuthorPage;

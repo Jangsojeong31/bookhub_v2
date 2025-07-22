@@ -6,6 +6,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.publisher.request.PublisherRequestDto;
 import com.bookhub.bookhub_back.dto.publisher.response.PublisherResponseDto;
 import com.bookhub.bookhub_back.entity.Publisher;
+import com.bookhub.bookhub_back.exception.BusinessException;
 import com.bookhub.bookhub_back.exception.DuplicateResourceException;
 import com.bookhub.bookhub_back.repository.PublisherRepository;
 import com.bookhub.bookhub_back.service.PublisherService;
@@ -24,7 +25,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public ResponseDto<PublisherResponseDto> createPublisher(PublisherRequestDto dto) {
         if (publisherRepository.existsByPublisherName(dto.getPublisherName())) {
-            throw new DuplicateResourceException("이미 존재하는 출판사입니다.");
+            throw new BusinessException(ResponseCode.DUPLICATED_ENTITY, "이미 존재하는 출판사입니다.");
         }
 
         Publisher newPublisher = Publisher.builder()

@@ -36,10 +36,10 @@ public class BookLocationServiceImpl implements BookLocationService {
     @Override
     public ResponseDto<LocationCreateResponseDto> createLocation(UserPrincipal userPrincipal, LocationCreateRequestDto dto) {
         Branch branch = branchRepository.findById(userPrincipal.getBranchId())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
+                .orElseThrow(EntityNotFoundException::new);
 
         Book book = bookRepository.findById(dto.getBookIsbn())
-                .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
+                .orElseThrow(EntityNotFoundException::new);
 
         BookDisplayLocation newLocation = BookDisplayLocation.builder()
                 .branchId(branch)
