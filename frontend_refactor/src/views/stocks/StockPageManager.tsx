@@ -4,6 +4,7 @@ import { searchStocks, searchStocksByBranch } from "@/apis/stock/stock";
 import { StockListResponseDto } from "@/dtos/stock/Stock.response.dto";
 import StockUpdateModal from "./StockUpdateModal";
 import "./stockmodal.css";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 
 function StockPage() {
   const [cookies] = useCookies(["accessToken"]);
@@ -12,7 +13,8 @@ function StockPage() {
   const [selectedStock, setSelectedStock] =
     useState<StockListResponseDto | null>(null);
   const [isUpdateOpen, setIsUpdateOpen] = useState<boolean>(false);
-  const [branchName, setBranchName] = useState("");
+  const branchName = useEmployeeStore((state) => state.employee?.branchName);
+  // const [branchName, setBranchName] = useState("");
 
   const [searchForm, setSearchForm] = useState({
     bookTitle: "",
@@ -49,7 +51,6 @@ function StockPage() {
 
     if (Array.isArray(data)) {
       setStocks(data);
-      setBranchName(data[0].branchName);
       // setMessage("");
     } else {
       alert("올바른 검색 조건을 입력해주세요.");

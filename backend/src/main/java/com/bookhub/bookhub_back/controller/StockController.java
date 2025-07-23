@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.dto.stock.response.StockListResponseDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockUpdateResponseDto;
 import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.StockService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,8 +26,9 @@ public class StockController {
     private static final String STOCK_ADMIN = ApiMappingPattern.ADMIN + "/stocks";
     private static final String STOCK_MANAGER = ApiMappingPattern.MANAGER + "/stocks";
 
-    //책 재고 손실 시 수량 변경(Update)
+    // 재고 수정 - 책 재고 손실 시
     @PutMapping(STOCK_MANAGER + "/{stockId}")
+    @Operation(summary = "재고 수정")
     public ResponseEntity<ResponseDto<StockUpdateResponseDto>> updateStock(
             @PathVariable Long stockId,
             @Valid @RequestBody StockUpdateRequestDto dto
@@ -37,6 +39,7 @@ public class StockController {
 
     // 재고 조회 - manager : 사용자 소속 지점 재고 조회
     @GetMapping(STOCK_MANAGER)
+    @Operation(summary = "재고 조회 (소속 지점) - manager")
     public ResponseEntity<ResponseDto<List<StockListResponseDto>>> searchStocksByBranch(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam(required = false) String bookTitle,
@@ -48,6 +51,7 @@ public class StockController {
 
     // 재고 조회 - admin : 전체 지점 재고 조회 (책제목, isbn, 지점이름)
     @GetMapping(STOCK_ADMIN)
+    @Operation(summary = "재고 조건별 조회 - admin")
     public ResponseEntity<ResponseDto<List<StockListResponseDto>>> searchStocks(
             @RequestParam(required = false) String bookTitle,
             @RequestParam(required = false) String isbn,

@@ -3,7 +3,7 @@ import * as style from "@/styles/style";
 import React, { useState } from "react";
 import { createAuthor } from "@/apis/author/author";
 import { useCookies } from "react-cookie";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 
 // 저자 등록
 function CreateAuthor() {

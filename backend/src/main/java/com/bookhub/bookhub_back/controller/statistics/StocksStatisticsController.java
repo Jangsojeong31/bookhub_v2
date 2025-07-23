@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.dto.statistics.response.stocks.CategoryStockResp
 import com.bookhub.bookhub_back.dto.statistics.response.stocks.TimeStockChartResponseDto;
 import com.bookhub.bookhub_back.dto.statistics.response.stocks.ZeroStockResponseDto;
 import com.bookhub.bookhub_back.service.statistics.StocksStaticsService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class StocksStatisticsController {
 
     //지점별 입고량 및 출고량
     @GetMapping("/branch")
+    @Operation(summary = "재고 통계 - 지점별 입고량 및 출고량")
     public ResponseEntity<ResponseDto<List<BranchStockBarChartDto>>> getBranchStockBarChart(
             @RequestParam int year,
             @RequestParam int month
@@ -34,7 +36,8 @@ public class StocksStatisticsController {
     }
 
     //시간별 입고량 추이
-    @GetMapping("/time")
+    @GetMapping("/period")
+    @Operation(summary = "재고 통계 - 시간별 입고량 추이")
     public ResponseEntity<ResponseDto<List<TimeStockChartResponseDto>>> getTimeStockStatistics(
             @RequestParam int year
     ) {
@@ -44,6 +47,7 @@ public class StocksStatisticsController {
 
     //지점별 재고가 0인 책의 수
     @GetMapping("/zero")
+    @Operation(summary = "재고 통계 - 지점별 재고가 0인 책의 수")
     public ResponseEntity<ResponseDto<List<ZeroStockResponseDto>>> getZeroStockBooks() {
         ResponseDto<List<ZeroStockResponseDto>> revenue = stocksStaticsService.getZeroStockBooks();
         return ResponseEntity.status(HttpStatus.OK).body(revenue);
@@ -51,6 +55,7 @@ public class StocksStatisticsController {
 
     //지점별 각 카테고리의 재고 비율
     @GetMapping("/category")
+    @Operation(summary = "재고 통계 - 지점별 각 카테고리의 재고 비율")
     public ResponseEntity<ResponseDto<List<CategoryStockResponseDto>>> getCategoryStocks(
             @RequestParam String branchName
     ) {

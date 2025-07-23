@@ -36,9 +36,9 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
 
     @Override
     @Transactional
-    public ResponseDto<Void> createReception(ReceptionCreateRequestDto dto) {
+    public void createReception(ReceptionCreateRequestDto dto) {
         PurchaseOrderApproval purchaseOrderApproval = purchaseOrderApprovalRepository.findById(dto.getPurchaseOrderApprovalId())
-                .orElseThrow(()-> new IllegalArgumentException("존재하지 않는 발주 승인 입니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
         BookReceptionApproval bookReceptionApproval = BookReceptionApproval.builder()
                 .bookIsbn(purchaseOrderApproval.getPurchaseOrderId().getBookIsbn().getBookIsbn())
@@ -53,7 +53,7 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
 
         bookReceptionApprovalRepository.save(bookReceptionApproval);
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS) ;
+        ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS);
     }
 
     // 수령 확인
@@ -86,10 +86,7 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
         Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
 
-        for (Employee admin : employeeRepository.findAll().stream()
-                .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
-                .toList()) {
-
+        for (Employee admin : employeeRepository.findAllByAuthorityId(adminAuthority)) {
             alertService.createAlert(AlertCreateRequestDto.builder()
                     .employeeId(admin.getEmployeeId())
                     .alertType(String.valueOf(AlertType.BOOK_RECEIVED_SUCCESS))

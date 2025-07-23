@@ -8,7 +8,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.branch.request.BranchRequestDto;
 import com.bookhub.bookhub_back.dto.branch.response.BranchResponseDto;
 import com.bookhub.bookhub_back.entity.Branch;
-import com.bookhub.bookhub_back.exception.DuplicateResourceException;
+import com.bookhub.bookhub_back.exception.DuplicateEntityException;
 import com.bookhub.bookhub_back.repository.BranchRepository;
 import com.bookhub.bookhub_back.service.BranchService;
 import jakarta.persistence.EntityNotFoundException;
@@ -26,7 +26,7 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public ResponseDto<BranchResponseDto> createBranch(BranchRequestDto dto) {
         if (branchRepository.existsByBranchName(dto.getBranchName())) {
-            throw new DuplicateResourceException("이미 존재하는 지점입니다.");
+            throw new DuplicateEntityException("이미 존재하는 지점입니다.");
         }
 
         Branch newBranch = Branch.builder()
@@ -67,13 +67,14 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ResponseDto<BranchResponseDto> updateBranch(Long branchId, BranchRequestDto dto) {
+
+        boolean isBranchExists = branchRepository.existsByBranchNameAndBranchIdNot(dto.getBranchName(), branchId);
+        if (isBranchExists) {
+            throw new DuplicateEntityException("이미 존재하는 지점입니다.");
+        }
+
         Branch branch = branchRepository.findById(branchId)
                 .orElseThrow(EntityNotFoundException::new);
-
-        if (!branch.getBranchName().equals(dto.getBranchName())
-                && branchRepository.existsByBranchName(dto.getBranchName())) {
-            throw new DuplicateResourceException("이미 존재하는 지점입니다.");
-        }
 
         branch.setBranchName(dto.getBranchName());
         branch.setBranchLocation(dto.getBranchLocation());

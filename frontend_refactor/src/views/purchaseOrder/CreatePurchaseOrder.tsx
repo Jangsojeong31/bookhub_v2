@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import * as style from "@/styles/style";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import { createPurchaseOrder } from "@/apis/purchaseOrder/purchaseOrder";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";

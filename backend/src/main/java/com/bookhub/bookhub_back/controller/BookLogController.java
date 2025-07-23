@@ -4,13 +4,11 @@ import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.book.response.BookLogResponseDto;
 import com.bookhub.bookhub_back.service.BookLogService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,10 +18,11 @@ import java.util.List;
 public class BookLogController {
     private final BookLogService bookLogService;
 
-    // 로그 목록 조회
-    @GetMapping("/{isbn}")
+    // 로그 목록 조회 (isbn으로)
+    @GetMapping
+    @Operation(summary = "책 수정 기록 조회 (isbn으로)")
     public ResponseEntity<ResponseDto<List<BookLogResponseDto>>> getLogsByBook(
-            @PathVariable String isbn
+            @RequestParam String isbn
     ) {
         ResponseDto<List<BookLogResponseDto>> bookLog = bookLogService.getLogsByBook(isbn);
         return ResponseEntity.status(HttpStatus.OK).body(bookLog);

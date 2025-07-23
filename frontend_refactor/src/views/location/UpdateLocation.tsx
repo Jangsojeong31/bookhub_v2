@@ -1,7 +1,7 @@
 import { DisplayType } from "@/apis/enums/DisplayType";
 import { getLocationDetail, updateLocation } from "@/apis/location/location";
 import { LocationUpdateRequestDto } from "@/dtos/location/location.dto";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 import { useRef, useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
@@ -38,6 +38,8 @@ export function UpdateLocation({
             cookies.accessToken,
             locationId
           );
+          if(res.code != "SU") alert(res.message);
+
           if (res.data) {
             setForm({
               floor: res.data.floor,
@@ -91,11 +93,14 @@ export function UpdateLocation({
     if (locationId == null) return;
 
     try {
-      await updateLocation(
+      const res = await updateLocation(
         locationId,
         form,
         cookies.accessToken,
       );
+      
+      if(res.code != "SU") alert(res.message);
+
       await onSuccess();
       alert("수정이 완료되었습니다.")
       onClose();

@@ -3,7 +3,7 @@ import {
   GET_ALL_POSITION_URL,
   GET_BRANCH_URL,
 } from "@/apis";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import {
   employeeChangeRequestDto,
   employeeDetailRequest,

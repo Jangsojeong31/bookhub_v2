@@ -1,14 +1,12 @@
-import { useEmployeeStore } from "@/stores/employee.store";
-import React from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 type RequireRoleProps = {
   allowedRoles: string[];
-  children: React.ReactNode;
 };
 
 function RequireAuth(props: RequireRoleProps) {
-  const { allowedRoles, children } = props;
+  const { allowedRoles } = props;
   const employee = useEmployeeStore((state) => state.employee);
   const location = useLocation();
 
@@ -17,7 +15,7 @@ function RequireAuth(props: RequireRoleProps) {
     return <Navigate to="/main" replace state={{ from: location }} />;
   }
 
-  return <>{children}</>;
+  return <Outlet />;
 }
 
 export default RequireAuth;

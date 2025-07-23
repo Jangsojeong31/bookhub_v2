@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `book_categories` (
 CREATE TABLE IF NOT EXISTS `authors` (
 	author_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     author_name VARCHAR(255) NOT NULL,
-    author_email VARCHAR(255) NOT NULL UNIQUE -- 동명이인 존재 시 구별용
+    author_email VARCHAR(255) NOT NULL UNIQUE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `publishers` (

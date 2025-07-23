@@ -17,12 +17,13 @@ import java.time.LocalDate;
 public class DiscountPolicyCreateRequestDto {
     @NotBlank(message = "할인 정책 이름은 필수입니다.")
     private String policyTitle;
-    private String policyDescription;
-    @NotNull(message = "할인 정책 타입은 필수입니다.")
-    private PolicyType policyType;
-    private Integer totalPriceAchieve;
     @NotNull(message = "할인율은 필수입니다.")
     private Integer discountPercent;
+    @NotNull(message = "할인 정책 타입은 필수입니다.")
+    private PolicyType policyType;
+    private String policyDescription;
+    private Integer totalPriceAchieve;
+    @NotNull(message = "시작일은 필수입니다.")
     private LocalDate startDate;
     private LocalDate endDate;
 }

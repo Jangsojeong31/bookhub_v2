@@ -17,6 +17,7 @@ public class DiscountPolicyUpdateRequestDto {
     private Integer totalPriceAchieve;
     @NotNull(message = "할인율은 필수입니다.")
     private Integer discountPercent;
+    @NotNull(message = "시작일은 필수입니다.")
     private LocalDate startDate;
     private LocalDate endDate;
 }

@@ -96,8 +96,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     // 발주 요청서 수정 - 발주량
     @Override
     public ResponseDto<PurchaseOrderResponseDto> updatePurchaseOrder(PurchaseOrderRequestDto dto, Long purchaseOrderId) {
+
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
                 .orElseThrow(EntityNotFoundException::new);
+
+        if (purchaseOrder.getPurchaseOrderStatus() != PurchaseOrderStatus.REQUESTED) {
+            throw new IllegalStateException("이미 승인 또는 승인 거절된 요청건입니다.");
+        }
 
         purchaseOrder.setPurchaseOrderAmount(dto.getPurchaseOrderAmount());
 
@@ -112,7 +117,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     @Override
     public ResponseDto<Void> deletePurchaseOrder(Long purchaseOrderId) {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
-                .orElseThrow(() -> new EntityNotFoundException(ResponseMessage.FAILED + purchaseOrderId));
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (purchaseOrder.getPurchaseOrderStatus() != PurchaseOrderStatus.REQUESTED) {
+            throw new IllegalStateException("이미 승인 또는 승인 거절된 요청건입니다.");
+        }
 
         purchaseOrderRepository.delete(purchaseOrder);
 
@@ -141,14 +150,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
                 .orElseThrow(EntityNotFoundException::new);
 
+        if(purchaseOrder.getPurchaseOrderStatus() != PurchaseOrderStatus.REQUESTED) {
+            throw new IllegalArgumentException("이미 승인/승인 거절된 요청건 입니다.");
+        }
+
         Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        if(purchaseOrder.getPurchaseOrderStatus() == PurchaseOrderStatus.REQUESTED) {
-                purchaseOrder.setPurchaseOrderStatus(dto.getStatus());
-        } else {
-            throw new IllegalArgumentException("이미 승인/승인 거절된 요청건 입니다.");
-        }
+        purchaseOrder.setPurchaseOrderStatus(dto.getStatus());
 
         PurchaseOrder approvedPurchaseOrder = purchaseOrderRepository.save(purchaseOrder);
 

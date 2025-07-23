@@ -1,6 +1,6 @@
 // src/views/publisher/UpdatePublisher.tsx
 import React, { useState, useEffect } from 'react';
-import Modal from '@/apis/constants/Modal';
+import Modal from '@/components/Modal';
 import { PublisherResponseDto } from '@/dtos/publisher/response/publisher.response.dto';
 import { PublisherRequestDto } from '@/dtos/publisher/request/publisher.request.dto';
 import { updatePublisher } from '@/apis/publisher/publisher';

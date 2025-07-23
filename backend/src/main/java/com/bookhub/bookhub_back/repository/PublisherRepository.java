@@ -12,4 +12,6 @@ public interface PublisherRepository extends JpaRepository<Publisher, Long> {
     List<Publisher> findByPublisherNameContaining(String keyword);
 
     boolean existsByPublisherName(String publisherName);
+
+    boolean existsByPublisherNameAndPublisherIdNot(String publisherName, Long publisherId);
 }

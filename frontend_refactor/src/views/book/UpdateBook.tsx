@@ -60,6 +60,9 @@ function UpdateBook() {
   const handleHide = async () => {
     const token = cookies.accessToken;
     if (!token || !isbnInput) return;
+
+    if (!window.confirm('정말 삭제하시겠습니까?')) return;
+    
     try {
       const res = await hideBook(isbnInput, token);
       if (res.code !== "SU") throw new Error(res.message);

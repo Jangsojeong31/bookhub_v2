@@ -24,7 +24,7 @@ export const adminMenu: SidebarMenu[] = [
   {
     title: '지점 관리',
     submenu: [
-      { label: '지점 관리', path: '/branches/manage' },
+      { label: '지점 관리', path: '/branches' },
     ],
   },
   {
@@ -36,8 +36,6 @@ export const adminMenu: SidebarMenu[] = [
       { label: '퇴사자 로그 조회', path: '/employees/retired/logs' },
       { label: '회원정보 로그 조회', path: '/employees/logs' },
       { label: '회원가입승인 로그 조회', path: '/employees/approval/logs' },
-      { label: '', path: '' },
-      
     ],
   },
   {

@@ -6,7 +6,10 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.publisher.request.PublisherRequestDto;
 import com.bookhub.bookhub_back.dto.publisher.response.PublisherResponseDto;
 import com.bookhub.bookhub_back.entity.Publisher;
-import com.bookhub.bookhub_back.exception.DuplicateResourceException;
+import com.bookhub.bookhub_back.exception.BusinessException;
+import com.bookhub.bookhub_back.exception.DuplicateEntityException;
+import com.bookhub.bookhub_back.exception.ReferencedEntityException;
+import com.bookhub.bookhub_back.repository.BookRepository;
 import com.bookhub.bookhub_back.repository.PublisherRepository;
 import com.bookhub.bookhub_back.service.PublisherService;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,11 +23,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PublisherServiceImpl implements PublisherService {
     private final PublisherRepository publisherRepository;
+    private final BookRepository bookRepository;
 
     @Override
     public ResponseDto<PublisherResponseDto> createPublisher(PublisherRequestDto dto) {
         if (publisherRepository.existsByPublisherName(dto.getPublisherName())) {
-            throw new DuplicateResourceException("이미 존재하는 출판사입니다.");
+            throw new DuplicateEntityException("이미 존재하는 출판사입니다.");
         }
 
         Publisher newPublisher = Publisher.builder()
@@ -55,11 +59,11 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public ResponseDto<PublisherResponseDto> updatePublisher(Long publisherId, PublisherRequestDto dto) {
         Publisher publisher = publisherRepository.findById(publisherId)
-                .orElseThrow(() -> new EntityNotFoundException());
+                .orElseThrow(EntityNotFoundException::new);
 
-        if (!publisher.getPublisherName().equals(dto.getPublisherName())
-            && publisherRepository.existsByPublisherName(dto.getPublisherName())) {
-            throw new DuplicateResourceException("이미 존재하는 출판사입니다.");
+        boolean isPublisherNameExists = publisherRepository.existsByPublisherNameAndPublisherIdNot(dto.getPublisherName(), publisherId);
+        if (isPublisherNameExists) {
+            throw new DuplicateEntityException("이미 존재하는 출판사입니다.");
         }
 
         publisher.setPublisherName(dto.getPublisherName());
@@ -74,7 +78,11 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public ResponseDto<Void> deletePublisher(Long publisherId) {
         Publisher publisher = publisherRepository.findById(publisherId)
-                .orElseThrow(() -> new EntityNotFoundException());
+                .orElseThrow(EntityNotFoundException::new);
+
+        if (bookRepository.existsByPublisherId_PublisherId(publisher.getPublisherId())) {
+            throw new ReferencedEntityException();
+        }
 
         publisherRepository.delete(publisher);
 

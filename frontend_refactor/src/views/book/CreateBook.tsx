@@ -14,11 +14,7 @@ import { AuthorResponseDto } from '@/dtos/author/response/author.response.dto';
 import { PageResponseDto } from '@/dtos/page-response.dto';
 import './book.css';
 
-interface CreateBookProps {
-  onSuccess: () => Promise<void>;
-}
-
-function CreateBook({ onSuccess }: CreateBookProps) {
+function CreateBook () {
   const [cookies] = useCookies(["accessToken"]);
 
   const [isbn, setIsbn] = useState("");
@@ -121,10 +117,9 @@ function CreateBook({ onSuccess }: CreateBookProps) {
       };
 
       const res = await createBook(dto, token, coverFile);
-      if (res.code !== "SU") throw new Error(res.message);
+      if (res.code !== "SU") return alert(res.message);
 
       alert("책 등록 성공!");
-      await onSuccess();
     } catch (err: any) {
       alert(err.message || "책 등록 실패");
     }
@@ -174,7 +169,7 @@ function CreateBook({ onSuccess }: CreateBookProps) {
         onInputChange={(input) => setAuthorName(input)}
         options={authorOptions}
         onChange={(option) => setSelectedAuthor(option)}
-        placeholder="저자 선택"
+        placeholder="저자 입력"
         isClearable
       />
       <Select
@@ -182,7 +177,7 @@ function CreateBook({ onSuccess }: CreateBookProps) {
         onInputChange={(input) => setPublisherName(input)}
         options={publisherOptions}
         onChange={(option) => setSelectedPublisher(option)}
-        placeholder="출판사 선택"
+        placeholder="출판사 입력"
         isClearable
       />
       <input 

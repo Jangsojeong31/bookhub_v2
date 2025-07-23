@@ -1,5 +1,6 @@
 package com.bookhub.bookhub_back.repository;
 
+import com.bookhub.bookhub_back.common.enums.DisplayType;
 import com.bookhub.bookhub_back.entity.Book;
 import com.bookhub.bookhub_back.entity.BookDisplayLocation;
 import com.bookhub.bookhub_back.entity.Branch;
@@ -15,4 +16,6 @@ public interface BookDisplayLocationRepository extends JpaRepository<BookDisplay
 
     @Query("SELECT l FROM BookDisplayLocation l WHERE l.branchId = :branch AND l.bookIsbn IN :books")
     List<BookDisplayLocation> findByBranchAndBooks(@Param("branch") Branch branch, @Param("books") List<Book> books);
+
+    boolean existsByBookIsbn_BookIsbnAndFloorAndHallAndSectionAndDisplayType(String bookIsbnBookIsbn, String floor, String hall, String section, DisplayType displayType);
 }

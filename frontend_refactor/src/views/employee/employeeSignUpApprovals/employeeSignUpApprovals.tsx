@@ -1,5 +1,5 @@
 import { signUpResultRequest } from "@/apis/auth/auth";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import {
   employeeSignUpApprovalRequest,
   employeeSignUpListeRequest,

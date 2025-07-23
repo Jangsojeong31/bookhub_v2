@@ -13,6 +13,7 @@ import com.bookhub.bookhub_back.entity.Employee;
 import com.bookhub.bookhub_back.repository.AlertRepository;
 import com.bookhub.bookhub_back.repository.EmployeeRepository;
 import com.bookhub.bookhub_back.service.AlertService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public ResponseDto<AlertResponseDto> createAlert(AlertCreateRequestDto dto) {
         Employee employee = employeeRepository.findById(dto.getEmployeeId())
-                .orElseThrow(() -> new IllegalArgumentException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(EntityNotFoundException::new);
 
         Alert alert = Alert.builder()
                 .employeeId(employee)
@@ -61,7 +62,7 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public ResponseDto<List<AlertResponseDto>> getUnreadAlert(String loginId) {
         Employee employee = employeeRepository.findByLoginId(loginId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(EntityNotFoundException::new);
 
         List<Alert> alerts = alertRepository.findByEmployeeId_EmployeeIdAndIsReadFalseOrderByCreatedAtDesc(employee);
 

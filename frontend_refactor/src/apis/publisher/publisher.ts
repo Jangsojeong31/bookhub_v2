@@ -19,16 +19,16 @@ import {
 // 키워드가 입력될 경우 조건에 맞게 조회
 export const getPublishers = async (
   accessToken: string,
-  keyword?: string
+  publisherName?: string
 ): Promise<
   ResponseDto<
-    PageResponseDto<PublisherResponseDto> | PublisherResponseDto[]
+    PublisherResponseDto[]
   >
 > => {
   try {
     let url = `${GET_ALL_PUBLISHER_URL}`
-    if (keyword && keyword.trim() !== '') {
-      url += `?keyword=${encodeURIComponent(keyword.trim())}`;
+    if (publisherName && publisherName.trim() !== '') {
+      url += `?publisherName=${encodeURIComponent(publisherName.trim())}`;
     }
     const response = await axiosInstance.get(
       url,
@@ -39,7 +39,7 @@ export const getPublishers = async (
     return responseErrorHandler(
       error as AxiosError<
         ResponseDto<
-          PageResponseDto<PublisherResponseDto> | PublisherResponseDto[]
+          PublisherResponseDto[]
         >
       >
     );

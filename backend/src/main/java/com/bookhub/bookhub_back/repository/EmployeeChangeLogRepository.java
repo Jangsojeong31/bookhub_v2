@@ -22,6 +22,7 @@ public interface EmployeeChangeLogRepository extends JpaRepository<EmployeeChang
         (:startUpdatedAt IS NULL AND :endUpdatedAt IS NULL)
         OR (e.changedAt BETWEEN :startUpdatedAt AND :endUpdatedAt)
         )
+    ORDER BY e.changedAt DESC
     """)
     List<EmployeeChangeLog> searchEmployeeChangeLogs(
             @Param("employeeName") String employeeName,

@@ -12,6 +12,8 @@ import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignUpRequestDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import com.bookhub.bookhub_back.dto.auth.response.EmployeeSignInResponseDto;
 import com.bookhub.bookhub_back.entity.*;
+import com.bookhub.bookhub_back.exception.BusinessException;
+import com.bookhub.bookhub_back.exception.DuplicateEntityException;
 import com.bookhub.bookhub_back.security.JwtProvider;
 import com.bookhub.bookhub_back.repository.*;
 import com.bookhub.bookhub_back.security.UserPrincipal;
@@ -54,22 +56,22 @@ public class AuthServiceImpl implements AuthService {
 
         // 아이디 중복 확인
         if (employeeRepository.existsByLoginId(loginId)) {
-            return ResponseDto.fail(ResponseCode.DUPLICATED_USER_ID, ResponseMessageKorean.DUPLICATED_USER_ID);
+            throw new DuplicateEntityException(ResponseMessageKorean.DUPLICATED_USER_ID);
         }
 
         // 비밀번호 일치 확인
         if (!password.equals(confirmPassword)) {
-            return ResponseDto.fail(ResponseCode.NOT_MATCH_PASSWORD, ResponseMessageKorean.NOT_MATCH_PASSWORD);
+            throw new BusinessException(ResponseCode.NOT_MATCH_PASSWORD, ResponseMessageKorean.NOT_MATCH_PASSWORD);
         }
 
         // 이메일 중복 확인
         if (employeeRepository.existsByEmail(email)) {
-            return ResponseDto.fail(ResponseCode.DUPLICATED_EMAIL, ResponseMessageKorean.DUPLICATED_EMAIL);
+            throw new DuplicateEntityException(ResponseMessageKorean.DUPLICATED_EMAIL);
         }
 
         // 전화번호 중복 확인
         if (employeeRepository.existsByPhoneNumber(phoneNumber)) {
-            return ResponseDto.fail(ResponseCode.DUPLICATED_TEL_NUMBER, ResponseMessageKorean.DUPLICATED_TEL_NUMBER);
+            throw new DuplicateEntityException(ResponseMessageKorean.DUPLICATED_TEL_NUMBER);
         }
 
         // 비밀번호 암호화
@@ -86,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
                         .build()));
 
         Branch branch = branchRepository.findById(dto.getBranchId())
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않은 지점입니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
         // 사원 번호 생성
         Random random = new Random();
@@ -125,14 +127,13 @@ public class AuthServiceImpl implements AuthService {
 
         employeeSignupApprovalRepository.save(employeeSignUpApproval);
 
-        // 본사 관리자(ADMIN 권한)에게 알림 전송
+        // 본사 관리자(ADMIN 권한) 모두 에게 알림 전송
         Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
-                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
+                .orElseThrow(IllegalArgumentException::new);
 
         final Employee finalEmployee = newEmployee;
 
-        employeeRepository.findAll().stream()
-                .filter(emp -> emp.getAuthorityId().equals(adminAuthority))
+        employeeRepository.findAllByAuthorityId(adminAuthority)
                 .forEach(admin -> {
                     AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
                             .employeeId(admin.getEmployeeId())
@@ -164,7 +165,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 사원의 승인 상태가 PENDING이거나 DENIED일 경우
         if (employee.getIsApproved().equals(IsApproved.PENDING) || employee.getIsApproved().equals(IsApproved.DENIED)) {
-            return ResponseDto.fail(ResponseCode.NO_PERMISSION, ResponseMessageKorean.NO_PERMISSION);
+            throw new IllegalStateException("회원가입이 승인되지 않았습니다.");
         }
 
         String token = jwtProvider.generateJwtToken(authentication);
@@ -202,7 +203,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public ResponseDto<Void> checkLoginIdDuplicate(String loginId) {
         if (employeeRepository.existsByLoginId(loginId)) {
-            return ResponseDto.fail(ResponseCode.DUPLICATED_USER_ID, ResponseMessageKorean.DUPLICATED_USER_ID);
+            throw new DuplicateEntityException(ResponseMessageKorean.DUPLICATED_USER_ID);
         }
         return ResponseDto.success(ResponseCode.SUCCESS, "사용 가능한 아이디입니다.");
     }

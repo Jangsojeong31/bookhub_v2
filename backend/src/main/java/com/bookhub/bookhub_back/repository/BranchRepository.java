@@ -13,4 +13,6 @@ public interface BranchRepository extends JpaRepository<Branch, Long> {
     boolean existsByBranchName(@NotBlank(message = "지점명은 필수값입니다.") String branchName);
 
     List<Branch> findByBranchLocationContaining(String branchLocation);
+
+    boolean existsByBranchNameAndBranchIdNot(String branchName, Long branchId);
 }

@@ -4,15 +4,14 @@ import { useCookies } from "react-cookie";
 import { StockLogResponseDto } from "@/dtos/stock/StockLog.response.dto";
 import { getStockLogsByBranch } from "@/apis/stock/stockLog";
 import "./StockLogPage.css";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 
 const StockLogListPage = () => {
   // const { branchId } = useParams();
   const navigate = useNavigate();
   const [cookies] = useCookies(["accessToken"]);
   const [logs, setLogs] = useState<StockLogResponseDto[]>([]);
-
-  const [branchName, setBranchName] = useState("");
+  const branchName = useEmployeeStore((state) => state.employee?.branchName);
   const [searchForm, setSearchForm] = useState({
     type: "",
     bookIsbn: "",
@@ -50,7 +49,6 @@ const StockLogListPage = () => {
     
         if (Array.isArray(data)) {
           setLogs(data);
-          setBranchName(data[0].branchName);
           // setMessage("");
         } else {
           alert("올바른 검색 조건을 입력해주세요.");
@@ -62,7 +60,7 @@ const StockLogListPage = () => {
     <div className="stock-log-wrapper">
   
     
-      <h2 className="stock-log-title">지점 재고로그 [{branchName}]</h2>
+      <h2 className="stock-log-title">지점 재고로그 [ {branchName} ]</h2>
 
 
       <div style={{ display: "flex", gap: 20, height: 40 }}>

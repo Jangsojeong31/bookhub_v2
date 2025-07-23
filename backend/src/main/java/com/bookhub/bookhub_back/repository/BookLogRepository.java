@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface BookLogRepository extends JpaRepository<BookLog, Long> {
 
-    List<BookLog> findByBookIsbn_BookIsbn(String bookIsbnBookIsbn);
+    List<BookLog> findByBookIsbn_BookIsbn(String bookIsbn);
 }

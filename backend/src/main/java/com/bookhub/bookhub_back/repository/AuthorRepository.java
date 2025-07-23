@@ -14,4 +14,6 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findAllByAuthorNameContaining(String authorName);
 
     boolean existsByAuthorEmail(@NotBlank(message = "저자 이메일은 필수입니다.") @Email(message = "올바른 이메일 형식을 입력해주세요.") String authorEmail);
+
+    boolean existsByAuthorEmailAndAuthorIdNot(String authorEmail, Long authorId);
 }

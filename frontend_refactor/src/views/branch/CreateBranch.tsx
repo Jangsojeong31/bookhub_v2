@@ -4,7 +4,7 @@ import {
   branchSearchRequest,
   branchUpdateRequest,
 } from "@/apis/branch/branch";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import { BranchSearchResponseDto } from "@/dtos/branch/response/branch-search.respnse.dto";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
@@ -235,7 +235,7 @@ function CreateBranch() {
         />
         <div className="search-button">
           <button onClick={onSearchClick}>검색</button>
-          <button onClick={onResetClick}>최기화</button>
+          <button onClick={onResetClick}>초기화</button>
           <button style={{ float: "right" }} onClick={onOpenCreateModal}>
             등록
           </button>

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { StockActionType } from '@/apis/enums/StockActionType';
 import { updateStock } from '@/apis/stock/stock';
-import { useEmployeeStore } from '@/stores/employee.store';
+import { useEmployeeStore } from '@/stores/useEmployeeStore';
 import { StockListResponseDto } from '@/dtos/stock/Stock.response.dto';
 import './stockmodal.css';
 

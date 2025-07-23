@@ -4,6 +4,7 @@ import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.purchaseOrderApproval.response.PurchaseOrderApprovalResponseDto;
 import com.bookhub.bookhub_back.service.PurchaseOrderApprovalService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,9 @@ import java.util.List;
 public class PurchaseOrderApprovalController {
     private final PurchaseOrderApprovalService purchaseOrderApprovalService;
 
-    // 조회 조건으로 조회 - 승인 담당자, 승인 여부, 승인 일자
+    // 발주 승인 기록 조회
     @GetMapping
+    @Operation(summary = "발주 승인 기록 조건별 조회")
     public ResponseEntity<ResponseDto<List<PurchaseOrderApprovalResponseDto>>> searchPurchaseOrderApprovals(
             @RequestParam(required = false) String employeeName,
             @RequestParam(required = false) Boolean isApproved,

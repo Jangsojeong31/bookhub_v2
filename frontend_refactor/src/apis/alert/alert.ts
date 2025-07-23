@@ -1,6 +1,6 @@
 import { ResponseDto } from "@/dtos";
 import { axiosInstance, bearerAuthorization, responseErrorHandler, responseSuccessHandler } from "../axiosConfig";
-import { GET_ALERT_URL, GET_UNREAD_ALERT_URL, PUT_ALERT_URL } from "../constants/sjw.constants";
+import { GET_ALERT_URL, GET_UNREAD_ALERT_URL, PUT_ALERT_URL } from "../../constants/url/sjw.constants";
 import axios, { AxiosError } from "axios";
 import { AlertResponseDto } from "@/dtos/alert/response/alert.response.dto";
 
@@ -32,16 +32,6 @@ export const markAlertsAsRead = async (
     return responseErrorHandler(error as AxiosError<ResponseDto>);
   }
 };
-
-// 안읽은 알림 개수 
-export async function getUnreadAlertCount(employeeId: number, token: string): Promise<ResponseDto<number>> {
-  const res = await axios.get(`/api/alerts/unread-count?employeeId=${employeeId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return res.data;
-}
 
 export function getAlertTargetUrl(alert: AlertResponseDto): string | null {
   const { alertType } = alert;

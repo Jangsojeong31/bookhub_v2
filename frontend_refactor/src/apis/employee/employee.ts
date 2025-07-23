@@ -13,7 +13,7 @@ import {
   PUT_EMPLOYEE_APPROVE_URL,
   PUT_EMPLOYEE_CHANGE_URL,
   PUT_EMPLOYEE_STATUS_URL,
-} from "../constants/khj.constants";
+} from "../../constants/url/khj.constants";
 import { AxiosError } from "axios";
 import { EmployeeSignUpApprovalRequestDto } from "@/dtos/employee/request/employee-sign-up-Approval.request.dto";
 import { EmployeeDetailResponseDto } from "@/dtos/employee/response/employee-detail.response.dto";

@@ -6,6 +6,7 @@ import com.bookhub.bookhub_back.dto.alert.request.AlertReadRequestDto;
 import com.bookhub.bookhub_back.dto.alert.response.AlertResponseDto;
 import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.AlertService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class AlertController {
 
     // 안읽은 알림 조회
     @GetMapping("/unread")
+    @Operation(summary = "알림 조회 (안읽은 알림)")
     public ResponseEntity<ResponseDto<List<AlertResponseDto>>> getUnreadAlert(
             @AuthenticationPrincipal UserPrincipal userPrincipal
             ) {
@@ -31,6 +33,7 @@ public class AlertController {
 
     // 알림 '읽음' 처리
     @PutMapping("/read")
+    @Operation(summary = "알림 '읽음' 처리")
     public ResponseEntity<ResponseDto<Void>> readAlert(
             @RequestBody AlertReadRequestDto dto
     ) {

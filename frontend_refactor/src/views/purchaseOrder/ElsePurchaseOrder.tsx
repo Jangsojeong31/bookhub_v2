@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import * as style from "@/styles/style";
-import Modal from "@/apis/constants/Modal";
+import Modal from "@/components/Modal";
 import {
   deletePurchaseOrder,
   getAllPurchaseOrderByCriteria,
@@ -140,7 +140,7 @@ function ElsePurchaseOrder() {
       const { code, message } = response;
 
       if (code != "SU") {
-        setMessage(message);
+        alert(message);
         return;
       }
 

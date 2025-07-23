@@ -25,6 +25,7 @@ public interface EmployeeExitLogRepository extends JpaRepository<EmployeeExitLog
         (:startUpdatedAt IS NULL AND :endUpdatedAt IS NULL)
         OR (e.exitAt BETWEEN :startUpdatedAt AND :endUpdatedAt)
         )
+    ORDER BY e.exitAt DESC 
     """)
     List<EmployeeExitLog> searchEmployeeExitLogs(
             @Param("employeeName") String employeeName,

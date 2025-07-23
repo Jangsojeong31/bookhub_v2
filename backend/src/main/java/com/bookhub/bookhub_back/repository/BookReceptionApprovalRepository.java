@@ -16,6 +16,7 @@ public interface BookReceptionApprovalRepository extends JpaRepository<BookRecep
     SELECT r FROM BookReceptionApproval r
     WHERE r.branchName = :branchName
     AND r.isReceptionApproved = false
+    ORDER BY r.createdAt DESC 
     """)
     List<BookReceptionApproval> findPendingByBranchName(@Param("branchName") String branchName);
 
@@ -24,6 +25,7 @@ public interface BookReceptionApprovalRepository extends JpaRepository<BookRecep
     SELECT r FROM BookReceptionApproval r
     WHERE r.branchName = :branchName
     AND r.isReceptionApproved = true
+    ORDER BY r.createdAt DESC
     """)
     List<BookReceptionApproval> findConfirmedByBranchName(@Param("branchName")String branchName);
 
@@ -33,6 +35,7 @@ public interface BookReceptionApprovalRepository extends JpaRepository<BookRecep
     WHERE r.isReceptionApproved = true
     AND (:branchName IS NULL OR r.branchName LIKE %:branchName%)
     AND (:isbn IS NULL OR r.bookIsbn LIKE %:isbn%)
+    ORDER BY r.createdAt DESC
     """)
     List<BookReceptionApproval> findConfirmedLogsByConditions(@Param("branchName")String branchName, @Param("isbn")String isbn);
 }

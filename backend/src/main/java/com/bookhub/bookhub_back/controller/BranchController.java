@@ -5,6 +5,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.branch.request.BranchRequestDto;
 import com.bookhub.bookhub_back.dto.branch.response.BranchResponseDto;
 import com.bookhub.bookhub_back.service.BranchService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ public class BranchController {
 
     // 지점 등록
     @PostMapping(BRANCH_ADMIN)
+    @Operation(summary = "지점 생성")
     public ResponseEntity<ResponseDto<BranchResponseDto>> createBranch(
             @Valid @RequestBody BranchRequestDto dto
     ) {
@@ -33,6 +35,7 @@ public class BranchController {
 
     // 주소로 지점 조회
     @GetMapping(BRANCH_AUTH)
+    @Operation(summary = "지점 조회 (주소로)")
     public ResponseEntity<ResponseDto<List<BranchResponseDto>>> getBranchesByLocation(
             @RequestParam(required = false) String branchLocation
     ) {
@@ -51,6 +54,7 @@ public class BranchController {
 
     // 지점 수정
     @PutMapping(BRANCH_ADMIN + "/{branchId}")
+    @Operation(summary = "지점 수정")
     public ResponseEntity<ResponseDto<BranchResponseDto>> updateBranch(
             @PathVariable Long branchId,
             @Valid @RequestBody BranchRequestDto dto

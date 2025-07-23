@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { checkLoginIdDuplicate, signUpRequest } from "@/apis/auth/auth";
-import { GET_BRANCH_URL } from "@/apis/constants/khj.constants";
+import { GET_BRANCH_URL } from "@/constants/url/khj.constants";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "@/styles/auth/Auth.css";
@@ -48,7 +48,7 @@ function SignUp() {
   }, [form.password, form.confirmPassword]);
 
   useEffect(() => {
-    fetch(`${GET_BRANCH_URL}?branchLocation`, {
+    fetch(`${GET_BRANCH_URL}`, {
       method: "GET",
     })
       .then((res) => res.json())
@@ -146,7 +146,7 @@ function SignUp() {
   return (
     <div className="container">
       <img
-        src="/src/apis/constants/북허브_로그_로그인창.png"
+        src="/src/constants/image/북허브_로그_로그인창.png"
         alt="BookHub 로고"
         onClick={onLogoClick}
         className="logo-img"
@@ -208,7 +208,7 @@ function SignUp() {
         <br />
         <input
           type="tel"
-          placeholder="전화번호"
+          placeholder="전화번호( ' - ' 를 제외하고 입력해주세요)"
           name="phoneNumber"
           value={form.phoneNumber}
           onChange={onInputChange}

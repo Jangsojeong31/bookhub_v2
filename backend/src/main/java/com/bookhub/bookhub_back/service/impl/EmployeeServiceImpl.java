@@ -69,10 +69,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public ResponseDto<List<EmployeeSignUpApprovalsResponseDto>> getPendingEmployee() {
-        List<EmployeeSignUpApproval> employees = employeeSignUpApprovalRepository.findAll();
+        List<EmployeeSignUpApproval> employees = employeeSignUpApprovalRepository.findAllByIsApproved(IsApproved.PENDING);
 
         List<EmployeeSignUpApprovalsResponseDto> responseDtos = employees.stream()
-                .filter(employee -> employee.getIsApproved() == IsApproved.PENDING)
                 .map(employee -> EmployeeSignUpApprovalsResponseDto.builder()
                         .approvalId(employee.getApprovalId())
                         .employeeId(employee.getEmployeeId().getEmployeeId())
@@ -122,27 +121,34 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeListResponseDto responseDto = null;
 
         Employee employee = employeeRepository.findById(employeeId)
-                .filter(emp -> emp.getIsApproved() == IsApproved.PENDING)
-                .orElseThrow(() -> new EntityNotFoundException("회원가입 승인 대기중인 사원이 아닙니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
-        EmployeeSignUpApproval employeeSignUpApproval = employeeSignUpApprovalRepository.findAllByEmployeeIdAndIsApproved(employee, IsApproved.PENDING)
-                .orElseThrow(() -> new EntityNotFoundException("회원가입 승인 대기 상태인 사원이 없습니다."));
+        EmployeeSignUpApproval employeeSignUpApproval
+                = employeeSignUpApprovalRepository.findAllByEmployeeId_EmployeeIdAndIsApproved(employee.getEmployeeId(), IsApproved.PENDING)
+                .orElseThrow(EntityNotFoundException::new);
 
         Employee authorizerEmployee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
-                .orElseThrow(() -> new EntityNotFoundException("관리자를 찾을 수 없습니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
-        if (dto.getIsApproved().equals(IsApproved.APPROVED) && dto.getDeniedReason().isBlank()) {
-            employee.setIsApproved(dto.getIsApproved());
-            employeeSignUpApproval.setAuthorizerId(authorizerEmployee);
-            employeeSignUpApproval.setIsApproved(dto.getIsApproved());
-        } else if (dto.getIsApproved().equals(IsApproved.DENIED) && !dto.getDeniedReason().isBlank()) {
-            employee.setIsApproved(dto.getIsApproved());
-            employeeSignUpApproval.setAuthorizerId(authorizerEmployee);
-            employeeSignUpApproval.setIsApproved(dto.getIsApproved());
-            employeeSignUpApproval.setDeniedReason(dto.getDeniedReason());
+        String deniedReason = dto.getDeniedReason();
+
+        if (dto.getIsApproved().equals(IsApproved.APPROVED)) {
+            if(deniedReason != null && !deniedReason.isBlank()) {
+                throw new IllegalArgumentException("거절 사유는 승인 거절 시 입력할 수 있습니다.");
+            }
+        } else if (dto.getIsApproved().equals(IsApproved.DENIED)) {
+            if(deniedReason == null || deniedReason.isBlank()) {
+                throw new IllegalArgumentException("승인 거절 사유를 입력해주세요.");
+            }
+                employeeSignUpApproval.setDeniedReason(deniedReason);
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalStateException("잘못된 승인 상태입니다.");
         }
+
+        employee.setIsApproved(dto.getIsApproved());
+        employeeSignUpApproval.setAuthorizerId(authorizerEmployee);
+        employeeSignUpApproval.setIsApproved(dto.getIsApproved());
+
 
         employeeRepository.save(employee);
         employeeSignUpApprovalRepository.save(employeeSignUpApproval);
@@ -154,19 +160,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public ResponseDto<Void> updateOrganization(Long employeeId, EmployeeOrganizationUpdateRequestDto dto, UserPrincipal userPrincipal) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException("직원 정보를 찾을 수 없습니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
         Employee authorizer = employeeRepository.findByLoginId(userPrincipal.getLoginId())
-                .orElseThrow(() -> new EntityNotFoundException("직원 정보를 찾을 수 없습니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
         Long preBranchId = employee.getBranchId().getBranchId();
         Long prePositionId = employee.getPositionId().getPositionId();
         Long preAuthorityId = employee.getAuthorityId().getAuthorityId();
 
         // 지점 변경 시
-        if (dto.getBranchId() != null && !dto.getBranchId().equals(preBranchId)) {
+        if (!dto.getBranchId().equals(preBranchId)) {
             employee.setBranchId(branchRepository.findById(dto.getBranchId())
-                    .orElseThrow(() -> new EntityNotFoundException("지점 정보가 정확하지 않습니다.")));
+                    .orElseThrow(EntityNotFoundException::new));
 
             // 직원 정보 변경 로그 생성
             EmployeeChangeLog employeeChangeLog = EmployeeChangeLog.builder()
@@ -174,7 +180,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .authorizerId(authorizer)
                     .changeType(ChangeType.BRANCH_CHANGE)
                     .previousBranchId(branchRepository.findById(preBranchId)
-                            .orElseThrow(() -> new IllegalArgumentException("지점 정보가 정확하지 않습니다.")))
+                            .orElseThrow(IllegalArgumentException::new))
                     .build();
 
             employeeChangeLogRepository.save(employeeChangeLog);
@@ -191,9 +197,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         // 직급 변경 시
-        if (dto.getPositionId() != null && !dto.getPositionId().equals(prePositionId)) {
+        if (!dto.getPositionId().equals(prePositionId)) {
             employee.setPositionId(positionRepository.findById(dto.getPositionId())
-                    .orElseThrow(() -> new EntityNotFoundException("직급 정보가 정확하지 않습니다.")));
+                    .orElseThrow(EntityNotFoundException::new));
 
             // 직원 정보 변경 로그 생성
             EmployeeChangeLog employeeChangeLog = EmployeeChangeLog.builder()
@@ -201,7 +207,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .authorizerId(authorizer)
                     .changeType(ChangeType.POSITION_CHANGE)
                     .previousPositionId(positionRepository.findById(prePositionId)
-                            .orElseThrow(() -> new EntityNotFoundException("직급 정보가 정확하지 않습니다.")))
+                            .orElseThrow(IllegalArgumentException::new))
                     .build();
 
             employeeChangeLogRepository.save(employeeChangeLog);
@@ -218,9 +224,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         // 권한 변경 시
-        if (dto.getAuthorityId() != null && !dto.getAuthorityId().equals(preAuthorityId)) {
+        if (!dto.getAuthorityId().equals(preAuthorityId)) {
             employee.setAuthorityId(authorityRepository.findById(dto.getAuthorityId())
-                    .orElseThrow(() -> new EntityNotFoundException("권한 정보가 정확하지 않습니다.")));
+                    .orElseThrow(EntityNotFoundException::new));
 
             // 직원 정보 변경 로그 생성
             EmployeeChangeLog employeeChangeLog = EmployeeChangeLog.builder()
@@ -228,7 +234,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .authorizerId(authorizer)
                     .changeType(ChangeType.AUTHORITY_CHANGE)
                     .previousAuthorityId(authorityRepository.findById(preAuthorityId)
-                            .orElseThrow(() -> new EntityNotFoundException("권한 정보가 정확하지 않습니다.")))
+                            .orElseThrow(IllegalArgumentException::new))
                     .build();
 
             employeeChangeLogRepository.save(employeeChangeLog);
@@ -253,18 +259,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ResponseDto<Void> updateStatus(Long employeeId, EmployeeStatusUpdateRequestDto dto, UserPrincipal userPrincipal) {
 
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new EntityNotFoundException("사원이 존재하지 않습니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
         Employee authorizer = employeeRepository.findByLoginId(userPrincipal.getLoginId())
-                .orElseThrow(() -> new EntityNotFoundException("관리자가 존재하지 않습니다."));
+                .orElseThrow(EntityNotFoundException::new);
 
         EmployeeStatus status = employee.getStatus();
 
         if (status == EmployeeStatus.EXITED) {
-            throw new IllegalArgumentException("이미 퇴사 처리되었습니다.");
+            throw new IllegalStateException("이미 퇴사 처리되었습니다.");
         }
 
-        if (status != null && !status.equals(dto.getStatus())) {
+        if (dto.getStatus() == EmployeeStatus.EXITED) {
             employee.setStatus(dto.getStatus());
             EmployeeExitLog employeeExitLog = EmployeeExitLog.builder()
                     .employeeId(employee)
@@ -273,6 +279,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                     .exitReason(dto.getExitReason())
                     .build();
             employeeExitLogRepository.save(employeeExitLog);
+        } else {
+            throw new IllegalArgumentException("잘못된 요청입니다.");
         }
 
         employeeRepository.save(employee);

@@ -42,12 +42,14 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
     @Override
     @Transactional
     public ResponseDto<Void> createPolicy(DiscountPolicyCreateRequestDto dto) {
-        if (dto.getPolicyType() == PolicyType.TOTAL_PRICE_DISCOUNT && dto.getTotalPriceAchieve() == null) {
-            throw new IllegalArgumentException(ResponseCode.VALIDATION_FAIL);
-        }
-
-        if (dto.getPolicyType() != PolicyType.TOTAL_PRICE_DISCOUNT && dto.getTotalPriceAchieve() != null) {
-            throw new IllegalArgumentException(ResponseCode.VALIDATION_FAIL);
+        if (dto.getPolicyType() == PolicyType.TOTAL_PRICE_DISCOUNT){
+            if(dto.getTotalPriceAchieve() == null) {
+                throw new IllegalArgumentException("'총 금액' 항목을 입력해주세요.");
+            }
+        }else {
+            if (dto.getTotalPriceAchieve() != null) {
+                throw new IllegalArgumentException("'총 금액' 항목은 총 금액 할인에만 설정할 수 있습니다.");
+            }
         }
 
         DiscountPolicy newPolicy = DiscountPolicy.builder()
@@ -82,19 +84,20 @@ public class DiscountPolicyServiceImpl implements DiscountPolicyService {
         DiscountPolicy policy = policyRepository.findById(policyId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (dto.getPolicyDescription() != null) policy.setPolicyDescription(dto.getPolicyDescription());
-        if (dto.getTotalPriceAchieve() != null){
-            if(policy.getPolicyType() == PolicyType.TOTAL_PRICE_DISCOUNT){
-                policy.setTotalPriceAchieve(dto.getTotalPriceAchieve());
-            }else{
-                throw new IllegalArgumentException(ResponseCode.VALIDATION_FAIL);}}
-        if (dto.getDiscountPercent() != null) policy.setDiscountPercent(dto.getDiscountPercent());
-        if (dto.getStartDate() != null) policy.setStartDate(dto.getStartDate());
-        if (dto.getEndDate() != null) policy.setEndDate(dto.getEndDate());
+        if (dto.getTotalPriceAchieve() != null) {
+            if (policy.getPolicyType() != PolicyType.TOTAL_PRICE_DISCOUNT) {
+                throw new IllegalArgumentException("'총 금액' 항목은 총 금액 할인에만 설정할 수 있습니다.");
+            }
+            policy.setTotalPriceAchieve(dto.getTotalPriceAchieve());
+            policy.setPolicyDescription(dto.getPolicyDescription());
+            policy.setDiscountPercent(dto.getDiscountPercent());
+            policy.setStartDate(dto.getStartDate());
+            policy.setEndDate(dto.getEndDate());
 
-        policyRepository.save(policy);
+            policyRepository.save(policy);
 
-        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+        }
+            return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
     // 할인 정책 삭제

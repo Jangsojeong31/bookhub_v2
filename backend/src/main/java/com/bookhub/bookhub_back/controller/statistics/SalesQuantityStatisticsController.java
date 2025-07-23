@@ -5,6 +5,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.statistics.response.salesQuantity.CategorySalesQuantityDto;
 import com.bookhub.bookhub_back.dto.statistics.response.salesQuantity.SalesQuantityStatisticsDto;
 import com.bookhub.bookhub_back.service.statistics.SalesQuantityStatisticsService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class SalesQuantityStatisticsController {
     // 기간별
     // 1) Daily
     @GetMapping("/daily")
+    @Operation(summary = "판매량 통계 - 일일 통계")
     public ResponseEntity<ResponseDto<List<SalesQuantityStatisticsDto>>> getDailySalesQuantity(
             @RequestParam("month") int month
     ) {
@@ -34,6 +36,7 @@ public class SalesQuantityStatisticsController {
 
     // 2) weekly
     @GetMapping("/weekly")
+    @Operation(summary = "판매량 통계 - 주간 통계")
     public ResponseEntity<ResponseDto<List<SalesQuantityStatisticsDto>>> getWeeklySalesQuantity(
             @RequestParam("year") int year,
             @RequestParam("month") int month
@@ -44,6 +47,7 @@ public class SalesQuantityStatisticsController {
 
     // 3) monthly
     @GetMapping("/monthly")
+    @Operation(summary = "판매량 통계 - 월간 통계")
     public ResponseEntity<ResponseDto<List<SalesQuantityStatisticsDto>>> getMonthlySalesQuantity(
             @RequestParam int year
     ) {
@@ -53,6 +57,7 @@ public class SalesQuantityStatisticsController {
 
     // 카테고리별 (일주일간)
     @GetMapping("/category")
+    @Operation(summary = "판매량 통계 - 카테고리별 통계")
     public ResponseEntity<ResponseDto<List<CategorySalesQuantityDto>>> getSalesQuantityByCategory() {
         ResponseDto<List<CategorySalesQuantityDto>> response = salesQuantityStatisticsService.getSalesQuantityByCategory();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -60,6 +65,7 @@ public class SalesQuantityStatisticsController {
 
     // 할인항목별 (일주일간)
     @GetMapping("/discount-policy")
+    @Operation(summary = "판매량 통계 - 할인항목별 통계")
     public ResponseEntity<ResponseDto<List<SalesQuantityStatisticsDto>>> getSalesQuantityByDiscountPolicy(
             @RequestParam int year,
             @RequestParam int quarter
@@ -70,6 +76,7 @@ public class SalesQuantityStatisticsController {
 
     // 지점별
     @GetMapping("/branch")
+    @Operation(summary = "판매량 통계 - 지점별 통계")
     public ResponseEntity<ResponseDto<List<SalesQuantityStatisticsDto>>> getSalesQuantityByBranch(
             @RequestParam int year,
             @RequestParam int month

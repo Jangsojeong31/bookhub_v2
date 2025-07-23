@@ -1,6 +1,6 @@
 import { signInRequest } from "@/apis/auth/auth";
 import { SignInRequestDto } from "@/dtos/auth/request/sign-in.request.dto";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
@@ -34,10 +34,10 @@ function SignIn() {
     }
 
     const response = await signInRequest(form);
-    const { code, data } = response;
+    const { code, message, data } = response;
 
     if (code != "SU" || !data) {
-      alert("로그인에 실패하였습니다.");
+      alert(message ? message : "로그인에 실패하였습니다.");
       return;
     }
 
@@ -73,7 +73,7 @@ function SignIn() {
   return (
     <div className="container">
       <img
-        src="/src/apis/constants/북허브_로그_로그인창.png"
+        src="/src/constants/image/북허브_로그_로그인창.png"
         alt="BookHub 로고"
         className="logo-img"
       />

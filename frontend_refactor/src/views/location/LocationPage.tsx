@@ -1,6 +1,6 @@
 import { getLocations, deleteLocation } from "@/apis/location/location";
 import { LocationResponseDto } from "@/dtos/location/location.dto";
-import { useEmployeeStore } from "@/stores/employee.store";
+import { useEmployeeStore } from "@/stores/useEmployeeStore";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { CreateLocation } from "./CreateLocation";

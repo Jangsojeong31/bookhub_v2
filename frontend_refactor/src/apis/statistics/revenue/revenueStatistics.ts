@@ -1,5 +1,5 @@
 import { axiosInstance, bearerAuthorization, responseSuccessHandler, responseErrorHandler } from "@/apis/axiosConfig";
-import { REVENUE_STATISTICS_WEEKDAY_URL, REVENUE_STATISTICS_WEEKLY_URL, REVENUE_STATISTICS_MONTHLY_URL, REVENUE_STATISTICS_BRANCH_URL } from "@/apis/constants/csy.constants";
+import { REVENUE_STATISTICS_WEEKDAY_URL, REVENUE_STATISTICS_WEEKLY_URL, REVENUE_STATISTICS_MONTHLY_URL, REVENUE_STATISTICS_BRANCH_URL } from "@/constants/url/csy.constants";
 import { ResponseDto } from "@/dtos";
 import { WeekdayRevenueResponseDto, WeeklyRevenueResponseDto, MonthlyRevenueResponseDto, BranchRevenueResponseDto } from "@/dtos/statistics/revenue/revenue.response";
 import { AxiosError } from "axios";

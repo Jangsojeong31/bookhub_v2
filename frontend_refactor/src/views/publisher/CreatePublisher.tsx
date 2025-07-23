@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPublisher } from '@/apis/publisher/publisher';
-import Modal from '@/apis/constants/Modal';
+import Modal from '@/components/Modal';
 import { useCookies } from 'react-cookie';
 
 interface Props {

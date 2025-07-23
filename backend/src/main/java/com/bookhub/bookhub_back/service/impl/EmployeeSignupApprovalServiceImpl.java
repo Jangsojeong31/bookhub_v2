@@ -8,6 +8,7 @@ import com.bookhub.bookhub_back.common.util.DateUtils;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeSignUpApprovalsResponseDto;
 import com.bookhub.bookhub_back.entity.EmployeeSignUpApproval;
+import com.bookhub.bookhub_back.exception.InvalidSearchConditionException;
 import com.bookhub.bookhub_back.repository.EmployeeSignUpApprovalRepository;
 import com.bookhub.bookhub_back.service.EmployeeSignupApprovalService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class EmployeeSignupApprovalServiceImpl implements EmployeeSignupApproval
         List<EmployeeSignUpApproval> employeeSignUpApprovals = null;
 
         if ((startUpdatedAt != null && endUpdatedAt == null) || (startUpdatedAt == null && endUpdatedAt != null)) {
-            throw new IllegalArgumentException("시작일과 종료일을 입력해주세요.");
+            throw new InvalidSearchConditionException("시작일과 종료일을 입력해주세요.");
         }
 
         if (startUpdatedAt != null) {
