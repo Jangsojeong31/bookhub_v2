@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class EmployeeStatusUpdateRequestDto {
     @NotNull
     private EmployeeStatus status;
-
+    @NotNull(message = "퇴사 사유를 선택해주세요.")
     private ExitReason exitReason;
 }

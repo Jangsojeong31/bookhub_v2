@@ -77,17 +77,16 @@ public class BookLocationServiceImpl implements BookLocationService {
         BookDisplayLocation location = bookLocationRepository.findById(locationId)
                 .orElseThrow(() -> new EntityNotFoundException(ResponseCode.NO_EXIST_ID));
 
+        if(bookLocationRepository.existsByBookIsbn_BookIsbnAndFloorAndHallAndSectionAndDisplayType(
+                location.getBookIsbn().getBookIsbn(), dto.getFloor(), dto.getHall(), dto.getSection(), dto.getDisplayType())) {
+            throw new DuplicateEntityException("해당 조건의 책 위치가 이미 존재합니다.");
+        }
+
         location.setFloor(dto.getFloor());
         location.setHall(dto.getHall());
         location.setSection(dto.getSection());
         location.setDisplayType(dto.getDisplayType());
         location.setNote(dto.getNote());
-
-//        if(bookLocationRepository.existsByBookIsbn_BookIsbnAndFloorAndHallAndSectionAndDisplayType(
-//                location.getBookIsbn().getBookIsbn(), location.getFloor(), location.getHall(),
-//                location.getSection(), location.getDisplayType())) {
-//            throw new DuplicateEntityException("해당 조건의 책 위치가 이미 존재합니다.");
-//        }
 
         BookDisplayLocation updatedLocation = bookLocationRepository.save(location);
 

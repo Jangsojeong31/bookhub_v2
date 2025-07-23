@@ -67,13 +67,14 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public ResponseDto<BranchResponseDto> updateBranch(Long branchId, BranchRequestDto dto) {
-        Branch branch = branchRepository.findById(branchId)
-                .orElseThrow(EntityNotFoundException::new);
 
-        if (!branch.getBranchName().equals(dto.getBranchName())
-                && branchRepository.existsByBranchName(dto.getBranchName())) {
+        boolean isBranchExists = branchRepository.existsByBranchNameAndBranchIdNot(dto.getBranchName(), branchId);
+        if (isBranchExists) {
             throw new DuplicateEntityException("이미 존재하는 지점입니다.");
         }
+
+        Branch branch = branchRepository.findById(branchId)
+                .orElseThrow(EntityNotFoundException::new);
 
         branch.setBranchName(dto.getBranchName());
         branch.setBranchLocation(dto.getBranchLocation());

@@ -60,7 +60,7 @@ function CreateCategory({ onSuccess }: CreateCategoryProps) {
 
     try {
       const res = await createCategory(dto, token);
-      if (res.code !== "SU") throw new Error(res.message);
+      if (res.code !== "SU") return alert(res.message);
 
       alert("카테고리 등록 성공!");
       setCategoryName("");

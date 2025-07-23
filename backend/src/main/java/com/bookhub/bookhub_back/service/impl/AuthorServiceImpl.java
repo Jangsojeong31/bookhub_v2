@@ -8,7 +8,6 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.author.request.AuthorRequestDto;
 import com.bookhub.bookhub_back.dto.author.response.AuthorResponseDto;
 import com.bookhub.bookhub_back.entity.Author;
-import com.bookhub.bookhub_back.exception.BusinessException;
 import com.bookhub.bookhub_back.exception.DuplicateEntityException;
 import com.bookhub.bookhub_back.exception.InvalidSearchConditionException;
 import com.bookhub.bookhub_back.exception.ReferencedEntityException;
@@ -68,8 +67,8 @@ public class AuthorServiceImpl implements AuthorService {
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (!author.getAuthorEmail().equals(dto.getAuthorEmail())
-                && authorRepository.existsByAuthorEmail(dto.getAuthorEmail())) {
+        boolean isEmailUsedByAnother = authorRepository.existsByAuthorEmailAndAuthorIdNot(dto.getAuthorEmail(), authorId);
+        if (isEmailUsedByAnother) {
             throw new DuplicateEntityException("이미 존재하는 작가 이메일입니다.");
         }
 

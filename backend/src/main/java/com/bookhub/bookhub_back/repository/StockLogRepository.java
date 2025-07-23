@@ -23,6 +23,7 @@ public interface StockLogRepository extends JpaRepository<StockLog, Long> {
             AND (:bookIsbn IS NULL OR sl.bookIsbn.bookIsbn = :bookIsbn)
             AND (:start IS NULL OR sl.actionedAt >= :start)
             AND (:end IS NULL OR sl.actionedAt <= :end)
+            ORDER BY sl.actionedAt DESC 
         """)
     List<StockLog> searchStockLogsByConditions(
             @Param("branchName") String branchName,

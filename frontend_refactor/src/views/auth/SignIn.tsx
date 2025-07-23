@@ -34,10 +34,10 @@ function SignIn() {
     }
 
     const response = await signInRequest(form);
-    const { code, data } = response;
+    const { code, message, data } = response;
 
     if (code != "SU" || !data) {
-      alert("로그인에 실패하였습니다.");
+      alert(message ? message : "로그인에 실패하였습니다.");
       return;
     }
 

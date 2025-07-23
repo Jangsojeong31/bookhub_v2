@@ -235,7 +235,7 @@ function CreateBranch() {
         />
         <div className="search-button">
           <button onClick={onSearchClick}>검색</button>
-          <button onClick={onResetClick}>최기화</button>
+          <button onClick={onResetClick}>초기화</button>
           <button style={{ float: "right" }} onClick={onOpenCreateModal}>
             등록
           </button>

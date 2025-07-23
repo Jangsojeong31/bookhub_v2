@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.common.enums.ExitReason;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeExitLogListResponseDto;
 import com.bookhub.bookhub_back.entity.EmployeeExitLog;
+import com.bookhub.bookhub_back.exception.InvalidSearchConditionException;
 import com.bookhub.bookhub_back.repository.EmployeeExitLogRepository;
 import com.bookhub.bookhub_back.service.EmployeeExitLogService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class EmployeeExitLogServiceImpl implements EmployeeExitLogService {
         List<EmployeeExitLog> employeeExitLogs = null;
 
         if ((startUpdatedAt != null && endUpdatedAt == null) || (startUpdatedAt == null && endUpdatedAt != null)) {
-            throw new IllegalArgumentException("시작일과 종료일을 입력해주세요.");
+            throw new InvalidSearchConditionException("시작일과 종료일을 입력해주세요.");
         }
 
         if (startUpdatedAt != null) {

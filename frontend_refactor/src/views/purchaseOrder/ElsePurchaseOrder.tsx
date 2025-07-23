@@ -140,7 +140,7 @@ function ElsePurchaseOrder() {
       const { code, message } = response;
 
       if (code != "SU") {
-        setMessage(message);
+        alert(message);
         return;
       }
 

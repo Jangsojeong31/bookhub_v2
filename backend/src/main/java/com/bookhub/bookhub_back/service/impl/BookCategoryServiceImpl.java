@@ -42,9 +42,17 @@ public class BookCategoryServiceImpl implements BookCategoryService {
     @Override
     public ResponseDto<CategoryCreateResponseDto> createCategory(CategoryCreateRequestDto dto) {
 
-        if (bookCategoryRepository.existsByCategoryNameAndCategoryTypeAndParentCategoryId_CategoryId(
-                dto.getCategoryName(), dto.getCategoryType(), dto.getParentCategoryId()
-        )) {
+        boolean isCategoryExists;
+
+        if (dto.getParentCategoryId() == null) {
+            isCategoryExists = bookCategoryRepository.existsByCategoryNameAndCategoryTypeAndParentCategoryIdIsNull(
+                    dto.getCategoryName(), dto.getCategoryType());
+        } else {
+            isCategoryExists = bookCategoryRepository.existsByCategoryNameAndCategoryTypeAndParentCategoryId_CategoryId(
+                    dto.getCategoryName(), dto.getCategoryType(), dto.getParentCategoryId());
+        }
+
+        if (isCategoryExists) {
             throw new DuplicateEntityException("이미 존재하는 카테고리입니다.");
         }
 
@@ -102,10 +110,17 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         BookCategory category = bookCategoryRepository.findById(categoryId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (!category.getCategoryName().equals(dto.getCategoryName())
-                && bookCategoryRepository.existsByCategoryNameAndCategoryTypeAndParentCategoryId_CategoryId(
-                dto.getCategoryName(), dto.getCategoryType(), dto.getParentCategoryId().getCategoryId()
-        )) {
+        boolean isCategoryExists;
+
+        if (category.getParentCategoryId() == null) {
+            isCategoryExists = bookCategoryRepository.existsByCategoryNameAndCategoryTypeAndParentCategoryIdIsNullAndCategoryIdNot(
+                    dto.getCategoryName(), dto.getCategoryType(), categoryId);
+        } else {
+            isCategoryExists = bookCategoryRepository.existsByCategoryNameAndCategoryTypeAndParentCategoryId_CategoryIdAndCategoryIdNot(
+                dto.getCategoryName(), dto.getCategoryType(), category.getParentCategoryId().getCategoryId(), categoryId);
+        }
+
+        if (isCategoryExists) {
             throw new DuplicateEntityException("이미 존재하는 카테고리입니다.");
         }
 

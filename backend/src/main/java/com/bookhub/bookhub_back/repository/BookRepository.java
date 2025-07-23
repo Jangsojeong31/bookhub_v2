@@ -32,8 +32,6 @@ public interface BookRepository extends JpaRepository<Book, String> {
 """)
     List<Book> findAllByBookTitleContaining(@Param("bookTitle") String bookTitle);
 
-    boolean existsByAuthorId(Author authorId);
-
     boolean existsByAuthorId_AuthorId(Long authorIdAuthorId);
 
     boolean existsByPublisherId_PublisherId(Long publisherIdPublisherId);

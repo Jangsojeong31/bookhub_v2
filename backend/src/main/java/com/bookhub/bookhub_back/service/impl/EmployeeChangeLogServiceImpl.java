@@ -7,6 +7,7 @@ import com.bookhub.bookhub_back.common.enums.ChangeType;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeChangeLogListResponseDto;
 import com.bookhub.bookhub_back.entity.EmployeeChangeLog;
+import com.bookhub.bookhub_back.exception.InvalidSearchConditionException;
 import com.bookhub.bookhub_back.repository.EmployeeChangeLogRepository;
 import com.bookhub.bookhub_back.service.EmployeeChangeLogService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class EmployeeChangeLogServiceImpl implements EmployeeChangeLogService {
         List<EmployeeChangeLog> employeeChangeLogs = null;
 
         if ((startUpdatedAt != null && endUpdatedAt == null) || (startUpdatedAt == null && endUpdatedAt != null)) {
-            throw new IllegalArgumentException("시작일과 종료일을 입력해주세요.");
+            throw new InvalidSearchConditionException("시작일과 종료일을 입력해주세요.");
         }
 
         if (startUpdatedAt != null) {

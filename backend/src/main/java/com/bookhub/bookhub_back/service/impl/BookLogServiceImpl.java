@@ -38,35 +38,35 @@ public class BookLogServiceImpl implements BookLogService {
     // 책 등록 로그 생성
     @Override
     public void logCreate(Book book, Employee employee) {
-        savebookLog(book, employee, BookLogType.CREATE, null, null, null);
+        saveBookLog(book, employee, BookLogType.CREATE, null, null, null);
     }
 
     // 가격 변경 로그 생성
     @Override
     public void logPriceChange(Book book, Long oldPrice, Employee employee) {
-        savebookLog(book, employee, BookLogType.PRICE_CHANGE, oldPrice, null, null);
+        saveBookLog(book, employee, BookLogType.PRICE_CHANGE, oldPrice, null, null);
     }
 
     // 할인율 변경 로그 생성
     @Override
     public void logDiscountChange(Book book, Integer oldRate, DiscountPolicy policy, Employee employee) {
-        savebookLog(book, employee, BookLogType.DISCOUNT_RATE, null, oldRate, policy);
+        saveBookLog(book, employee, BookLogType.DISCOUNT_RATE, null, oldRate, policy);
     }
 
     // 책 상태 변경 로그 생성
     @Override
     public void logStatusChange(Book book, Employee employee) {
-        savebookLog(book, employee, BookLogType.STATUS_CHANGE, null, null, null);
+        saveBookLog(book, employee, BookLogType.STATUS_CHANGE, null, null, null);
     }
 
     // 책 hidden 처리 로그 생성
     @Override
     public void logHidden(Book book, Employee employee) {
-        savebookLog(book, employee, BookLogType.HIDDEN, null, null, null);
+        saveBookLog(book, employee, BookLogType.HIDDEN, null, null, null);
     }
 
     // 로그 생성 메서드
-    private void savebookLog(Book book, Employee employee, BookLogType type,
+    private void saveBookLog(Book book, Employee employee, BookLogType type,
                              Long prevPrice, Integer prevDiscount, DiscountPolicy policy) {
 
         BookLog log = BookLog.builder()

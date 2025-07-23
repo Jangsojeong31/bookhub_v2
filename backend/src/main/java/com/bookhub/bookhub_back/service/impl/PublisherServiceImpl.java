@@ -61,8 +61,8 @@ public class PublisherServiceImpl implements PublisherService {
         Publisher publisher = publisherRepository.findById(publisherId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (!publisher.getPublisherName().equals(dto.getPublisherName())
-            && publisherRepository.existsByPublisherName(dto.getPublisherName())) {
+        boolean isPublisherNameExists = publisherRepository.existsByPublisherNameAndPublisherIdNot(dto.getPublisherName(), publisherId);
+        if (isPublisherNameExists) {
             throw new DuplicateEntityException("이미 존재하는 출판사입니다.");
         }
 

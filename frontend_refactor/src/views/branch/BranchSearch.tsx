@@ -77,7 +77,7 @@ function BranchSearch() {
         />
         <div className="search-button">
           <button onClick={onSearchClick}>검색</button>
-          <button onClick={onResetClick}>최기화</button>
+          <button onClick={onResetClick}>초기화</button>
         </div>
       </div>
       <table>

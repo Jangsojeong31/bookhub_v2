@@ -104,6 +104,7 @@ function AuthorPage() {
       const { code: udpateCode, message } = updateResponse;
 
       if (udpateCode != "SU") {
+        alert(message);
         setMessage(message);
 
         return;

@@ -39,39 +39,19 @@ public class StockServiceImpl implements StockService {
     public ResponseDto<StockUpdateResponseDto> updateStock(Long stockId, StockUpdateRequestDto dto) {
         StockActionType actionType = StockActionType.valueOf(dto.getType().toUpperCase());
         Long updatedAmount= null;
-        Stock stock = null;
 
-        if (stockId != null) {
-            stock = stockRepository.findById(stockId)
+        Stock stock = stockRepository.findById(stockId)
                     .orElseThrow(() -> new EntityNotFoundException("해당 재고 ID가 존재하지 않습니다."));
-        } else {
-            // Book + Branch로 재고 조회
-            Book book = bookRepository.findById(dto.getBookIsbn())
-                    .orElseThrow(() -> new EntityNotFoundException("도서가 존재하지 않습니다."));
-
-            Branch branch = branchRepository.findById(dto.getBranchId())
-                    .orElseThrow(() -> new EntityNotFoundException("지점이 존재하지 않습니다."));
-
-            // 재고 조회 -> 없으면 재고 생성
-            stock = stockRepository.findByBookIsbnAndBranchId(book, branch)
-                    .orElseGet(() -> stockRepository.save(
-                            Stock.builder()
-                                    .bookIsbn(book)
-                                    .branchId(branch)
-                                    .bookAmount(0L)
-                                    .build()
-                    ));
-        }
 
         switch (actionType) {
             case IN -> updatedAmount = stock.getBookAmount() + dto.getAmount();
             case OUT, LOSS -> {
                 if (stock.getBookAmount() < dto.getAmount()) {
-                    throw new IllegalArgumentException("재고 부족");
+                    throw new IllegalArgumentException("잘못된 입력값입니다. (재고 부족)");
                 }
                 updatedAmount = stock.getBookAmount() - dto.getAmount();
             }
-            default -> throw new IllegalArgumentException("잘못된 type");
+            default -> throw new IllegalArgumentException();
         }
 
         stock.setBookAmount(updatedAmount);
@@ -90,9 +70,9 @@ public class StockServiceImpl implements StockService {
         // 재고 로그 생성
         StockLog log = StockLog.builder()
                 .stockActionType(StockActionType.valueOf(dto.getType()))
-                .employeeId(employeeRepository.findById(dto.getEmployeeId()).orElseThrow(()-> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND)))
-                .bookIsbn(bookRepository.findById(dto.getBookIsbn()).orElseThrow(()-> new IllegalArgumentException((ResponseMessageKorean.RESOURCE_NOT_FOUND))))
-                .branchId(branchRepository.findById(dto.getBranchId()).orElseThrow(()-> new IllegalArgumentException((ResponseMessageKorean.RESOURCE_NOT_FOUND))))
+                .employeeId(employeeRepository.findById(dto.getEmployeeId()).orElseThrow(EntityNotFoundException::new))
+                .bookIsbn(bookRepository.findById(dto.getBookIsbn()).orElseThrow(EntityNotFoundException::new))
+                .branchId(branchRepository.findById(dto.getBranchId()).orElseThrow(EntityNotFoundException::new))
                 .amount(dto.getAmount())
                 .bookAmount(updatedAmount)
                 .description(dto.getDescription())
@@ -102,6 +82,7 @@ public class StockServiceImpl implements StockService {
 
         // 알림 기능: 매니저에게 STOCK_LOW 알림
         if ((actionType == StockActionType.OUT || actionType == StockActionType.LOSS) && updatedAmount <= 5) {
+
             Authority managerAuthority = authorityRepository.findByAuthorityName("MANAGER")
                     .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
 
@@ -111,8 +92,7 @@ public class StockServiceImpl implements StockService {
             String message = "[" + stock.getBookIsbn().getBookTitle() + "] 도서의 재고가 "
                     + (updatedAmount == 0 ? "모두 소진되었습니다." : "부족합니다 (남은 수량: " + updatedAmount + "권)");
 
-            employeeRepository.findAll().stream()
-                    .filter(emp -> emp.getAuthorityId().equals(managerAuthority) && emp.getBranchId().equals(finalStock.getBranchId()))
+            employeeRepository.findAllByAuthorityIdAndBranchId_BranchId(managerAuthority, finalStock.getBranchId().getBranchId())
                     .forEach(manager -> {
                         AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
                                 .employeeId(manager.getEmployeeId())

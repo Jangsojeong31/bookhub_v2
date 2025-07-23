@@ -27,6 +27,7 @@ public interface EmployeeSignUpApprovalRepository extends JpaRepository<Employee
               AND (:authorizerName IS NULL OR esa.authorizerId.name LIKE CONCAT('%', :authorizerName, '%'))
               AND (:startUpdatedAt IS NULL OR esa.updatedAt >= :startUpdatedAt)
               AND (:endUpdatedAt IS NULL OR esa.updatedAt <= :endUpdatedAt)
+    ORDER BY esa.updatedAt DESC
     """)
     List<EmployeeSignUpApproval> searchSignUpApproval(
             @Param("employeeName") String employeeName,
@@ -36,4 +37,8 @@ public interface EmployeeSignUpApprovalRepository extends JpaRepository<Employee
             @Param("startUpdatedAt") LocalDateTime startUpdatedAt,
             @Param("endUpdatedAt") LocalDateTime endUpdatedAt
     );
+
+    List<EmployeeSignUpApproval> findAllByIsApproved(IsApproved isApproved);
+
+    Optional<EmployeeSignUpApproval> findAllByEmployeeId_EmployeeIdAndIsApproved(Long employeeId, IsApproved isApproved);
 }

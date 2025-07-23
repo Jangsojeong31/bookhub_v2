@@ -43,7 +43,9 @@ function UpdateCategory({ category, onSuccess, mode }: UpdateCategoryProps) {
     };
 
     try {
-      await updateCategory(category.categoryId, dto, token);
+      const res = await updateCategory(category.categoryId, dto, token);
+      if(res.code != "SU") return alert(res.message);
+
       alert("카테고리 수정 성공!");
       onSuccess();
     } catch (err) {
@@ -62,7 +64,8 @@ function UpdateCategory({ category, onSuccess, mode }: UpdateCategoryProps) {
     }
     
     try {
-      await deleteCategory(category.categoryId, token);
+      const res = await deleteCategory(category.categoryId, token);
+      if(res.code != "SU") return alert(res.message);
       alert("카테고리 비활성화 완료");
       onSuccess();
     } catch (error) {
