@@ -163,11 +163,11 @@ CREATE TABLE IF NOT EXISTS `books` (
     category_id BIGINT NOT NULL,
     author_id BIGINT NOT NULL,
     publisher_id BIGINT NOT NULL,
+    cover_image_id BIGINT, -- 책 표지
     book_title VARCHAR(255) NOT NULL,
     book_price INT NOT NULL,
     published_date DATE NOT NULL,
     book_status VARCHAR(50) NOT NULL,
-    cover_url VARCHAR(500), -- 책 표지 (
     page_count VARCHAR(255) NOT NULL, -- 책 페이지
     language VARCHAR(255) NOT NULL,
     description TEXT,
@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS `books` (
     FOREIGN KEY (author_id) REFERENCES authors(author_id),
     FOREIGN KEY (publisher_id) REFERENCES publishers(publisher_id),
     FOREIGN KEY (discount_policy_id) REFERENCES discount_policies(policy_id),
+    FOREIGN KEY (cover_image_id) REFERENCES upload_files(upload_file_id),
     CONSTRAINT chk_book_status 
 		CHECK (book_status IN ('ACTIVE', 'INACTIVE', 'HIDDEN'))
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -378,11 +379,5 @@ CREATE TABLE IF NOT EXISTS `upload_files` (
     file_path VARCHAR(500) NOT NULL, -- 저장 경로
     file_type VARCHAR(100), -- MIME 타입
     file_size BIGINT NOT NULL, -- 크기(bytes)
-    
-    target_id VARCHAR(255) NOT NULL, -- 책 ISBN
-    target_type VARCHAR(50) NOT NULL, -- BOOK만 허용
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    
-	CONSTRAINT chk_target_type CHECK (target_type = 'BOOK'),
-    INDEX idx_target (target_type, target_id)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

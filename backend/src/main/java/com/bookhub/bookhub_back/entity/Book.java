@@ -32,6 +32,10 @@ public class Book extends BaseTimeEntity {
     @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisherId;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "cover_image_id")
+    private UploadFile coverImage;
+
     @Column(name = "book_title", nullable = false)
     private String bookTitle;
 
@@ -40,9 +44,6 @@ public class Book extends BaseTimeEntity {
 
     @Column(name = "published_date", nullable = false)
     private LocalDate publishedDate;
-
-    @Column(name = "cover_url")
-    private String coverUrl;
 
     @Column(name = "page_count", nullable = false)
     private String pageCount;
