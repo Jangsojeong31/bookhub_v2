@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `employee_change_logs` (
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
     FOREIGN KEY (authorizer_id) REFERENCES employees(employee_id),
-    FOREIGN KEY (previous_authority_id) REFERENCES authority(authority_id),
+    FOREIGN KEY (previous_authority_id) REFERENCES authorities(authority_id),
     FOREIGN KEY (previous_branch_id) REFERENCES branches(branch_id),
     FOREIGN KEY (previous_position_id) REFERENCES positions(position_id),
     CONSTRAINT chk_process_type 

@@ -1,6 +1,5 @@
 package com.bookhub.bookhub_back.entity;
 
-import com.bookhub.bookhub_back.common.enums.FileTargetType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

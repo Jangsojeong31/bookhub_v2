@@ -2,7 +2,6 @@ package com.bookhub.bookhub_back.service.impl;
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessage;
 import com.bookhub.bookhub_back.common.enums.BookStatus;
-import com.bookhub.bookhub_back.common.enums.FileTargetType;
 
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.book.request.BookCreateRequestDto;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -204,7 +202,7 @@ public class BookServiceImpl implements BookService {
                 .publisherName(book.getPublisherId().getPublisherName())
                 .bookPrice(book.getBookPrice())
                 .publishedDate(book.getPublishedDate())
-                .coverUrl("/files/" + book.getCoverImage().getFilePath())
+                .coverUrl(book.getCoverImage() != null ? "/files/" + book.getCoverImage().getFilePath() : null)
                 .pageCount(book.getPageCount())
                 .language(book.getLanguage())
                 .description(book.getDescription())

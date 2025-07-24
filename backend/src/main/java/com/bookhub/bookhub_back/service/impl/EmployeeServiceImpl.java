@@ -16,10 +16,7 @@ import com.bookhub.bookhub_back.dto.employee.request.EmployeeStatusUpdateRequest
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeListResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeSignUpApprovalsResponseDto;
-import com.bookhub.bookhub_back.entity.Employee;
-import com.bookhub.bookhub_back.entity.EmployeeChangeLog;
-import com.bookhub.bookhub_back.entity.EmployeeExitLog;
-import com.bookhub.bookhub_back.entity.EmployeeSignUpApproval;
+import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.repository.*;
 import com.bookhub.bookhub_back.security.UserPrincipal;
 import com.bookhub.bookhub_back.service.AlertService;
@@ -255,7 +252,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS);
     }
 
+    // 퇴사 처리
     @Override
+    @Transactional
     public ResponseDto<Void> updateStatus(Long employeeId, EmployeeStatusUpdateRequestDto dto, UserPrincipal userPrincipal) {
 
         Employee employee = employeeRepository.findById(employeeId)
@@ -272,18 +271,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if (dto.getStatus() == EmployeeStatus.EXITED) {
             employee.setStatus(dto.getStatus());
-            EmployeeExitLog employeeExitLog = EmployeeExitLog.builder()
-                    .employeeId(employee)
-                    .appliedAt(employee.getCreatedAt())
-                    .authorizerId(authorizer)
-                    .exitReason(dto.getExitReason())
-                    .build();
-            employeeExitLogRepository.save(employeeExitLog);
+            employee.setAuthorityId(authorityRepository.findByAuthorityName("NONE")
+                    .orElseGet(() -> authorityRepository.save(Authority.builder()
+                            .authorityName("NONE")
+                            .build())));
+
         } else {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
 
         employeeRepository.save(employee);
+
+        EmployeeExitLog employeeExitLog = EmployeeExitLog.builder()
+                .employeeId(employee)
+                .appliedAt(employee.getCreatedAt())
+                .authorizerId(authorizer)
+                .exitReason(dto.getExitReason())
+                .build();
+        employeeExitLogRepository.save(employeeExitLog);
 
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessageKorean.SUCCESS);
     }
