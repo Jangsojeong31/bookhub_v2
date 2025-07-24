@@ -45,7 +45,10 @@ function CreateBook () {
     const fetchCategoryTree = async () => {
       const res = await getCategoryTree(categoryType, token);
       if (res.code === 'SU' && res.data) {
-        setCategoryTree(res.data);
+        const filteredCategory = res.data.filter(data => 
+          data.isActive == true
+        )
+        setCategoryTree(filteredCategory);
       } else {
         alert("카테고리를 불러오지 못했습니다.");
       }

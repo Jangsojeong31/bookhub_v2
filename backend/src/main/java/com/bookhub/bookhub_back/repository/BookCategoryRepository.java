@@ -15,13 +15,13 @@ import java.util.Optional;
 @Repository
 public interface BookCategoryRepository extends JpaRepository<BookCategory, Long> {
 
-    @Query("SELECT bc FROM BookCategory bc WHERE bc.parentCategoryId.categoryId = :parentId AND bc.isActive = true")
+    @Query("SELECT bc FROM BookCategory bc WHERE bc.parentCategoryId.categoryId = :parentId")
     List<BookCategory> findByParentId(@Param("parentId") Long parentId);
 
-    @Query("SELECT bc FROM BookCategory bc WHERE bc.categoryType = :type AND bc.categoryLevel = :level AND bc.isActive = true")
+    @Query("SELECT bc FROM BookCategory bc WHERE bc.categoryType = :type AND bc.categoryLevel = :level")
     List<BookCategory> findByTypeAndLevel(CategoryType type, int level);
 
-    @Query("SELECT bc FROM BookCategory bc WHERE bc.parentCategoryId IS NULL AND bc.isActive = true")
+    @Query("SELECT bc FROM BookCategory bc WHERE bc.parentCategoryId IS NULL")
     List<BookCategory> findRootCategories();
 
     boolean existsByCategoryNameAndCategoryTypeAndParentCategoryId_CategoryId(String categoryName, CategoryType categoryType, Long parentCategoryIdCategoryId);

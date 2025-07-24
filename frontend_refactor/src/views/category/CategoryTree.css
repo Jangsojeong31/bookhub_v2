@@ -36,8 +36,12 @@
   font-size: 15px;
   border-radius: 6px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
   transition: background-color 0.2s;
+}
+
+.subcategory-item.inactive {
+  background-color: #dcdfe5; 
+  color: #888; 
 }
 
 .subcategory-item:hover {

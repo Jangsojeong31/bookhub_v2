@@ -148,7 +148,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
-    // 카테고리 삭제(비활성화)
+    // 카테고리 비활성화 / 활성화
     @Override
     public ResponseDto<Void> updateCategoryStatus(Long categoryId) {
         BookCategory category = bookCategoryRepository.findById(categoryId)
@@ -158,11 +158,7 @@ public class BookCategoryServiceImpl implements BookCategoryService {
             throw new ReferencedEntityException("참조 중인 카테고리는 비활성화할 수 없습니다.");
         }
 
-        if (!category.getIsActive()) {
-            throw new IllegalStateException("이미 비활성화된 카테고리입니다.");
-        }
-
-        category.setIsActive(false);
+        category.setIsActive(!category.getIsActive());
 
         bookCategoryRepository.save(category);
 
