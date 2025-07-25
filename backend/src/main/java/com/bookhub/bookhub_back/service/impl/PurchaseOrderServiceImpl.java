@@ -36,6 +36,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     private final BookRepository bookRepository;
     private final AlertService alertService;
     private final BookReceptionApprovalService bookReceptionApprovalService;
+    private final AuthorityRepository authorityRepository;
 
     // 발주 요청서 작성
     @Override
@@ -61,7 +62,10 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         PurchaseOrder savedOrder = purchaseOrderRepository.save(newOrder);
 
         // 알림 기능
-        for (Employee admin : employeeRepository.findByAuthorityId_AuthorityName("ADMIN")) {
+        Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
+                .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
+
+        for (Employee admin : employeeRepository.findAllByPositionId_Authority(adminAuthority)) {
             alertService.createAlert(AlertCreateRequestDto.builder()
                     .employeeId(admin.getEmployeeId())
                     .alertType(String.valueOf(AlertType.PURCHASE_REQUESTED))

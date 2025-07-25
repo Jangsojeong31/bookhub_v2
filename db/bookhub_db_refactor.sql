@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS `branches` (
 -- 직급 테이블: 사원, 대리, 과장, 부장, 점장 등
 CREATE TABLE IF NOT EXISTS `positions` (
 	position_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    position_name VARCHAR(255) NOT NULL UNIQUE -- 직급 중복 방지
+    position_name VARCHAR(255) NOT NULL UNIQUE, -- 직급 중복 방지
+    authority_id BIGINT NOT NULL,
+    FOREIGN KEY (authority_id) REFERENCES authorities (authority_id)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 권한 테이블: 로그인 후 접근 권한, 기능 수행 제어 등의 보안 목적 / STAFF, MANAGER, ADMIN
@@ -36,8 +38,7 @@ CREATE TABLE IF NOT EXISTS `authorities` (
 CREATE TABLE IF NOT EXISTS `employees` (
 	employee_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     branch_id BIGINT NOT NULL,
-    position_id BIGINT NOT NULL DEFAULT 1, -- 회원가입 시 기본 직급: 사원
-    authority_id BIGINT NOT NULL DEFAULT 1, -- 회원가입 시 기본 권한: STAFF
+    position_id BIGINT NOT NULL DEFAULT 1, -- 회원가입 시 기본 직급: 사원 / 기본 권한: STAFF
     employee_number INT NOT NULL UNIQUE,
     login_id VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -50,8 +51,7 @@ CREATE TABLE IF NOT EXISTS `employees` (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     status ENUM('EMPLOYED', 'EXITED'),
     FOREIGN KEY (branch_id) REFERENCES branches (branch_id),
-    FOREIGN KEY (position_id) REFERENCES positions (position_id),
-    FOREIGN KEY (authority_id) REFERENCES authorities (authority_id)
+    FOREIGN KEY (position_id) REFERENCES positions (position_id)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- ====================================

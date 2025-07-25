@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { ReceptionListResponseDto } from "@/dtos/reception/response/receptionlist-response.dto";
@@ -84,8 +86,8 @@ function AdminReceptionList() {
           onChange={(e) => setBookIsbn(e.target.value)}
         />
 
-        <button onClick={fetchLogs}>조회</button>
-        <button onClick={fetchAllLogs}>전체</button>
+        <button onClick={fetchLogs} css={style.createButton}>조회</button>
+        <button onClick={fetchAllLogs} css={style.searchAll}>전체</button>
       </div>
 
       {logs.length === 0 ? (

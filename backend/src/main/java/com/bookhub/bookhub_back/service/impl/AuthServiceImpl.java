@@ -86,11 +86,6 @@ public class AuthServiceImpl implements AuthService {
                         .positionName("사원")
                         .build()));
 
-        Authority authority = authorityRepository.findByAuthorityName("STAFF")
-                .orElseGet(() -> authorityRepository.save(Authority.builder()
-                        .authorityName("STAFF")
-                        .build()));
-
         Branch branch = branchRepository.findById(dto.getBranchId())
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -113,7 +108,6 @@ public class AuthServiceImpl implements AuthService {
                 .name(dto.getName())
                 .branchId(branch)
                 .positionId(position)
-                .authorityId(authority)
                 .phoneNumber(phoneNumber)
                 .birthDate(dto.getBirthDate())
                 .isApproved(IsApproved.PENDING)
@@ -137,7 +131,7 @@ public class AuthServiceImpl implements AuthService {
 
         final Employee finalEmployee = newEmployee;
 
-        employeeRepository.findAllByAuthorityId(adminAuthority)
+        employeeRepository.findAllByPositionId_Authority(adminAuthority)
                 .forEach(admin -> {
                     AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
                             .employeeId(admin.getEmployeeId())
@@ -190,8 +184,8 @@ public class AuthServiceImpl implements AuthService {
                 .branchName(employee.getBranchId().getBranchName())
                 .positionId(employee.getPositionId().getPositionId())
                 .positionName(employee.getPositionId().getPositionName())
-                .authorityId(employee.getAuthorityId().getAuthorityId())
-                .authorityName(employee.getAuthorityId().getAuthorityName())
+                .authorityId(employee.getPositionId().getAuthority().getAuthorityId())
+                .authorityName(employee.getPositionId().getAuthority().getAuthorityName())
                 .email(employee.getEmail())
                 .phoneNumber(employee.getPhoneNumber())
                 .birthDate(employee.getBirthDate())

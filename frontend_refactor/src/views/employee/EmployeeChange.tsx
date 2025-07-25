@@ -324,24 +324,11 @@ function EmployeeChange() {
                 onChange={onEmployeeChange}
               >
                 <option value="">직급 선택</option>
-                {positions.map((position) => (
+                {positions
+                .filter((position) => position.positionName !== "퇴사")
+                .map((position) => (
                   <option key={position.positionId} value={position.positionId}>
                     {position.positionName}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="field">
-              <label>권한 명</label>
-              <select
-                name="authorityId"
-                value={form.authorityId}
-                onChange={onEmployeeChange}
-              >
-                <option value="">권한 선택</option>
-                {authorities.map((auth) => (
-                  <option key={auth.authorityId} value={auth.authorityId}>
-                    {auth.authorityName}
                   </option>
                 ))}
               </select>

@@ -131,7 +131,7 @@ function CreateBook () {
 
   return (
     <form onSubmit={handleSubmit} className="create-book-form">
-      <h2>📘책 등록</h2>
+      <h2>책 등록</h2>
       <input
         type="text"
         value={isbn} 
@@ -199,7 +199,7 @@ function CreateBook () {
         required />
       <div 
         className="file-upload-wrapper">
-        <label htmlFor="coverUpload" className="file-upload-label">
+        <label htmlFor="coverUpload" className="file-upload-label" style={{ backgroundColor: "#e74c3c"}}>
           책 표지 업로드
         </label>
         <input
@@ -234,7 +234,8 @@ function CreateBook () {
       required />
       <button 
         type="submit" 
-        className="create-book-button">등록</button>
+        className="create-book-button"
+        style={{ backgroundColor: "#265185"}}>등록</button>
     </form>
   );
 }

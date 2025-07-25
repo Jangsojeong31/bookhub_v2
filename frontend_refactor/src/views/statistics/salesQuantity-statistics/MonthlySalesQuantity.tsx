@@ -1,5 +1,4 @@
 import {
-  getDailySalesQuantity,
   getMonthlySalesQuantity,
 } from "@/apis/statistics/salesQuantityStatistics/salesQuantityStatistics";
 import React, { useEffect, useState } from "react";

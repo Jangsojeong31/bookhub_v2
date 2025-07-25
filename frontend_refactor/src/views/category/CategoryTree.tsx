@@ -121,7 +121,11 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({ onSelect }) => {
 
   // * 비활성화 / 활성화
   const handleDeactivate = async (sub: CategoryTreeResponseDto) => {
-    const confirm = window.confirm(sub.isActive ? "카테고리를 비활성화하시겠습니까?" : "카테고리를 활성화하시겠습니까?");
+    const confirm = window.confirm(
+      sub.isActive
+        ? "카테고리를 비활성화하시겠습니까?"
+        : "카테고리를 활성화하시겠습니까?"
+    );
     if (!confirm) return;
 
     const token = cookies.accessToken;
@@ -169,7 +173,7 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({ onSelect }) => {
         name="discountPolicyId"
         value={updateForm.discountPolicyId ?? ""}
         onChange={onUpdateInputChange}
-        placeholder={updateForm.discountPolicyId?.toString() ?? ""}
+        placeholder={updateForm.discountPolicyId?.toString() ?? "할인정책 id"}
       />
       <button
         onClick={() => onUpdateCategoryClick(categoryId)}
@@ -204,22 +208,37 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({ onSelect }) => {
               {cat.subCategories!.map((sub) => (
                 <div
                   key={sub.categoryId}
-                  className={`subcategory-item ${sub.isActive ? "" : "inactive"}`}
+                  className={`subcategory-item ${
+                    sub.isActive ? "" : "inactive"
+                  }`}
                   onClick={() => onSelect(sub)}
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  {sub.categoryName}
-
+                  <div>{sub.categoryName}</div>
                   {sub.isActive ? (
-                    <>
-                      <button onClick={() => openUpdateModal(sub)}>수정</button>
-                      <button onClick={() => handleDeactivate(sub)}>
+                    <div>
+                      <button
+                        css={style.modifyButton}
+                        onClick={() => openUpdateModal(sub)}
+                      >
+                        수정
+                      </button>
+                      <button
+                        css={style.deleteButton}
+                        onClick={() => handleDeactivate(sub)}
+                      >
                         비활성화
                       </button>
-                    </>
+                    </div>
                   ) : (
-                    <button onClick={() => handleDeactivate(sub)}>
-                      활성화
-                    </button>
+                    <div>
+                      <button
+                        css={style.deleteButton}
+                        onClick={() => handleDeactivate(sub)}
+                      >
+                        활성화
+                      </button>
+                    </div>
                   )}
                 </div>
               ))}
@@ -231,30 +250,30 @@ const CategoryTree: React.FC<CategoryTreeProps> = ({ onSelect }) => {
   };
 
   return (
-    <div className="category-container" style={{width: "100%"}}>
+    <div className="category-container" style={{ width: "100%" }}>
       <h2>전체 도서 카테고리</h2>
-      <div style={{display: "flex", gap: 16}}>
-      <div style={{width: "50%", padding: 10}}>
-        <div
-          className="category-type"
-          onClick={() => fetchCategories("DOMESTIC")}
-        >
-          {expandedType === "DOMESTIC" ? "▼" : "▶"} 국내 도서
+      <div style={{ display: "flex", gap: 16 }}>
+        <div style={{ width: "50%", padding: 10 }}>
+          <div
+            className="category-type"
+            onClick={() => fetchCategories("DOMESTIC")}
+          >
+            {expandedType === "DOMESTIC" ? "▼" : "▶"} 국내 도서
+          </div>
+          {expandedType === "DOMESTIC" &&
+            renderCategoryTree(categoriesMap.DOMESTIC)}
         </div>
-        {expandedType === "DOMESTIC" &&
-          renderCategoryTree(categoriesMap.DOMESTIC)}
+        <div style={{ width: "50%", padding: 10 }}>
+          <div
+            className="category-type"
+            onClick={() => fetchCategories("FOREIGN")}
+          >
+            {expandedType === "FOREIGN" ? "▼" : "▶"} 해외 도서
+          </div>
+          {expandedType === "FOREIGN" &&
+            renderCategoryTree(categoriesMap.FOREIGN)}
+        </div>
       </div>
-      <div style={{width: "50%", padding: 10}}>
-        <div
-          className="category-type"
-          onClick={() => fetchCategories("FOREIGN")}
-        >
-          {expandedType === "FOREIGN" ? "▼" : "▶"} 해외 도서
-        </div>
-        {expandedType === "FOREIGN" &&
-          renderCategoryTree(categoriesMap.FOREIGN)}
-      </div>
-        </div>
 
       {modalStatus && (
         <Modal

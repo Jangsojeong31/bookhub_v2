@@ -43,7 +43,7 @@ function DailySalesQuantity() {
     const { code, message, data } = response;
 
     if (code != "SU") {
-      alert(`${message}`)
+      alert(message);
       return;
     }
 

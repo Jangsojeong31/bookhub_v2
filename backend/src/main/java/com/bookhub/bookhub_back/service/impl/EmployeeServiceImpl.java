@@ -56,7 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                         .employeeName(employee.getName())
                         .branchName(employee.getBranchId().getBranchName())
                         .positionName(employee.getPositionId().getPositionName())
-                        .authorityName(employee.getAuthorityId().getAuthorityName())
+                        .authorityName(employee.getPositionId().getAuthority().getAuthorityName())
                         .status(employee.getStatus())
                         .build())
                 .collect(Collectors.toList());
@@ -100,8 +100,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .branchName(employee.getBranchId().getBranchName())
                 .positionId(employee.getPositionId().getPositionId())
                 .positionName(employee.getPositionId().getPositionName())
-                .authorityId(employee.getAuthorityId().getAuthorityId())
-                .authorityName(employee.getAuthorityId().getAuthorityName())
+                .authorityId(employee.getPositionId().getAuthority().getAuthorityId())
+                .authorityName(employee.getPositionId().getAuthority().getAuthorityName())
                 .email(employee.getEmail())
                 .phoneNumber(employee.getPhoneNumber())
                 .birthDate(employee.getBirthDate())
@@ -164,7 +164,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Long preBranchId = employee.getBranchId().getBranchId();
         Long prePositionId = employee.getPositionId().getPositionId();
-        Long preAuthorityId = employee.getAuthorityId().getAuthorityId();
+        Long preAuthorityId = employee.getPositionId().getAuthority().getAuthorityId();
 
         // 지점 변경 시
         if (!dto.getBranchId().equals(preBranchId)) {
@@ -220,32 +220,32 @@ public class EmployeeServiceImpl implements EmployeeService {
             );
         }
 
-        // 권한 변경 시
-        if (!dto.getAuthorityId().equals(preAuthorityId)) {
-            employee.setAuthorityId(authorityRepository.findById(dto.getAuthorityId())
-                    .orElseThrow(EntityNotFoundException::new));
-
-            // 직원 정보 변경 로그 생성
-            EmployeeChangeLog employeeChangeLog = EmployeeChangeLog.builder()
-                    .employeeId(employee)
-                    .authorizerId(authorizer)
-                    .changeType(ChangeType.AUTHORITY_CHANGE)
-                    .previousAuthorityId(authorityRepository.findById(preAuthorityId)
-                            .orElseThrow(IllegalArgumentException::new))
-                    .build();
-
-            employeeChangeLogRepository.save(employeeChangeLog);
-
-            // 알림 생성
-            alertService.createAlert(AlertCreateRequestDto.builder()
-                    .employeeId(employee.getEmployeeId())
-                    .alertType(String.valueOf(AlertType.CHANGE_PERMISSION_SUCCESS))
-                    .alertTargetTable("EMPLOYEES")
-                    .targetPk(employee.getEmployeeId())
-                    .message("권한이 [" + employee.getAuthorityId().getAuthorityName() + "]로 변경되었습니다.")
-                    .build()
-            );
-        }
+//        // 권한 변경 시
+//        if (!dto.getAuthorityId().equals(preAuthorityId)) {
+//            employee.setAuthorityId(authorityRepository.findById(dto.getAuthorityId())
+//                    .orElseThrow(EntityNotFoundException::new));
+//
+//            // 직원 정보 변경 로그 생성
+//            EmployeeChangeLog employeeChangeLog = EmployeeChangeLog.builder()
+//                    .employeeId(employee)
+//                    .authorizerId(authorizer)
+//                    .changeType(ChangeType.AUTHORITY_CHANGE)
+//                    .previousAuthorityId(authorityRepository.findById(preAuthorityId)
+//                            .orElseThrow(IllegalArgumentException::new))
+//                    .build();
+//
+//            employeeChangeLogRepository.save(employeeChangeLog);
+//
+//            // 알림 생성
+//            alertService.createAlert(AlertCreateRequestDto.builder()
+//                    .employeeId(employee.getEmployeeId())
+//                    .alertType(String.valueOf(AlertType.CHANGE_PERMISSION_SUCCESS))
+//                    .alertTargetTable("EMPLOYEES")
+//                    .targetPk(employee.getEmployeeId())
+//                    .message("권한이 [" + employee.getAuthorityId().getAuthorityName() + "]로 변경되었습니다.")
+//                    .build()
+//            );
+//        }
 
         employeeRepository.save(employee);
 
@@ -271,11 +271,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if (dto.getStatus() == EmployeeStatus.EXITED) {
             employee.setStatus(dto.getStatus());
-            employee.setAuthorityId(authorityRepository.findByAuthorityName("NONE")
-                    .orElseGet(() -> authorityRepository.save(Authority.builder()
-                            .authorityName("NONE")
-                            .build())));
-
+            employee.setPositionId(positionRepository.findByAuthority_AuthorityName("NONE"));
         } else {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }

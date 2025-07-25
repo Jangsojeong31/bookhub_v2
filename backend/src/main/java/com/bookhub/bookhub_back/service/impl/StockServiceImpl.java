@@ -126,7 +126,7 @@ public class StockServiceImpl implements StockService {
             String message = "[" + stock.getBookIsbn().getBookTitle() + "] 도서의 재고가 "
                     + (updatedAmount == 0 ? "모두 소진되었습니다." : "부족합니다 (남은 수량: " + updatedAmount + "권)");
 
-            employeeRepository.findAllByAuthorityIdAndBranchId_BranchId(managerAuthority, finalStock.getBranchId().getBranchId())
+            employeeRepository.findAllByPositionId_AuthorityAndBranchId_BranchId(managerAuthority, finalStock.getBranchId().getBranchId())
                     .forEach(manager -> {
                         AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
                                 .employeeId(manager.getEmployeeId())

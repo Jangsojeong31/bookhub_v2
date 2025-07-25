@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import React, { useState } from "react";
 import {
   deleteAuthor,
@@ -8,7 +9,6 @@ import {
 import { AuthorResponseDto } from "@/dtos/author/response/author.response.dto";
 import { useCookies } from "react-cookie";
 import Modal from "@/components/Modal";
-import * as style from "@/styles/style";
 import CreateAuthor from "./CreateAuthor";
 import Pagination from "@/components/Pagination";
 import usePagination from "@/hooks/usePagination";
@@ -268,7 +268,9 @@ function AuthorPage() {
           onKeyDown={handleKeyDown}
           css={style.searchInput}
           />
-        <button onClick={onGetAllAuthorsByNameClick}>검색</button>
+        <button 
+        css={style.createButton}
+        onClick={onGetAllAuthorsByNameClick}>검색</button>
           </div>
       </div>
       <table>

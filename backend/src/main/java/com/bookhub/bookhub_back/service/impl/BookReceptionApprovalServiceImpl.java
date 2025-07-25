@@ -95,7 +95,7 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
         Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
 
-        for (Employee admin : employeeRepository.findAllByAuthorityId(adminAuthority)) {
+        for (Employee admin : employeeRepository.findAllByPositionId_Authority(adminAuthority)) {
             alertService.createAlert(AlertCreateRequestDto.builder()
                     .employeeId(admin.getEmployeeId())
                     .alertType(String.valueOf(AlertType.BOOK_RECEIVED_SUCCESS))

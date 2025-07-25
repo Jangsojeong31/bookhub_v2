@@ -30,7 +30,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
             WHERE (:name IS NULL OR e.name LIKE %:name%)
               AND (:branchName IS NULL OR e.branchId.branchName LIKE %:branchName%)
               AND (:positionName IS NULL OR e.positionId.positionName LIKE %:positionName%)
-              AND (:authorityName IS NULL OR e.authorityId.authorityName LIKE %:authorityName%)
+              AND (:authorityName IS NULL OR e.positionId.authority.authorityName LIKE %:authorityName%)
               AND (:status IS NULL OR e.status = :status)
         """)
     List<Employee> searchEmployees(
@@ -43,9 +43,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     Optional<Employee> findByEmail(String email);
 
-    Iterable<? extends Employee> findByAuthorityId_AuthorityName(String authorityIdAuthorityName);
+    List<Employee> findAllByPositionId_AuthorityAndBranchId_BranchId(Authority managerAuthority, Long branchId);
 
-    List<Employee> findAllByAuthorityId(Authority authorityId);
-
-    List<Employee> findAllByAuthorityIdAndBranchId_BranchId(Authority managerAuthority, Long branchId);
+    List<Employee> findAllByPositionId_Authority(Authority positionIdAuthority);
 }

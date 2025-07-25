@@ -11,7 +11,6 @@ export const adminMenu: SidebarMenu[] = [
       { label: '책 등록', path: '/books/create' },
       { label: '책 수정 및 삭제', path: '/books/edit' },
       { label: '책 로그', path: '/booklogs' },
-      { label: '', path:''  },
     ],
   },
   {

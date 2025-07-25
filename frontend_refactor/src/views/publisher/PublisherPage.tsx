@@ -125,7 +125,9 @@ function PublisherPage() {
                             // onKeyDown={handleKeyDown}
                             css={style.searchInput}
                             />
-                  <button onClick={() => fetchPage(searchForm.publisherName)}>검색</button>
+                  <button 
+                  css={style.createButton}
+                  onClick={() => fetchPage(searchForm.publisherName)}>검색</button>
       </div>
 
       {/* 테이블 */}

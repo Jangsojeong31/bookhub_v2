@@ -28,10 +28,6 @@ public class Employee extends BaseTimeEntity {
     @JoinColumn(name = "position_id", nullable = false)
     private Position positionId;
 
-    @ManyToOne
-    @JoinColumn(name = "authority_id", nullable = false)
-    private Authority authorityId;
-
     @Column(name = "employee_number", nullable = false, unique = true)
     private Long employeeNumber;
 

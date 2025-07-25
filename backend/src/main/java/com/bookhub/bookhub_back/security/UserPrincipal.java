@@ -29,7 +29,7 @@ public class UserPrincipal implements UserDetails {
         this.password = employee.getPassword();
         this.branchId = employee.getBranchId().getBranchId();
         this.status = employee.getStatus();
-        String role = "ROLE_" + employee.getAuthorityId().getAuthorityName();
+        String role = "ROLE_" + employee.getPositionId().getAuthority().getAuthorityName();
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(role));
     }
 

@@ -17,4 +17,8 @@ public class Position {
 
     @Column(name = "position_name", nullable = false, unique = true)
     private String positionName;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "authority_id", nullable = false)
+    private Authority authority;
 }
