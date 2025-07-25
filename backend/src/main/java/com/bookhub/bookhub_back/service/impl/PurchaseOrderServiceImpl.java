@@ -47,7 +47,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
         Branch branch = branchRepository.findById(userPrincipal.getBranchId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Book book = bookRepository.findById(dto.getIsbn())
+        Book book = bookRepository.findByIdNotHidden(dto.getIsbn())
                 .orElseThrow(EntityNotFoundException::new);
 
         PurchaseOrder newOrder = PurchaseOrder.builder()

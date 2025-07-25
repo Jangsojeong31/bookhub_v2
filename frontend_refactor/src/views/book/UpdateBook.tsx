@@ -8,6 +8,7 @@ function UpdateBook() {
   const [isbnInput, setIsbnInput] = useState("");
   const [cookies] = useCookies(["accessToken"]);
 
+  const [isbn, setIsbn] = useState("");
   const [bookPrice, setBookPrice] = useState<number>();
   const [description, setDescription] = useState("");
   const [policyId, setPolicyId] = useState<number | null>(null);
@@ -21,6 +22,7 @@ function UpdateBook() {
     const res = await getBookByIsbn(isbnInput, cookies.accessToken);
     if (res.code === "SU" && res.data) {
       const book = res.data;
+      setIsbn(book.isbn);
       setDescription(book.description ?? "");
       setBookPrice(book.bookPrice ?? null);
       setPolicyId(book.policyId ?? null);
@@ -90,17 +92,19 @@ function UpdateBook() {
           <table>
             <thead>
               <tr>
+                <th>ISBN</th>
                 <th>설명</th>
                 <th>가격</th>
                 <th>정책ID</th>
                 <th>카테고리ID</th>
-                <th>활성/비활성화</th>
+                <th>판매 상태</th>
                 <th>표지 이미지</th>
                 <th>수정</th>
               </tr>
             </thead>
             <tbody>
               <tr>
+                <td>{isbn}</td>
                 <td>
                   <textarea value={description}
                   onChange={(e) => setDescription(e.target.value)}

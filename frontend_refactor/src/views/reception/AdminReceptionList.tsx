@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { ReceptionListResponseDto } from "@/dtos/reception/response/receptionlist-response.dto";
 import { getAdminReceptionApproval } from "@/apis/reception/reception";
-import { GET_BRANCH_URL } from "@/constants/url/khj.constants";
+import { GET_BRANCH_URL } from "@/constants/api/khj.constants";
 
 type Branch = {
   branchId: number;

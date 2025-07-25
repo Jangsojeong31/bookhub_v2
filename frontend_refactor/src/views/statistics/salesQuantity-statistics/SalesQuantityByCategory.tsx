@@ -112,7 +112,6 @@ function SalesQuantityByCategory() {
     );
 
     if (responseDomestic.code != "SU" || responseForeign.code != "SU") {
-      // setMessage(message);
       return;
     }
     const legendData1 = responseDomestic.data!.map((item) => ({
@@ -208,6 +207,7 @@ function SalesQuantityByCategory() {
       </div>
 
       <div style={{ margin: 30 }}>
+        <p>(최근 30일 기준)</p>
         <button onClick={onFetchChart}>새로고침</button>
 
         {loading ? (

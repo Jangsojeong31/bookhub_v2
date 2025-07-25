@@ -9,7 +9,7 @@ import {
 import { AxiosError } from "axios";
 import { ResponseDto } from "@/dtos";
 import { LocationResponseDto, LocationDetailResponseDto, LocationCreateRequestDto, LocationUpdateRequestDto } from "@/dtos/location/location.dto";
-import { GET_ALL_LOCATIONS_URL, GET_LOCATION_URL, POST_LOCATION_URL, PUT_LOCATION_URL, DELETE_LOCATION_URL } from "../../constants/url/csy.constants";
+import { GET_ALL_LOCATIONS_URL, GET_LOCATION_URL, POST_LOCATION_URL, PUT_LOCATION_URL, DELETE_LOCATION_URL } from "../../constants/api/csy.constants";
 
 
 

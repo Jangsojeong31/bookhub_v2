@@ -6,7 +6,7 @@ import {
   responseErrorHandler,
   responseSuccessHandler,
 } from "../axiosConfig";
-import { GET_ALL_EMPLOYEE_SIGN_UP_APRROVALS_URL } from "../../constants/url/khj.constants";
+import { GET_ALL_EMPLOYEE_SIGN_UP_APRROVALS_URL } from "../../constants/api/khj.constants";
 import { AxiosError } from "axios";
 
 interface SearchParams {

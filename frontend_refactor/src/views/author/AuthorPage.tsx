@@ -6,7 +6,6 @@ import {
   updateAuthor,
 } from "@/apis/author/author";
 import { AuthorResponseDto } from "@/dtos/author/response/author.response.dto";
-import { NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Modal from "@/components/Modal";
 import * as style from "@/styles/style";
@@ -66,7 +65,6 @@ function AuthorPage() {
       setMessage("검색 결과가 없습니다.");
     }
 
-    // 검색창 초기화
     setSearchForm({ authorName: "" });
   };
 

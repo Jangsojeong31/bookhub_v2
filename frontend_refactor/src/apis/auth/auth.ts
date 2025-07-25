@@ -18,7 +18,7 @@ import {
   SIGNUP_APPROVAL_EMAIL_URL,
   SIGNUP_APPROVAL_EMAIL_VERIFY_URL,
   SIGNUP_APPROVAL_UPDATE_URL,
-} from "../../constants/url/khj.constants";
+} from "../../constants/api/khj.constants";
 import { AxiosError } from "axios";
 import { SignInRequestDto } from "@/dtos/auth/request/sign-in.request.dto";
 import { SignInResponseDto } from "@/dtos/auth/response/sign-in.response.dto";

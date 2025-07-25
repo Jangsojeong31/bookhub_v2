@@ -13,6 +13,6 @@ public class StockUpdateResponseDto {
     private String type;
     private String bookIsbn;
     private String bookTitle;
-    private Long amount;
-    private Long bookAmount;
+    private Long amount; // 변경된 재고량
+    private Long bookAmount; // 현재 재고량
 }

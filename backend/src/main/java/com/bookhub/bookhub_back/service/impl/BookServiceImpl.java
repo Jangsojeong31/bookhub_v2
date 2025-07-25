@@ -117,7 +117,7 @@ public class BookServiceImpl implements BookService {
         Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Book book = bookRepository.findById(isbn)
+        Book book = bookRepository.findByIdNotHidden(isbn)
                 .orElseThrow(EntityNotFoundException::new);
 
         BookCategory category = categoryRepository.findById(dto.getCategoryId())
@@ -175,7 +175,7 @@ public class BookServiceImpl implements BookService {
         Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Book book = bookRepository.findById(isbn)
+        Book book = bookRepository.findByIdNotHidden(isbn)
                 .orElseThrow(EntityNotFoundException::new);
 
         if (book.getBookStatus().equals(BookStatus.HIDDEN)) {

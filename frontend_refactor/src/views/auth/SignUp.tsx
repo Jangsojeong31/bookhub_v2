@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { checkLoginIdDuplicate, signUpRequest } from "@/apis/auth/auth";
-import { GET_BRANCH_URL } from "@/constants/url/khj.constants";
+import { GET_BRANCH_URL } from "@/constants/api/khj.constants";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "@/styles/auth/Auth.css";
