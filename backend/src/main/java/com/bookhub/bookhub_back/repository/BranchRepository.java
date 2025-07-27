@@ -15,4 +15,6 @@ public interface BranchRepository extends JpaRepository<Branch, Long> {
     List<Branch> findByBranchLocationContaining(String branchLocation);
 
     boolean existsByBranchNameAndBranchIdNot(String branchName, Long branchId);
+
+    Branch findByBranchName(String branchName);
 }

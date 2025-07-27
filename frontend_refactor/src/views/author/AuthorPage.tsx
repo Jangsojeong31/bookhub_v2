@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import React, { useState } from "react";
 import {
   deleteAuthor,
@@ -6,13 +7,12 @@ import {
   updateAuthor,
 } from "@/apis/author/author";
 import { AuthorResponseDto } from "@/dtos/author/response/author.response.dto";
-import { NavLink } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Modal from "@/components/Modal";
-import * as style from "@/styles/style";
 import CreateAuthor from "./CreateAuthor";
 import Pagination from "@/components/Pagination";
 import usePagination from "@/hooks/usePagination";
+import DataTable from "@/components/Table";
 
 // & 기능: 이름으로 조회, 수정, 삭제
 
@@ -27,7 +27,7 @@ function AuthorPage() {
   const [message, setMessage] = useState("");
   const [modalMessage, setModalMessage] = useState("");
   const [modalStatus, setModalStatus] = useState(false);
-  
+
   const [cookies] = useCookies(["accessToken"]);
 
   const onSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +66,6 @@ function AuthorPage() {
       setMessage("검색 결과가 없습니다.");
     }
 
-    // 검색창 초기화
     setSearchForm({ authorName: "" });
   };
 
@@ -137,7 +136,7 @@ function AuthorPage() {
       return;
     }
 
-    if (!window.confirm('정말 삭제하시겠습니까?')) return;
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     try {
       const response = await deleteAuthor(authorId, token);
@@ -169,29 +168,6 @@ function AuthorPage() {
     goPrev,
     goNext,
   } = usePagination(authors, 10);
-
-  const authorList = pagedAuthors.map((author) => {
-    return (
-      <tr key={author.authorId}>
-        <td>{author.authorName}</td>
-        <td>{author.authorEmail}</td>
-        <td>
-          <button
-            onClick={() => openUpdateModal(author)}
-            css={style.modifyButton}
-          >
-            수정
-          </button>
-          <button
-            onClick={() => onDeleteAuthorClick(author.authorId)}
-            css={style.deleteButton}
-          >
-            삭제
-          </button>
-        </td>
-      </tr>
-    );
-  });
 
   const modalContent: React.ReactNode = (
     <>
@@ -257,10 +233,11 @@ function AuthorPage() {
 
   return (
     <>
-      <div className="topBar">
-        <CreateAuthor />
-        <div style={{display: "flex", gap: 12}}>
-          
+      <div className="filter-bar">
+        <div className="left-item">
+          <CreateAuthor />
+        </div>
+
         <input
           type="text"
           name="authorName"
@@ -269,20 +246,31 @@ function AuthorPage() {
           onChange={onSearchInputChange}
           onKeyDown={handleKeyDown}
           css={style.searchInput}
-          />
-        <button onClick={onGetAllAuthorsByNameClick}>검색</button>
-          </div>
+        />
+        <button css={style.searchButton} onClick={onGetAllAuthorsByNameClick}>
+          검색
+        </button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>저자 이름</th>
-            <th>저자 이메일</th>
-            <th>작업</th>
-          </tr>
-        </thead>
-        <tbody>{authorList}</tbody>
-      </table>
+
+      <DataTable<AuthorResponseDto>
+        columns={[
+          { header: "저자 이름", accessor: "authorName" },
+          { header: "저자 이메일", accessor: "authorEmail" },
+        ]}
+        data={pagedAuthors}
+        actions={[
+          {
+            label: "수정",
+            onClick: openUpdateModal,
+            buttonCss: style.modifyButton,
+          },
+          {
+            label: "삭제",
+            onClick: (author) => onDeleteAuthorClick(author.authorId),
+            buttonCss: style.deleteButton,
+          },
+        ]}
+      />
       {message && <p>{message}</p>}
 
       {modalStatus && (
@@ -297,11 +285,11 @@ function AuthorPage() {
 
       {pagedAuthors.length > 0 && (
         <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={goToPage}
-        onPrev={goPrev}
-        onNext={goNext}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+          onPrev={goPrev}
+          onNext={goNext}
         />
       )}
     </>

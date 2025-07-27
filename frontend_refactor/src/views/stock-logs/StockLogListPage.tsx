@@ -21,49 +21,45 @@ const StockLogListPage = () => {
 
   useEffect(() => {
     onSearchLogs();
-  }, [])
+  }, []);
 
-  const onSearchLogs = async() => {
+  const onSearchLogs = async () => {
     setLogs([]);
-        const { type, bookIsbn, start, end } = searchForm;
-        const token = cookies.accessToken;
-    
-        if (!token) {
-          alert("인증 토큰이 없습니다.");
-          return;
-        }
-    
-        const response = await getStockLogsByBranch(
-          type,
-          bookIsbn,
-          start,
-          end,
-          token
-        );
-        const { code, message, data } = response;
-    
-        if (!code) {
-          alert(message);
-          return;
-        }
-    
-        if (Array.isArray(data)) {
-          setLogs(data);
-          // setMessage("");
-        } else {
-          alert("올바른 검색 조건을 입력해주세요.");
-        }
+    const { type, bookIsbn, start, end } = searchForm;
+    const token = cookies.accessToken;
 
-  }
+    if (!token) {
+      alert("인증 토큰이 없습니다.");
+      return;
+    }
+
+    const response = await getStockLogsByBranch(
+      type,
+      bookIsbn,
+      start,
+      end,
+      token
+    );
+    const { code, message, data } = response;
+
+    if (!code) {
+      alert(message);
+      return;
+    }
+
+    if (Array.isArray(data)) {
+      setLogs(data);
+      // setMessage("");
+    } else {
+      alert("올바른 검색 조건을 입력해주세요.");
+    }
+  };
 
   return (
     <div className="stock-log-wrapper">
-  
-    
+
       <h2 className="stock-log-title">지점 재고로그 [ {branchName} ]</h2>
-
-
-      <div style={{ display: "flex", gap: 20, height: 40 }}>
+      <div className="filter-bar">
         <select
           name="isApproved"
           value={searchForm.type}
@@ -74,21 +70,20 @@ const StockLogListPage = () => {
             })
           }
         >
-          <option value="">전체</option>
+          <option value="">재고 이동 유형</option>
           <option value="IN">입고</option>
           <option value="OUT">출고</option>
           <option value="LOSS">분실/파손</option>
         </select>
-            <input
-              type="text"
-              name="employeeName"
-              value={searchForm.bookIsbn}
-              placeholder="bookIsbn"
-              onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setSearchForm({ ...searchForm, bookIsbn: e.target.value });
-              }}
-              style={{ border: "1px solid #ccc", textAlign: "center" }}
-            />
+        <input
+          type="text"
+          name="bookIsbn"
+          value={searchForm.bookIsbn}
+          placeholder="bookIsbn"
+          onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setSearchForm({ ...searchForm, bookIsbn: e.target.value });
+          }}
+        />
         <p>시작일</p>
         <input
           type="date"
@@ -98,7 +93,6 @@ const StockLogListPage = () => {
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
             setSearchForm({ ...searchForm, start: e.target.value });
           }}
-          style={{ border: "1px solid #ccc", width: 150 }}
         />
         <p>종료일</p>
         <input
@@ -109,16 +103,11 @@ const StockLogListPage = () => {
           onInput={(e: React.ChangeEvent<HTMLInputElement>) => {
             setSearchForm({ ...searchForm, end: e.target.value });
           }}
-          style={{ border: "1px solid #ccc", width: 150 }}
         />
-        <button
-          onClick={onSearchLogs}
-          style={{ border: "1px solid #ccc" }}
-        >
+        <button onClick={onSearchLogs}>
           검색
         </button>
       </div>
-
 
       <table className="stock-log-table">
         <thead>

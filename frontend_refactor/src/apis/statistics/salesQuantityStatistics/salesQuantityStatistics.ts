@@ -1,5 +1,5 @@
 import { axiosInstance, bearerAuthorization, responseSuccessHandler, responseErrorHandler } from "@/apis/axiosConfig";
-import { GET_BEST_SELLERS_BY_CATEGORY, GET_DAILY_SALES_QUANTITY, GET_MONTHLY_BEST_SELLERS, GET_MONTHLY_SALES_QUANTITY, GET_SALES_QUANTITY_BY_BRANCH, GET_SALES_QUANTITY_BY_CATEGORY, GET_SALES_QUANTITY_BY_DISCOUNT_POLICY, GET_TOP_100_BEST_SELLERS, GET_WEEKLY_BEST_SELLERS, GET_WEEKLY_SALES_QUANTITY, GET_YEARLY_BEST_SELLERS } from "@/constants/url/jsj.constants";
+import { GET_BEST_SELLERS_BY_CATEGORY, GET_DAILY_SALES_QUANTITY, GET_MONTHLY_BEST_SELLERS, GET_MONTHLY_SALES_QUANTITY, GET_SALES_QUANTITY_BY_BRANCH, GET_SALES_QUANTITY_BY_CATEGORY, GET_SALES_QUANTITY_BY_DISCOUNT_POLICY, GET_TOP_100_BEST_SELLERS, GET_WEEKLY_BEST_SELLERS, GET_WEEKLY_SALES_QUANTITY, GET_YEARLY_BEST_SELLERS } from "@/constants/api/jsj.constants";
 import { ResponseDto } from "@/dtos";
 import { BestSellerResponseDto } from "@/dtos/statistics/salesQuantityStatistics/response/bestSeller.reponse.dto";
 import { CategorySalesQuantityResponseDto } from "@/dtos/statistics/salesQuantityStatistics/response/categorySalesQuantity.response.dto";

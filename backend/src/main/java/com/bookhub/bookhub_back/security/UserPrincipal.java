@@ -1,5 +1,6 @@
 package com.bookhub.bookhub_back.security;
 
+import com.bookhub.bookhub_back.common.enums.EmployeeStatus;
 import com.bookhub.bookhub_back.entity.Branch;
 import com.bookhub.bookhub_back.entity.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,6 +20,7 @@ public class UserPrincipal implements UserDetails {
     @JsonIgnore
     private final String password;
     private final Long branchId;
+    private final EmployeeStatus status;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(Employee employee) {
@@ -26,7 +28,8 @@ public class UserPrincipal implements UserDetails {
         this.loginId = employee.getLoginId();
         this.password = employee.getPassword();
         this.branchId = employee.getBranchId().getBranchId();
-        String role = "ROLE_" + employee.getAuthorityId().getAuthorityName();
+        this.status = employee.getStatus();
+        String role = "ROLE_" + employee.getPositionId().getAuthority().getAuthorityName();
         this.authorities = Collections.singleton(new SimpleGrantedAuthority(role));
     }
 
@@ -62,6 +65,6 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return status == EmployeeStatus.EMPLOYED;
     }
 }

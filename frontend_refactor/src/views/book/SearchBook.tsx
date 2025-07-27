@@ -128,20 +128,20 @@ function SearchBook() {
 
   return (
     <div>
-      <div className="topBar">
+      <div className="filter-bar">
         <h2>도서 통합 검색</h2>
         <input
-          className="book-input"
+        className="searchInput" style={{width: 500}}
           value={keyword}
           onChange={(e) => {
             setKeyword(e.target.value)}
           }
           placeholder="검색어를 입력하세요(책 제목, 저자명, 출판사명, 카테고리명, 카테고리(국내/해외))"
-        />
-        <button type="button" className="button" onClick={handleSearch}>
+          />
+        <button type="button" onClick={handleSearch}>
           검색
         </button>
-      </div>
+          </div>
 
       <div className="table-container">
         <table>
@@ -170,12 +170,12 @@ function SearchBook() {
                     {book.coverUrl ? (
                       <img
                         src={`http://localhost:8080${encodeURI(book.coverUrl)}`}
-                        alt="cover"
+                        alt={book.bookTitle + "표지"}
                         width={90}
                         height={120}
                       />
                     ) : (
-                      "없음"
+                      " 표지 없음"
                     )}
                   </td>
                   <td>{book.isbn}</td>

@@ -12,6 +12,7 @@ import com.bookhub.bookhub_back.dto.auth.request.EmployeeSignUpRequestDto;
 import com.bookhub.bookhub_back.dto.employee.response.EmployeeResponseDto;
 import com.bookhub.bookhub_back.dto.auth.response.EmployeeSignInResponseDto;
 import com.bookhub.bookhub_back.entity.*;
+import com.bookhub.bookhub_back.exception.AuthenticationException;
 import com.bookhub.bookhub_back.exception.BusinessException;
 import com.bookhub.bookhub_back.exception.DuplicateEntityException;
 import com.bookhub.bookhub_back.security.JwtProvider;
@@ -24,8 +25,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -82,11 +86,6 @@ public class AuthServiceImpl implements AuthService {
                         .positionName("사원")
                         .build()));
 
-        Authority authority = authorityRepository.findByAuthorityName("STAFF")
-                .orElseGet(() -> authorityRepository.save(Authority.builder()
-                        .authorityName("STAFF")
-                        .build()));
-
         Branch branch = branchRepository.findById(dto.getBranchId())
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -109,7 +108,6 @@ public class AuthServiceImpl implements AuthService {
                 .name(dto.getName())
                 .branchId(branch)
                 .positionId(position)
-                .authorityId(authority)
                 .phoneNumber(phoneNumber)
                 .birthDate(dto.getBirthDate())
                 .isApproved(IsApproved.PENDING)
@@ -133,7 +131,7 @@ public class AuthServiceImpl implements AuthService {
 
         final Employee finalEmployee = newEmployee;
 
-        employeeRepository.findAllByAuthorityId(adminAuthority)
+        employeeRepository.findAllByPositionId_Authority(adminAuthority)
                 .forEach(admin -> {
                     AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
                             .employeeId(admin.getEmployeeId())
@@ -155,8 +153,15 @@ public class AuthServiceImpl implements AuthService {
         String loginId = dto.getLoginId();
         String password = dto.getPassword();
 
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginId, password));
+        Authentication authentication;
+        try {
+            authentication =
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginId, password));
+        } catch (BadCredentialsException | UsernameNotFoundException e) {
+            throw new AuthenticationException("아이디 또는 비밀번호가 틀렸습니다.");
+        } catch (DisabledException e) {
+            throw new AuthenticationException("비활성화된 계정입니다.");
+        }
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
@@ -179,8 +184,8 @@ public class AuthServiceImpl implements AuthService {
                 .branchName(employee.getBranchId().getBranchName())
                 .positionId(employee.getPositionId().getPositionId())
                 .positionName(employee.getPositionId().getPositionName())
-                .authorityId(employee.getAuthorityId().getAuthorityId())
-                .authorityName(employee.getAuthorityId().getAuthorityName())
+                .authorityId(employee.getPositionId().getAuthority().getAuthorityId())
+                .authorityName(employee.getPositionId().getAuthority().getAuthorityName())
                 .email(employee.getEmail())
                 .phoneNumber(employee.getPhoneNumber())
                 .birthDate(employee.getBirthDate())

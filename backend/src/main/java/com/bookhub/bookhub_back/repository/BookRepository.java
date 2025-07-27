@@ -8,9 +8,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, String> {
+
+    @Query("""
+        SELECT b FROM Book b
+        WHERE b.bookStatus != com.bookhub.bookhub_back.common.enums.BookStatus.HIDDEN
+        AND b.bookIsbn = :isbn
+        """)
+    Optional<Book> findByIdNotHidden(String isbn);
 
     @Query("""
     SELECT b FROM Book b
@@ -28,7 +36,8 @@ public interface BookRepository extends JpaRepository<Book, String> {
 
     @Query("""
     SELECT b FROM Book b
-    WHERE LOWER(b.bookTitle) LIKE LOWER(CONCAT('%', :bookTitle, '%'))
+    WHERE b.bookStatus != com.bookhub.bookhub_back.common.enums.BookStatus.HIDDEN 
+    AND LOWER(b.bookTitle) LIKE LOWER(CONCAT('%', :bookTitle, '%'))
 """)
     List<Book> findAllByBookTitleContaining(@Param("bookTitle") String bookTitle);
 

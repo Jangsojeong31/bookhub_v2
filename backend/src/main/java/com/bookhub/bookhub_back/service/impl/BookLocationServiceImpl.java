@@ -40,7 +40,7 @@ public class BookLocationServiceImpl implements BookLocationService {
         Branch branch = branchRepository.findById(userPrincipal.getBranchId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Book book = bookRepository.findById(dto.getBookIsbn())
+        Book book = bookRepository.findByIdNotHidden(dto.getBookIsbn())
                 .orElseThrow(EntityNotFoundException::new);
 
         if(bookLocationRepository.existsByBookIsbn_BookIsbnAndFloorAndHallAndSectionAndDisplayType(

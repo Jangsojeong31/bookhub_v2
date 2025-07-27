@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import { signUpResultRequest } from "@/apis/auth/auth";
 import Modal from "@/components/Modal";
 import {
@@ -9,6 +11,9 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import "@/styles/employee/employeeModal.css";
 import "@/styles/employee/employeeSelect.css";
+import DataTable from "@/components/Table";
+import Pagination from "@/components/Pagination";
+import usePagination from "@/hooks/usePagination";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -26,26 +31,14 @@ function EmployeeSignUpApprovals() {
 
   const [deniedReason, setDeniedReason] = useState("");
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const totalPages = Math.ceil(employeeList.length / ITEMS_PER_PAGE);
-
-  const goToPage = (page: number) => {
-    if (page >= 0 && page < totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const goPrev = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const goNext = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  const {
+    currentPage,
+    totalPages,
+    pagedItems: paginatedEmployees,
+    goToPage,
+    goPrev,
+    goNext,
+  } = usePagination(employeeList, 10);
 
   const onInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -75,11 +68,6 @@ function EmployeeSignUpApprovals() {
   useEffect(() => {
     fetchEmployeSignUpList();
   }, [token]);
-
-  const paginatedEmployees = employeeList.slice(
-    currentPage * ITEMS_PER_PAGE,
-    (currentPage + 1) * ITEMS_PER_PAGE
-  );
 
   const onOpenModalClick = async (employee: EmployeeSignUpListResponseDto) => {
     setEmployee({
@@ -170,82 +158,57 @@ function EmployeeSignUpApprovals() {
   return (
     <div>
       <h2>회원가입 승인</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>사원 번호</th>
-            <th>사원 명</th>
-            <th>지점 명</th>
-            <th>이메일</th>
-            <th>전화 번호</th>
-            <th>회원가입 날짜</th>
-            <th>승인 상태</th>
-            <th>승인</th>
-            <th>거절</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedEmployees.map((employee, index) => (
-            <tr key={employee.approvalId}>
-              <td>{currentPage * ITEMS_PER_PAGE + index + 1}</td>
-              <td>{employee.employeeNumber}</td>
-              <td>{employee.employeeName}</td>
-              <td>{employee.branchName}</td>
-              <td>{employee.email}</td>
-              <td>{employee.phoneNumber}</td>
-              <td>{new Date(employee.appliedAt || "").toLocaleString()}</td>
-              <td>{employee.isApproved === "PENDING" ? "대기 중" : "오류"}</td>
-              <td>
-                <button
-                  onClick={() => onApprovedClick(employee)}
-                  className="approval-button"
-                >
-                  승인
-                </button>
-              </td>
-              <td>
-                <button
-                  onClick={() => onOpenModalClick(employee)}
-                  className="denied-button"
-                >
-                  거절
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {employeeList.length > 0 && (
+      <DataTable<EmployeeSignUpListResponseDto>
+        columns={[
+          {
+            header: "",
+            accessor: "number",
+            cell: (_, index) => currentPage * ITEMS_PER_PAGE + index + 1,
+          },
+          { header: "사원 번호", accessor: "employeeNumber" },
+          { header: "사원 명", accessor: "employeeName" },
+          { header: "지점 명", accessor: "branchName" },
+          { header: "이메일", accessor: "email" },
+          { header: "전화 번호", accessor: "phoneNumber" },
+          {
+            header: "회원 가입 일자",
+            accessor: "appliedAt",
+            cell: (item) => new Date(item.appliedAt || "").toLocaleString(),
+          },
+          {
+            header: "승인 상태",
+            accessor: "isApproved",
+            cell: (item) =>
+              item.isApproved === "PENDING" ? "대기 중" : "오류",
+          },
+        ]}
+        data={paginatedEmployees}
+        actions={[
+          {
+            label: "승인",
+            onClick: onApprovedClick,
+            buttonCss: style.modifyButton,
+          },
+          {
+            label: "거절",
+            onClick: onOpenModalClick,
+            buttonCss: style.deleteButton,
+          },
+        ]}
+      />
+
+      {paginatedEmployees.length > 0 && (
         <div className="footer">
-          <button
-            className="pageBtn"
-            onClick={goPrev}
-            disabled={currentPage === 0}
-          >
-            {"<"}
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i).map((i) => (
-            <button
-              key={i}
-              className={`pageBtn${i === currentPage ? " current" : ""}`}
-              onClick={() => goToPage(i)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="pageBtn"
-            onClick={goNext}
-            disabled={currentPage >= totalPages - 1}
-          >
-            {">"}
-          </button>
-          <span className="pageText">
-            {totalPages > 0 ? `${currentPage + 1} / ${totalPages}` : "0 / 0"}
-          </span>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            onPrev={goPrev}
+            onNext={goNext}
+          />
         </div>
       )}
+
       {modalStatus && (
         <Modal
           isOpen={modalStatus}

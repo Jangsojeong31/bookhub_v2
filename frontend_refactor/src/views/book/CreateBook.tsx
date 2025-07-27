@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import Select from 'react-select';
@@ -45,7 +47,10 @@ function CreateBook () {
     const fetchCategoryTree = async () => {
       const res = await getCategoryTree(categoryType, token);
       if (res.code === 'SU' && res.data) {
-        setCategoryTree(res.data);
+        const filteredCategory = res.data.filter(data => 
+          data.isActive == true
+        )
+        setCategoryTree(filteredCategory);
       } else {
         alert("카테고리를 불러오지 못했습니다.");
       }
@@ -128,7 +133,13 @@ function CreateBook () {
 
   return (
     <form onSubmit={handleSubmit} className="create-book-form">
-      <h2>📘책 등록</h2>
+      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", height: 40}}>
+        <p css={style.modalTitle}>책 등록</p>
+        <button 
+          type="submit" 
+          css={style.createButton}>등록</button>
+      </div>
+
       <input
         type="text"
         value={isbn} 
@@ -196,7 +207,7 @@ function CreateBook () {
         required />
       <div 
         className="file-upload-wrapper">
-        <label htmlFor="coverUpload" className="file-upload-label">
+        <label htmlFor="coverUpload" className="file-upload-label" style={{ backgroundColor: "#e74c3c"}}>
           책 표지 업로드
         </label>
         <input
@@ -229,9 +240,7 @@ function CreateBook () {
       placeholder="설명" 
       className="create-book-input" 
       required />
-      <button 
-        type="submit" 
-        className="create-book-button">등록</button>
+      
     </form>
   );
 }

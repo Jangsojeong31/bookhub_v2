@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 
 import { AuthorRequestDto } from "@/dtos/author/request/author.request.dto";
 import { axiosInstance, bearerAuthorization, responseErrorHandler, responseSuccessHandler } from "../axiosConfig";
-import { DELETE_AUTHOR_URL, GET_ALL_AUTHOR_BY_NAME_URL, POST_AUTHOR_URL, PUT_AUTHOR_URL } from "../../constants/url/jsj.constants";
+import { DELETE_AUTHOR_URL, GET_ALL_AUTHOR_BY_NAME_URL, POST_AUTHOR_URL, PUT_AUTHOR_URL } from "../../constants/api/jsj.constants";
 
 
 // 저자 등록

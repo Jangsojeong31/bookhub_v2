@@ -24,7 +24,9 @@ CREATE TABLE IF NOT EXISTS `branches` (
 -- 직급 테이블: 사원, 대리, 과장, 부장, 점장 등
 CREATE TABLE IF NOT EXISTS `positions` (
 	position_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    position_name VARCHAR(255) NOT NULL UNIQUE -- 직급 중복 방지
+    position_name VARCHAR(255) NOT NULL UNIQUE, -- 직급 중복 방지
+    authority_id BIGINT NOT NULL,
+    FOREIGN KEY (authority_id) REFERENCES authorities (authority_id)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 권한 테이블: 로그인 후 접근 권한, 기능 수행 제어 등의 보안 목적 / STAFF, MANAGER, ADMIN
@@ -36,8 +38,7 @@ CREATE TABLE IF NOT EXISTS `authorities` (
 CREATE TABLE IF NOT EXISTS `employees` (
 	employee_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     branch_id BIGINT NOT NULL,
-    position_id BIGINT NOT NULL DEFAULT 1, -- 회원가입 시 기본 직급: 사원
-    authority_id BIGINT NOT NULL DEFAULT 1, -- 회원가입 시 기본 권한: STAFF
+    position_id BIGINT NOT NULL DEFAULT 1, -- 회원가입 시 기본 직급: 사원 / 기본 권한: STAFF
     employee_number INT NOT NULL UNIQUE,
     login_id VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -50,8 +51,7 @@ CREATE TABLE IF NOT EXISTS `employees` (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     status ENUM('EMPLOYED', 'EXITED'),
     FOREIGN KEY (branch_id) REFERENCES branches (branch_id),
-    FOREIGN KEY (position_id) REFERENCES positions (position_id),
-    FOREIGN KEY (authority_id) REFERENCES authorities (authority_id)
+    FOREIGN KEY (position_id) REFERENCES positions (position_id)
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- ====================================
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `employee_change_logs` (
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
     FOREIGN KEY (authorizer_id) REFERENCES employees(employee_id),
-    FOREIGN KEY (previous_authority_id) REFERENCES authority(authority_id),
+    FOREIGN KEY (previous_authority_id) REFERENCES authorities(authority_id),
     FOREIGN KEY (previous_branch_id) REFERENCES branches(branch_id),
     FOREIGN KEY (previous_position_id) REFERENCES positions(position_id),
     CONSTRAINT chk_process_type 
@@ -163,11 +163,11 @@ CREATE TABLE IF NOT EXISTS `books` (
     category_id BIGINT NOT NULL,
     author_id BIGINT NOT NULL,
     publisher_id BIGINT NOT NULL,
+    cover_image_id BIGINT, -- 책 표지
     book_title VARCHAR(255) NOT NULL,
     book_price INT NOT NULL,
     published_date DATE NOT NULL,
     book_status VARCHAR(50) NOT NULL,
-    cover_url VARCHAR(500), -- 책 표지 (
     page_count VARCHAR(255) NOT NULL, -- 책 페이지
     language VARCHAR(255) NOT NULL,
     description TEXT,
@@ -178,6 +178,7 @@ CREATE TABLE IF NOT EXISTS `books` (
     FOREIGN KEY (author_id) REFERENCES authors(author_id),
     FOREIGN KEY (publisher_id) REFERENCES publishers(publisher_id),
     FOREIGN KEY (discount_policy_id) REFERENCES discount_policies(policy_id),
+    FOREIGN KEY (cover_image_id) REFERENCES upload_files(upload_file_id),
     CONSTRAINT chk_book_status 
 		CHECK (book_status IN ('ACTIVE', 'INACTIVE', 'HIDDEN'))
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -378,11 +379,5 @@ CREATE TABLE IF NOT EXISTS `upload_files` (
     file_path VARCHAR(500) NOT NULL, -- 저장 경로
     file_type VARCHAR(100), -- MIME 타입
     file_size BIGINT NOT NULL, -- 크기(bytes)
-    
-    target_id VARCHAR(255) NOT NULL, -- 책 ISBN
-    target_type VARCHAR(50) NOT NULL, -- BOOK만 허용
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    
-	CONSTRAINT chk_target_type CHECK (target_type = 'BOOK'),
-    INDEX idx_target (target_type, target_id)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

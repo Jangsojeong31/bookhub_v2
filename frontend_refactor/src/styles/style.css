@@ -1,0 +1,113 @@
+/* 필터 바 전체 레이아웃 간격 조정 */
+.filter-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 10px 10px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 1rem;
+}
+
+.filter-bar .left-item {
+  margin-right: auto;
+}
+
+.filter-bar h2 {
+  margin-right: auto;
+}
+
+.filter-bar .searchInput  {
+  width: 300px;
+  max-width: 60%;
+  height: 36px;
+  border: 1px solid #ccc;
+  outline: none;
+  border-radius: 18px;
+  padding: 0 16px;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.filter-bar .searchInput:focus {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.filter-bar input[type="number"] { 
+  width: 200px;
+  max-width: 60%;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  padding: 0 16px;
+  font-size: 14px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+.filter-bar input[type="text"], input[type="number"] { 
+  width: 300px;
+  max-width: 60%;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  padding: 0 16px;
+  font-size: 14px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.filter-bar input[type="text"]:focus{ 
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.filter-bar button {
+  background-color: #265185;
+  height: 100%;
+  color: white;
+  font-size: 13px;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-bar button.searchAllButton {
+  background-color:  #e74c3c;
+}
+
+/* 날짜 인풋 통일 */
+.filter-bar input[type="date"] {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.95rem;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fdfdfd;
+  transition: border-color 0.2s ease;
+}
+
+.filter-bar input[type="date"]:hover,
+.filter-bar input[type="date"]:focus {
+  border-color: #305882;
+  outline: none;
+}
+
+/* 달력 아이콘 색상 통일 */
+.filter-bar input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: brightness(0) invert(0.4);
+  cursor: pointer;
+}
+
+.filter-bar p {
+  color: #8d8c8c;
+}
+
+
+

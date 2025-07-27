@@ -198,11 +198,11 @@ function EmployeeSearch() {
     <div>
       <div className="searchContainer">
         <h2>사원 정보 조회</h2>
-        <div className="search-row">
+        <div className="filter-bar">
           <input
             type="text"
             name="name"
-            placeholder="이름"
+            placeholder="사원 이름"
             value={searchForm.name}
             onChange={onInputChange}
           />
@@ -258,10 +258,8 @@ function EmployeeSearch() {
               </option>
             ))}
           </select>
-          <div className="search-button">
             <button onClick={onSearchClick}>검색</button>
             <button onClick={onResetClick}>초기화</button>
-          </div>
         </div>
       </div>
 

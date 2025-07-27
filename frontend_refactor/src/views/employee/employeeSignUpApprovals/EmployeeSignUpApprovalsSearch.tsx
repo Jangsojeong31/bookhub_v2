@@ -3,6 +3,10 @@ import { EmployeeSignUpApprovalsResponseDto } from "@/dtos/employee/response/emp
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import "@/styles/employee/employeeSelect.css";
+import "@/styles/style.css";
+import Pagination from "@/components/Pagination";
+import usePagination from "@/hooks/usePagination";
+import DataTable from "@/components/Table";
 
 const isApprovedOptions = ["APPROVED", "DENIED"];
 const ITEMS_PER_PAGE = 10;
@@ -28,8 +32,6 @@ function EmployeeSignUpApprovalsSearch() {
   const [employeeApprovalList, setEmployeeApprovalList] = useState<
     EmployeeSignUpApprovalsResponseDto[]
   >([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const totalPages = Math.ceil(employeeApprovalList.length / ITEMS_PER_PAGE);
 
   const onInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -61,8 +63,6 @@ function EmployeeSignUpApprovalsSearch() {
     } else {
       setEmployeeApprovalList([]);
     }
-
-    setCurrentPage(0);
   };
 
   const onResetClick = () => {
@@ -76,33 +76,22 @@ function EmployeeSignUpApprovalsSearch() {
     });
 
     setEmployeeApprovalList([]);
-    setCurrentPage(0);
   };
 
-  const paginatedEmployeeApprovalList = employeeApprovalList.slice(
-    currentPage * ITEMS_PER_PAGE,
-    (currentPage + 1) * ITEMS_PER_PAGE
-  );
-
-  const goToPage = (page: number) => {
-    if (page >= 0 && page < totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const goPrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-  };
-
-  const goNext = () => {
-    if (currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
-  };
+  const {
+    currentPage,
+    totalPages,
+    pagedItems: paginatedEmployeeApprovalList,
+    goToPage,
+    goPrev,
+    goNext,
+  } = usePagination(employeeApprovalList, 10);
 
   return (
     <div>
       <div className="searchContainer">
         <h2>회원 가입 승인 로그 조회</h2>
-        <div className="search-row">
+        <div className="filter-bar">
           <input
             type="text"
             name="employeeName"
@@ -158,90 +147,58 @@ function EmployeeSignUpApprovalsSearch() {
             onChange={onInputChange}
           />
 
-          <div className="search-button">
-            <button onClick={onSearchClick}>검색</button>
-            <button onClick={onResetClick}>초기화</button>
-          </div>
+          <button onClick={onSearchClick}>검색</button>
+          <button onClick={onResetClick}>초기화</button>
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>사원 번호</th>
-            <th>사원 명</th>
-            <th>회원 가입 일자</th>
-            <th>승인 상태</th>
-            <th>거절 사유</th>
-            <th>관리자 사원 번호</th>
-            <th>관리자 명</th>
-            <th>승인/거절 일자</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedEmployeeApprovalList.map(
-            (paginatedEmployeeApproval, index) => (
-              <tr key={paginatedEmployeeApproval.approvalId}>
-                <td>{currentPage * ITEMS_PER_PAGE + index + 1}</td>
-                <td>{paginatedEmployeeApproval.employeeNumber}</td>
-                <td>{paginatedEmployeeApproval.employeeName}</td>
-                <td>
-                  {new Date(
-                    paginatedEmployeeApproval.appliedAt
-                  ).toLocaleString()}
-                </td>
-                <td>
-                  {paginatedEmployeeApproval.isApproved === "APPROVED"
-                    ? "승인"
-                    : "거절"}
-                </td>
-                <td>
-                  {paginatedEmployeeApproval.deniedReason
-                    ? deniedReasonMap[paginatedEmployeeApproval.deniedReason] ||
-                      paginatedEmployeeApproval.deniedReason
-                    : "-"}
-                </td>
-                <td>{paginatedEmployeeApproval.authorizerNumber}</td>
-                <td>{paginatedEmployeeApproval.authorizerName}</td>
-                <td>
-                  {" "}
-                  {new Date(
-                    paginatedEmployeeApproval.updatedAt
-                  ).toLocaleString()}
-                </td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
-      {employeeApprovalList.length > 0 && (
+
+      <DataTable<EmployeeSignUpApprovalsResponseDto>
+        columns={[
+          {
+            header: "",
+            accessor: "number",
+            cell: (_, index) => currentPage * ITEMS_PER_PAGE + index + 1,
+          },
+          { header: "사원 번호", accessor: "employeeNumber" },
+          { header: "사원 명", accessor: "employeeName" },
+          {
+            header: "회원 가입 일자",
+            accessor: "appliedAt",
+            cell: (item) => new Date(item.appliedAt).toLocaleString(),
+          },
+          {
+            header: "승인 상태",
+            accessor: "isApproved",
+            cell: (item) => (item.isApproved === "APPROVED" ? "승인" : "거절"),
+          },
+          {
+            header: "거절 사유",
+            accessor: "deniedReason",
+            cell: (item) =>
+              item.deniedReason
+                ? deniedReasonMap[item.deniedReason] || item.deniedReason
+                : "-",
+          },
+          { header: "관리자 사원 번호", accessor: "authorizerNumber" },
+          { header: "관리자 명", accessor: "authorizerName" },
+          {
+            header: "승인/거절 일자",
+            accessor: "updatedAt",
+            cell: (item) => new Date(item.updatedAt).toLocaleString(),
+          },
+        ]}
+        data={paginatedEmployeeApprovalList}
+      />
+
+      {paginatedEmployeeApprovalList.length > 0 && (
         <div className="footer">
-          <button
-            className="pageBtn"
-            onClick={goPrev}
-            disabled={currentPage === 0}
-          >
-            {"<"}
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i).map((i) => (
-            <button
-              key={i}
-              className={`pageBtn${i === currentPage ? " current" : ""}`}
-              onClick={() => goToPage(i)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="pageBtn"
-            onClick={goNext}
-            disabled={currentPage >= totalPages - 1}
-          >
-            {">"}
-          </button>
-          <span className="pageText">
-            {totalPages > 0 ? `${currentPage + 1} / ${totalPages}` : "0 / 0"}
-          </span>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            onPrev={goPrev}
+            onNext={goNext}
+          />
         </div>
       )}
     </div>

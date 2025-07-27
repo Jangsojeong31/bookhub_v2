@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import {
   branchCreateRequest,
   branchDetailRequest,
@@ -8,8 +10,10 @@ import Modal from "@/components/Modal";
 import { BranchSearchResponseDto } from "@/dtos/branch/response/branch-search.respnse.dto";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
-
-const ITEMS_PAGE = 10;
+import "@/styles/style.css";
+import DataTable from "@/components/Table";
+import Pagination from "@/components/Pagination";
+import usePagination from "@/hooks/usePagination";
 
 function CreateBranch() {
   const [cookies] = useCookies(["accessToken"]);
@@ -21,8 +25,6 @@ function CreateBranch() {
     branchName: "",
     branchLocation: "",
   });
-  const [currentPage, setCurrentPage] = useState(0);
-  const totalPages = Math.ceil(branchList.length / ITEMS_PAGE);
   const [createBranch, setCreateBranch] = useState({
     branchName: "",
     branchLocation: "",
@@ -59,9 +61,8 @@ function CreateBranch() {
     }
 
     const response = await branchSearchRequest(searchForm, token);
-    const { code, message, data } = response;
+    const { code, data } = response;
 
-    setCurrentPage(0);
     if (code === "SU" && data) {
       setBranchList(data);
     } else {
@@ -72,13 +73,7 @@ function CreateBranch() {
   const onResetClick = () => {
     setSearchForm({ branchLocation: "" });
     setBranchList([]);
-    setCurrentPage(0);
   };
-
-  const paginatedBranchList = branchList.slice(
-    currentPage * ITEMS_PAGE,
-    (currentPage + 1) * ITEMS_PAGE
-  );
 
   const onOpenCreateModal = () => {
     if (!token) {
@@ -208,24 +203,19 @@ function CreateBranch() {
     onSearchClick();
   };
 
-  const goToPage = (page: number) => {
-    if (page >= 0 && page < totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const goPrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-  };
-
-  const goNext = () => {
-    if (currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
-  };
+  const {
+    currentPage,
+    totalPages,
+    pagedItems: paginatedBranchList,
+    goToPage,
+    goPrev,
+    goNext,
+  } = usePagination(branchList, 10);
 
   return (
     <div className="searchContainer">
       <h2>지점 관리</h2>
-      <div className="search-row">
+      <div className="filter-bar">
         <input
           type="text"
           name="branchLocation"
@@ -233,71 +223,43 @@ function CreateBranch() {
           placeholder="지점 주소"
           onChange={onInputChange}
         />
-        <div className="search-button">
-          <button onClick={onSearchClick}>검색</button>
-          <button onClick={onResetClick}>초기화</button>
-          <button style={{ float: "right" }} onClick={onOpenCreateModal}>
-            등록
-          </button>
-        </div>
+        <button onClick={onSearchClick}>검색</button>
+        <button onClick={onResetClick}>초기화</button>
+        <button onClick={onOpenCreateModal}>등록</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>지점 명</th>
-            <th>지점 주소</th>
-            <th>등록 일자</th>
-            <th>지점 수정</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedBranchList.map((branch) => (
-            <tr key={branch.branchId}>
-              <td>{branch.branchName}</td>
-              <td>{branch.branchLocation}</td>
-              <td>{new Date(branch.createdAt).toLocaleString()}</td>
-              <td>
-                <button
-                  onClick={() => onOpenUpdateModal(branch)}
-                  className="approval-button"
-                >
-                  수정
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+
+      <DataTable<BranchSearchResponseDto>
+        columns={[
+          { header: "지점 명", accessor: "branchName" },
+          { header: "지점 주소", accessor: "branchLocation" },
+          {
+            header: "등록 일자",
+            accessor: "createdAt",
+            cell: (item) => new Date(item.createdAt).toLocaleString(),
+          },
+        ]}
+        data={paginatedBranchList}
+        actions={[
+          {
+            label: "수정",
+            onClick: onOpenUpdateModal,
+            buttonCss: style.modifyButton,
+          },
+        ]}
+      />
+
       {branchList.length > 0 && (
         <div className="footer">
-          <button
-            className="pageBtn"
-            onClick={goPrev}
-            disabled={currentPage === 0}
-          >
-            {"<"}
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i).map((i) => (
-            <button
-              key={i}
-              className={`pageBtn${i === currentPage ? " current" : ""}`}
-              onClick={() => goToPage(i)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="pageBtn"
-            onClick={goNext}
-            disabled={currentPage >= totalPages - 1}
-          >
-            {">"}
-          </button>
-          <span className="pageText">
-            {totalPages > 0 ? `${currentPage + 1} / ${totalPages}` : "0 / 0"}
-          </span>
+          <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+          onPrev={goPrev}
+          onNext={goNext}
+        />
         </div>
       )}
+
       {modalStatus && (
         <Modal
           isOpen={modalStatus}
@@ -305,6 +267,7 @@ function CreateBranch() {
           children={modalContent}
         />
       )}
+
       {modalUpdateStatus && (
         <Modal
           isOpen={modalUpdateStatus}

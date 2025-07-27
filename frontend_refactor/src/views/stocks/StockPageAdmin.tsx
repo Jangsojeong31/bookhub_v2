@@ -41,24 +41,14 @@ function StockPageAdmin() {
     if (Array.isArray(data)) {
       setStocks(data);
 
-      // setMessage("");
     } else {
       alert("올바른 검색 조건을 입력해주세요.");
     }
   };
   return (
     <div className="stock-page-container">
-      <div className="topBar">
-        {/* <div style={{ display: "flex", gap: 12 }}> */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <div style={{ display: "flex", gap: 12, height: 35 }}>
+
+          <div className="filter-bar">
             <input
               type="text"
               name="bookTitle"
@@ -87,15 +77,11 @@ function StockPageAdmin() {
               검색
             </button>
           </div>
-        </div>
-      </div>
 
-      {/* Results Table */}
-      <div className="table-container margin-top">
+      <div>
         <table>
           <thead>
             <tr>
-              <th>Stock ID</th>
               <th>지점</th>
               <th>책 제목</th>
               <th>수량</th>
@@ -111,7 +97,6 @@ function StockPageAdmin() {
             ) : (
               stocks.map((stock) => (
                 <tr key={stock.stockId}>
-                  <td>{stock.stockId}</td>
                   <td>{stock.branchName}</td>
                   <td>{stock.bookTitle}</td>
                   <td>{stock.amount}</td>

@@ -1,7 +1,10 @@
 import { employeeExitLogsRequest } from "@/apis/employeeExitLogs/employeeExitLogs";
+import Pagination from "@/components/Pagination";
 import { EmployeeExitLogsResponseDto } from "@/dtos/employee/response/employee-exit-logs.response.dto";
+import usePagination from "@/hooks/usePagination";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
+import "@/styles/style.css";
 
 const ITEMS_PAGE = 10;
 const exitReasonMap: Record<string, string> = {
@@ -26,9 +29,15 @@ function EmployeeExitLogs() {
   const [employeeExitLogs, setEmployeeExitLogs] = useState<
     EmployeeExitLogsResponseDto[]
   >([]);
-
-  const [currentPage, setCurrentPage] = useState(0);
-  const totalPages = Math.ceil(employeeExitLogs.length / ITEMS_PAGE);
+  
+  const {
+      currentPage,
+      totalPages,
+      pagedItems: paginatedEmployeeExitLogs,
+      goToPage,
+      goPrev,
+      goNext,
+    } = usePagination(employeeExitLogs, 10);
 
   const onInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -52,7 +61,6 @@ function EmployeeExitLogs() {
       setEmployeeExitLogs([]);
     }
 
-    setCurrentPage(0);
   };
 
   const onResetClick = () => {
@@ -65,33 +73,13 @@ function EmployeeExitLogs() {
     });
 
     setEmployeeExitLogs([]);
-    setCurrentPage(0);
   };
 
-  const paginatedEmployeeExitLogs = employeeExitLogs.slice(
-    currentPage * ITEMS_PAGE,
-    (currentPage + 1) * ITEMS_PAGE
-  );
-
-  const goToPage = (page: number) => {
-    if (page >= 0 && page < totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const goPrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-  };
-
-  const goNext = () => {
-    if (currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
-  };
-
-  return (
+    return (
     <div>
       <div className="searchContainer">
         <h2>퇴사자 로그 조회</h2>
-        <div className="search-row">
+        <div className="filter-bar">
           <input
             type="text"
             name="employeeName"
@@ -134,10 +122,8 @@ function EmployeeExitLogs() {
             onChange={onInputChange}
           />
 
-          <div className="search-button">
             <button onClick={onSearchClick}>검색</button>
             <button onClick={onResetClick}>초기화</button>
-          </div>
         </div>
       </div>
       <table>
@@ -177,34 +163,16 @@ function EmployeeExitLogs() {
           ))}
         </tbody>
       </table>
+      
       {employeeExitLogs.length > 0 && (
         <div className="footer">
-          <button
-            className="pageBtn"
-            onClick={goPrev}
-            disabled={currentPage === 0}
-          >
-            {"<"}
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i).map((i) => (
-            <button
-              key={i}
-              className={`pageBtn${i === currentPage ? " current" : ""}`}
-              onClick={() => goToPage(i)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="pageBtn"
-            onClick={goNext}
-            disabled={currentPage >= totalPages - 1}
-          >
-            {">"}
-          </button>
-          <span className="pageText">
-            {totalPages > 0 ? `${currentPage + 1} / ${totalPages}` : "0 / 0"}
-          </span>
+          <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+          onPrev={goPrev}
+          onNext={goNext}
+        />
         </div>
       )}
     </div>

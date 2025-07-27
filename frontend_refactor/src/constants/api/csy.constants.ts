@@ -10,7 +10,6 @@ const COMMON = 'common';
 // & 1. publishers
 // 베이스 URL
 const PUBLISHER_MODULE_URL = `${API_DOMAIN}/api/v1/${ADMIN}/publishers`;
-//const PUBLISHER_MODULE_URL = `${API_DOMAIN}/api/v1/publishers`;
 
 // 1) 출판사 등록
 export const POST_PUBLISHER_URL = `${PUBLISHER_MODULE_URL}`;
@@ -26,7 +25,6 @@ export const DELETE_PUBLISHER_URL = (publisherId: number) => `${PUBLISHER_MODULE
 
 // & 2. locations
 
-// 공통·관리자 공통 도메인
 const LOCATION_BRANCH_MANAGER = `${API_DOMAIN}/api/v1/${MANAGER}/locations`
 const LOCATION_BRANCH_COMMON  = `${API_DOMAIN}/api/v1/${COMMON}/locations`
 
@@ -49,7 +47,6 @@ export const PUT_LOCATION_URL = ( locationId: number) =>
 // 5) 지점별 진열위치 삭제 (DELETE)
 export const DELETE_LOCATION_URL = ( locationId: number) =>
   `${LOCATION_BRANCH_MANAGER}/${locationId}`
-
 
 
 // & 3. discount_policies
@@ -111,6 +108,7 @@ export const SEARCH_STOCKS_URL = (
 //&StockLog
 export const STOCK_LOG_ADMIN_URL =  `${API_DOMAIN}/api/v1/${ADMIN}/stock-logs`;
 export const STOCK_LOG_MANAGER_URL =  `${API_DOMAIN}/api/v1/${MANAGER}/stock-logs`;
+
 // 조건별 재고 로그 조회 
 export const SEARCH_STOCK_LOGS_URL = (
   branchName: string,
@@ -167,7 +165,7 @@ export const REVENUE_STATISTICS_BRANCH_URL = `${REVENUE_STATISTICS_BASE_URL}/bra
 //*Stock(Stock) 통계 URL
 export const STOCK_STATISTICS_BASE_URL = `${STATISTICS_BASE_URL_ADMIN}/stocks`
 
-//1)재고가 0인거의 통계
+//1)0인 재고의 통계
 export const STOCK_STATISTICS_ZERO_URL = `${STOCK_STATISTICS_BASE_URL}/zero`
 //2)지점별 in out loss
 export const STOCK_STATISTICS_BRANCH_URL = `${STOCK_STATISTICS_BASE_URL}/branch`

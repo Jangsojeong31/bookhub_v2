@@ -2,7 +2,6 @@ import { useState } from "react";
 import { CategoryTreeResponseDto } from "@/dtos/category/response/category-tree.response.dto";
 import { getCategoryTree } from "@/apis/category/category";
 import CreateCategory from "./CreateCategory";
-import UpdateCategory from "./UpdateCategory";
 import CategoryTree from "./CategoryTree";
 import { useCookies } from "react-cookie";
 
@@ -33,49 +32,21 @@ function CategoryMain() {
     setSelectedCategory(category);
   };
 
-  const handleSuccess = () => {
-    fetchCategories();
-    setSelectedCategory(null);
-  };
-
   const topLevelCategories = categories.filter((cat) => cat.categoryLevel === 1);
 
   return (
     <div>
-    <div className="topBar">
-      <div style={{ display: "flex", gap: "12px", marginBottom: "20px" }}>
+    <div className="filter-bar" style={{justifyContent: "flex-start"}}>
         <button className="button" onClick={() => setMode("create")}>등록</button>
-        <button className="button" onClick={() => setMode("read")}>전체 조회</button>
-        <button className="button" onClick={() => setMode("update")}>수정</button>
-        <button className="button" onClick={() => setMode("delete")}>삭제</button>
+        <button className="button" onClick={() => setMode("read")}>전체 조회 / 수정 / 비활성화</button>
       </div>
-      </div>
-      <div style={{ display: "flex", gap: "32px" }}>
-        {(mode === "read" || mode === "update" || mode === "delete") && (
-          <div style={{ flex: 1 }}>
+      <div >
+        <div>
+          {(mode === "read") && (
             <CategoryTree onSelect={handleSelectCategory} />
-          </div>
         )}
-
-        <div style={{ flex: 1 }}>
           {mode === "create" && (
             <CreateCategory parentCategories={topLevelCategories} onSuccess={fetchCategories} />
-          )}
-
-          {mode === "update" && selectedCategory && (
-            <UpdateCategory
-              category={selectedCategory}
-              onSuccess={handleSuccess}
-              mode="update"
-            />
-          )}
-
-          {mode === "delete" && selectedCategory && (
-            <UpdateCategory
-              category={selectedCategory}
-              onSuccess={handleSuccess}
-              mode="delete"
-            />
           )}
         </div>
       </div>

@@ -9,7 +9,7 @@ import {
   STOCK_STATISTICS_CATEGORY_URL,
   STOCK_STATISTICS_TIME_URL,
   STOCK_STATISTICS_ZERO_URL,
-} from "@/constants/url/csy.constants";
+} from "@/constants/api/csy.constants";
 import { ResponseDto } from "@/dtos";
 import { BranchStockBarChartResponseDto } from "@/dtos/statistics/StocksStatistics/response/branchStockBarChart.response.dto";
 import { CategoryStockResponseDto } from "@/dtos/statistics/StocksStatistics/response/categoryStock.response.dto";

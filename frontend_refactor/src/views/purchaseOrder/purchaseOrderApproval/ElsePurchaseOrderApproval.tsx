@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import {
   getAllPurchaseOrderApprovalByCriteria,
 } from "@/apis/purchaseOrder/purchaseOrderApproval";
@@ -121,7 +123,7 @@ function ElsePurchaseOrderApproval() {
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 12 }}>
+      <div className="filter-bar">
           <input
             type="text"
             name="employeeName"
@@ -178,6 +180,7 @@ function ElsePurchaseOrderApproval() {
           <button
             onClick={onGetPurchaseOrderByCriteria}
             style={{ border: "1px solid #ccc" }}
+            css={style.createButton}
           >
             검색
           </button>

@@ -1,28 +1,35 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import { PolicyType } from "@/apis/enums/PolicyType";
 import { getPolicies, getPolicyDetail } from "@/apis/policy/policy";
-import { PolicyDetailResponseDto, PolicyListResponseDto } from "@/dtos/policy/policy.response.dto";
+import {
+  PolicyDetailResponseDto,
+  PolicyListResponseDto,
+} from "@/dtos/policy/policy.response.dto";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import PolicyDetail from "./PolicyDetail";
-import './policyC.css';
+import "./policyC.css";
+import DataTable from "@/components/Table";
 
 const PAGE_SIZE = 10;
 
 const PolicySearch: React.FC = () => {
-  const [cookies] = useCookies(['accessToken']);
+  const [cookies] = useCookies(["accessToken"]);
   const accessToken = cookies.accessToken;
 
-  const [type, setType] = useState<PolicyType | ''>('');
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
-  const [keyword, setKeyword] = useState<string>('');
-  const [discountPercent, setDiscountPercent] = useState<number | ''>('');
+  const [type, setType] = useState<PolicyType | "">("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [keyword, setKeyword] = useState<string>("");
+  const [discountPercent, setDiscountPercent] = useState<number | "">("");
 
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [policies, setPolicies] = useState<PolicyListResponseDto[]>([]);
   const [selectedPolicyId, setSelectedPolicyId] = useState<number | null>(null);
-  const [selectedDetail, setSelectedDetail] = useState<PolicyDetailResponseDto | null>(null);
+  const [selectedDetail, setSelectedDetail] =
+    useState<PolicyDetailResponseDto | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const fetchPage = async (page: number) => {
@@ -38,9 +45,9 @@ const PolicySearch: React.FC = () => {
         endDate || undefined
       );
 
-      if (res.code === 'SU' && res.data) {
+      if (res.code === "SU" && res.data) {
         const data = res.data;
-        if ('content' in data) {
+        if ("content" in data) {
           setPolicies(data.content);
           setTotalPages(data.totalPages);
           setCurrentPage(data.currentPage);
@@ -50,10 +57,10 @@ const PolicySearch: React.FC = () => {
           setCurrentPage(0);
         }
       } else {
-        console.error('목록 조회 실패:', res.message);
+        console.error("목록 조회 실패:", res.message);
       }
     } catch (err) {
-      console.error('목록 조회 예외:', err);
+      console.error("목록 조회 예외:", err);
     }
   };
 
@@ -65,16 +72,16 @@ const PolicySearch: React.FC = () => {
     if (!accessToken) return;
     try {
       const res = await getPolicyDetail(id, accessToken);
-      if (res.code === 'SU' && res.data) {
+      if (res.code === "SU" && res.data) {
         setSelectedDetail(res.data);
         setSelectedPolicyId(id);
         setIsDetailOpen(true);
       } else {
-        alert(res.message || '상세 조회 실패');
+        alert(res.message || "상세 조회 실패");
       }
     } catch (err) {
-      console.error('상세 조회 예외:', err);
-      alert('상세 조회 중 오류 발생');
+      console.error("상세 조회 예외:", err);
+      alert("상세 조회 중 오류 발생");
     }
   };
 
@@ -90,70 +97,94 @@ const PolicySearch: React.FC = () => {
 
   return (
     <div className="policy-page-container">
+      <h2>할인 정책 조회</h2>
       <div className="filter-bar">
-        <select value={type} onChange={(e) => setType(e.target.value as PolicyType)}>
-          <option value="">전체</option>
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value as PolicyType)}
+        >
+          <option value="">할인 유형</option>
           <option value={PolicyType.BOOK_DISCOUNT}>도서 할인</option>
           <option value={PolicyType.TOTAL_PRICE_DISCOUNT}>총 금액 할인</option>
           <option value={PolicyType.CATEGORY_DISCOUNT}>카테고리 할인</option>
         </select>
-        <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-        <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+        <p>시작일</p>
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <p>종료일</p>
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
         <input
           type="text"
-          placeholder="제목 검색"
+          placeholder="할인 제목"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && goToPage(0)}
-          className="input-search"
+          onKeyDown={(e) => e.key === "Enter" && goToPage(0)}
         />
         <input
           type="number"
           placeholder="할인율(%)"
           value={discountPercent}
-          onChange={(e) => setDiscountPercent(e.target.value === '' ? '' : Number(e.target.value))}
-          className="input-search"
+          onChange={(e) =>
+            setDiscountPercent(
+              e.target.value === "" ? "" : Number(e.target.value)
+            )
+          }
         />
-        <button onClick={() => goToPage(0)} className="btn-primary">
-          검색
-        </button>
+        <button onClick={() => goToPage(0)}>검색</button>
       </div>
 
       <table className="table-policy">
-        <thead>
-          <tr>
-            <th>정책 ID</th>
-            <th>제목</th>
-            <th>타입</th>
-            <th>시작일</th>
-            <th>종료일</th>
-            <th>작업</th>
-          </tr>
-        </thead>
-        <tbody>
-          {policies.map((p) => (
-            <tr key={p.policyId}>
-              <td>{p.policyId}</td>
-              <td>{p.policyTitle}</td>
-              <td>{p.policyType}</td>
-              <td>{p.startDate}</td>
-              <td>{p.endDate}</td>
-              <td>
-                <button onClick={() => openDetailModal(p.policyId)} className="modifyBtn">
-                  보기
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+        <DataTable<PolicyListResponseDto>
+          columns={[
+            { header: "정책 ID", accessor: "policyId" },
+            { header: "제목", accessor: "policyTitle" },
+            {
+              header: "타입",
+              accessor: "policyType",
+              cell: (item) =>
+                item.policyType == PolicyType.BOOK_DISCOUNT
+                  ? "도서 할인"
+                  : item.policyType == PolicyType.CATEGORY_DISCOUNT
+                  ? "카테고리 할인"
+                  : "총액 할인",
+            },
+            { header: "시작일", accessor: "startDate" },
+            { header: "종료일", accessor: "endDate" },
+          ]}
+          data={policies}
+          actions={[
+            {
+              label: "보기",
+              onClick: (p) => openDetailModal(p.policyId),
+              buttonCss: style.modifyButton,
+            },
+          ]}
+        />
       </table>
 
       <div className="pagination">
-        <button className="modifyBtn" disabled={currentPage === 0} onClick={() => goToPage(currentPage - 1)}>
+        <button
+          className="modifyBtn"
+          disabled={currentPage === 0}
+          onClick={() => goToPage(currentPage - 1)}
+        >
           이전
         </button>
-        <span>{currentPage + 1} / {totalPages}</span>
-        <button className="modifyBtn" disabled={currentPage + 1 >= totalPages} onClick={() => goToPage(currentPage + 1)}>
+        <span>
+          {currentPage + 1} / {totalPages}
+        </span>
+        <button
+          className="modifyBtn"
+          disabled={currentPage + 1 >= totalPages}
+          onClick={() => goToPage(currentPage + 1)}
+        >
           다음
         </button>
       </div>
@@ -171,4 +202,3 @@ const PolicySearch: React.FC = () => {
 };
 
 export default PolicySearch;
-

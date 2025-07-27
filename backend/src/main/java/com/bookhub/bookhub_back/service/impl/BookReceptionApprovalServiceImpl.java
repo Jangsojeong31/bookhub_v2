@@ -8,7 +8,7 @@ import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
 import com.bookhub.bookhub_back.dto.reception.request.ReceptionCreateRequestDto;
 import com.bookhub.bookhub_back.dto.reception.response.ReceptionResponseDto;
-import com.bookhub.bookhub_back.dto.stock.request.StockUpdateRequestDto;
+import com.bookhub.bookhub_back.dto.stock.request.StockRequestDto;
 import com.bookhub.bookhub_back.entity.*;
 import com.bookhub.bookhub_back.repository.*;
 import com.bookhub.bookhub_back.security.UserPrincipal;
@@ -33,6 +33,7 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
     private final StockService stockService;
     private final AlertService alertService;
     private final AuthorityRepository authorityRepository;
+    private final StockRepository stockRepository;
 
     @Override
     @Transactional
@@ -70,23 +71,31 @@ public class BookReceptionApprovalServiceImpl implements BookReceptionApprovalSe
         bookReceptionApproval.setReceptionEmployeeId(employee);
         bookReceptionApproval.setCreatedAt(LocalDateTime.now());
 
-        // 재고 증가
-        StockUpdateRequestDto stockUpdateRequestDto = StockUpdateRequestDto.builder()
+        // 재고 생성 또는 재고량 수정
+        Branch branch = branchRepository.findByBranchName(bookReceptionApproval.getBranchName());
+
+        Stock stock = stockRepository.findByBookIsbn_BookIsbnAndBranchId_BranchId(bookReceptionApproval.getBookIsbn(), branch.getBranchId());
+
+        StockRequestDto requestDto = StockRequestDto.builder()
                 .type("IN")
                 .employeeId(employee.getEmployeeId())
                 .bookIsbn(bookReceptionApproval.getBookIsbn())
-                .branchId(bookReceptionApproval.getPurchaseOrderApprovalId().getPurchaseOrderId().getBranchId().getBranchId())
+                .branchId(branch.getBranchId())
                 .amount((long) bookReceptionApproval.getPurchaseOrderAmount())
                 .description("입고-수령확인")
                 .build();
 
-        stockService.updateStock(null, stockUpdateRequestDto);
+        if (stock == null) {
+            stockService.createStock(requestDto);
+        } else {
+            stockService.updateStock(stock.getStockId(), requestDto);
+        }
 
          // 알림 기능: 관리자에게 수령 확인 성공 알림 보내기
         Authority adminAuthority = authorityRepository.findByAuthorityName("ADMIN")
                 .orElseThrow(() -> new IllegalArgumentException(ResponseMessageKorean.USER_NOT_FOUND));
 
-        for (Employee admin : employeeRepository.findAllByAuthorityId(adminAuthority)) {
+        for (Employee admin : employeeRepository.findAllByPositionId_Authority(adminAuthority)) {
             alertService.createAlert(AlertCreateRequestDto.builder()
                     .employeeId(admin.getEmployeeId())
                     .alertType(String.valueOf(AlertType.BOOK_RECEIVED_SUCCESS))

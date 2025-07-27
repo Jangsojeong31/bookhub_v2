@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import { getAllPendingReception, putReception } from '@/apis/reception/reception';
 import { ReceptionListResponseDto } from '@/dtos/reception/response/receptionlist-response.dto';
 import React, { useEffect, useState } from 'react'

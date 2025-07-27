@@ -25,7 +25,7 @@ export const tmp = '';
 
 //export * from './auth/auth'; // "./폴더명/파일명"
 
-export * from '../constants/url/csy.constants';
-export * from '../constants/url/sjw.constants';
-export * from '../constants/url/jsj.constants';
-export * from '../constants/url/khj.constants';
+export * from '../constants/api/csy.constants';
+export * from '../constants/api/sjw.constants';
+export * from '../constants/api/jsj.constants';
+export * from '../constants/api/khj.constants';

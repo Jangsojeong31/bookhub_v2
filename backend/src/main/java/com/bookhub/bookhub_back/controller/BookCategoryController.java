@@ -69,7 +69,7 @@ public class BookCategoryController {
 
     // 카테고리 비활성화
     @PutMapping(BOOK_CATEGORY_ADMIN + "/{categoryId}/status")
-    @Operation(summary = "카테고리 비활성화")
+    @Operation(summary = "카테고리 비활성화 / 활성화")
     public ResponseEntity<ResponseDto<Void>> updateCategoryStatus(
             @PathVariable Long categoryId
     ) {

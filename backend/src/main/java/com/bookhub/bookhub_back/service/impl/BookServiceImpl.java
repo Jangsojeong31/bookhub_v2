@@ -2,7 +2,6 @@ package com.bookhub.bookhub_back.service.impl;
 import com.bookhub.bookhub_back.common.constants.ResponseCode;
 import com.bookhub.bookhub_back.common.constants.ResponseMessage;
 import com.bookhub.bookhub_back.common.enums.BookStatus;
-import com.bookhub.bookhub_back.common.enums.FileTargetType;
 
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.book.request.BookCreateRequestDto;
@@ -21,8 +20,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class BookServiceImpl implements BookService {
                     .orElseThrow(EntityNotFoundException::new)
                 : null;
 
-        String coverUrl = coverImageFile != null && !coverImageFile.isEmpty()
+        UploadFile coverImage = coverImageFile != null && !coverImageFile.isEmpty()
                 ? saveAndRecordCoverImage(coverImageFile, dto.getIsbn())
                 : null;
 
@@ -79,7 +80,7 @@ public class BookServiceImpl implements BookService {
                 .bookTitle(dto.getBookTitle())
                 .bookPrice(dto.getBookPrice())
                 .publishedDate(dto.getPublishedDate())
-                .coverUrl(coverUrl)
+                .coverImage(coverImage)
                 .pageCount(dto.getPageCount())
                 .language(dto.getLanguage())
                 .description(dto.getDescription())
@@ -116,7 +117,7 @@ public class BookServiceImpl implements BookService {
         Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Book book = bookRepository.findById(isbn)
+        Book book = bookRepository.findByIdNotHidden(isbn)
                 .orElseThrow(EntityNotFoundException::new);
 
         BookCategory category = categoryRepository.findById(dto.getCategoryId())
@@ -127,7 +128,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(EntityNotFoundException::new)
                 : null;
 
-        String coverUrl = coverImageFile != null && !coverImageFile.isEmpty()
+        UploadFile coverImage = coverImageFile != null && !coverImageFile.isEmpty()
                 ? saveAndRecordCoverImage(coverImageFile, dto.getIsbn())
                 : null;
 
@@ -143,7 +144,7 @@ public class BookServiceImpl implements BookService {
         book.setDescription(dto.getDescription());
         book.setBookStatus(BookStatus.valueOf(dto.getBookStatus().toUpperCase()));
         book.setDiscountPolicyId(policy);
-        book.setCoverUrl(coverUrl);
+        book.setCoverImage(coverImage);
 
         Book updatedBook = bookRepository.save(book);
 
@@ -174,7 +175,7 @@ public class BookServiceImpl implements BookService {
         Employee employee = employeeRepository.findByLoginId(userPrincipal.getLoginId())
                 .orElseThrow(EntityNotFoundException::new);
 
-        Book book = bookRepository.findById(isbn)
+        Book book = bookRepository.findByIdNotHidden(isbn)
                 .orElseThrow(EntityNotFoundException::new);
 
         if (book.getBookStatus().equals(BookStatus.HIDDEN)) {
@@ -201,7 +202,7 @@ public class BookServiceImpl implements BookService {
                 .publisherName(book.getPublisherId().getPublisherName())
                 .bookPrice(book.getBookPrice())
                 .publishedDate(book.getPublishedDate())
-                .coverUrl(book.getCoverUrl())
+                .coverUrl(book.getCoverImage() != null ? "/files/" + book.getCoverImage().getFileName() : null)
                 .pageCount(book.getPageCount())
                 .language(book.getLanguage())
                 .description(book.getDescription())
@@ -215,29 +216,31 @@ public class BookServiceImpl implements BookService {
     }
 
     // 표지 저장
-    private String saveAndRecordCoverImage(MultipartFile file, String isbn) throws IOException {
-        File dir = new File(uploadDir);
-        if (!dir.exists()) dir.mkdirs();
+    private UploadFile saveAndRecordCoverImage(MultipartFile file, String isbn) throws IOException {
+        String fileType = file.getContentType();
+        if (fileType == null || !fileType.startsWith("image/")) {
+            throw new IllegalArgumentException("이미지 파일만 업로드 가능합니다.");
+        }
 
         String originalName = file.getOriginalFilename();
         String uuid = UUID.randomUUID() + "_" + originalName;
-        String filePath = uploadDir + "/" + uuid;
-        String fileType = file.getContentType();
-        long fileSize = file.getSize();
 
-        file.transferTo(new File(filePath));
+        Path saveDir = Paths.get(uploadDir);
+        if (!Files.exists(saveDir)) Files.createDirectories(saveDir);
+
+        Path filePath = saveDir.resolve(uuid);
+        file.transferTo(filePath.toFile());
 
         UploadFile uploadFile = UploadFile.builder()
                 .originalName(originalName)
                 .fileName(uuid)
-                .filePath(filePath)
+                .filePath(filePath.toString())
                 .fileType(fileType)
-                .fileSize(fileSize)
-                .targetId(isbn)
-                .targetType(FileTargetType.BOOK)
+                .fileSize(file.getSize())
                 .build();
         uploadFileRepository.save(uploadFile);
 
-        return "/files/" + uuid;
+        return uploadFile;
     }
+
 }

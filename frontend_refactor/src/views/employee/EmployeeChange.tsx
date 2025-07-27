@@ -324,24 +324,11 @@ function EmployeeChange() {
                 onChange={onEmployeeChange}
               >
                 <option value="">직급 선택</option>
-                {positions.map((position) => (
+                {positions
+                .filter((position) => position.positionName !== "퇴사")
+                .map((position) => (
                   <option key={position.positionId} value={position.positionId}>
                     {position.positionName}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="field">
-              <label>권한 명</label>
-              <select
-                name="authorityId"
-                value={form.authorityId}
-                onChange={onEmployeeChange}
-              >
-                <option value="">권한 선택</option>
-                {authorities.map((auth) => (
-                  <option key={auth.authorityId} value={auth.authorityId}>
-                    {auth.authorityName}
                   </option>
                 ))}
               </select>
@@ -407,7 +394,7 @@ function EmployeeChange() {
       <div>
         <div className="searchContainer">
           <h2>사원 정보 수정</h2>
-          <div className="search-row">
+          <div className="filter-bar">
             <input
               type="text"
               name="name"
@@ -464,10 +451,8 @@ function EmployeeChange() {
                 </option>
               ))}
             </select>
-            <div className="search-button">
               <button onClick={onSearchClick}>검색</button>
               <button onClick={onResetButtonClick}>초기화</button>
-            </div>
           </div>
         </div>
         {message && <p style={{ color: "red" }}>{message}</p>}

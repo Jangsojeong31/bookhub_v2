@@ -3,6 +3,7 @@ import { BranchSearchResponseDto } from "@/dtos/branch/response/branch-search.re
 import { tr } from "date-fns/locale";
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
+import "@/styles/style.css";
 
 const ITEMS_PAGE = 10;
 
@@ -67,7 +68,7 @@ function BranchSearch() {
   return (
     <div className="searchContainer">
       <h2>지점 조회</h2>
-      <div className="search-row">
+      <div className="filter-bar">
         <input
           type="text"
           name="branchLocation"
@@ -75,7 +76,7 @@ function BranchSearch() {
           placeholder="지점 주소"
           onChange={onInputChange}
         />
-        <div className="search-button">
+        <div>
           <button onClick={onSearchClick}>검색</button>
           <button onClick={onResetClick}>초기화</button>
         </div>

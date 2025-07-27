@@ -1,5 +1,5 @@
 export interface BestSellerResponseDto {
-  isbn: string;
+  bookIsbn: string;
   bookTitle: string;
   authorName: string;
   categoryName: string;

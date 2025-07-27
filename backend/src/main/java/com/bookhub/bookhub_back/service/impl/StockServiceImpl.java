@@ -6,7 +6,7 @@ import com.bookhub.bookhub_back.common.constants.ResponseMessageKorean;
 import com.bookhub.bookhub_back.common.enums.StockActionType;
 import com.bookhub.bookhub_back.dto.ResponseDto;
 import com.bookhub.bookhub_back.dto.alert.request.AlertCreateRequestDto;
-import com.bookhub.bookhub_back.dto.stock.request.StockUpdateRequestDto;
+import com.bookhub.bookhub_back.dto.stock.request.StockRequestDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockListResponseDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockUpdateResponseDto;
 import com.bookhub.bookhub_back.entity.*;
@@ -25,23 +25,57 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class StockServiceImpl implements StockService {
-    private final StockRepository stockRepository;//재고
-    private final StockLogRepository stockLogRepository;//재고 로그 입력
-    private final AlertService alertService;//알림
-    private final AuthorityRepository authorityRepository;//권한
-    private final EmployeeRepository employeeRepository;//직원
-    private final BookRepository bookRepository;//책
-    private final BranchRepository branchRepository;//지점
+    private final StockRepository stockRepository;
+    private final StockLogRepository stockLogRepository;
+    private final AlertService alertService;
+    private final AuthorityRepository authorityRepository;
+    private final EmployeeRepository employeeRepository;
+    private final BookRepository bookRepository;
+    private final BranchRepository branchRepository;
 
-    // 재고 수정
+    // 재고 생성
     @Override
     @Transactional
-    public ResponseDto<StockUpdateResponseDto> updateStock(Long stockId, StockUpdateRequestDto dto) {
+    public ResponseDto<Void> createStock(StockRequestDto dto) {
+        Book book = bookRepository.findByIdNotHidden(dto.getBookIsbn())
+                .orElseThrow(EntityNotFoundException::new);
+
+        Branch branch = branchRepository.findById(dto.getBranchId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        Stock stock = Stock.builder()
+                .bookIsbn(book)
+                .branchId(branch)
+                .bookAmount(dto.getAmount())
+                .build();
+
+        stockRepository.save(stock);
+
+        // 재고 로그 생성
+        StockLog log = StockLog.builder()
+                .stockActionType(StockActionType.valueOf(dto.getType()))
+                .employeeId(employeeRepository.findById(dto.getEmployeeId()).orElseThrow(EntityNotFoundException::new))
+                .bookIsbn(bookRepository.findByIdNotHidden(dto.getBookIsbn()).orElseThrow(EntityNotFoundException::new))
+                .branchId(branchRepository.findById(dto.getBranchId()).orElseThrow(EntityNotFoundException::new))
+                .amount(dto.getAmount())
+                .bookAmount(dto.getAmount())
+                .description(dto.getDescription())
+                .build();
+
+        stockLogRepository.save(log);
+
+        return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
+    }
+
+    // 재고량 수정
+    @Override
+    @Transactional
+    public ResponseDto<StockUpdateResponseDto> updateStock(Long stockId, StockRequestDto dto) {
         StockActionType actionType = StockActionType.valueOf(dto.getType().toUpperCase());
         Long updatedAmount= null;
 
         Stock stock = stockRepository.findById(stockId)
-                    .orElseThrow(() -> new EntityNotFoundException("해당 재고 ID가 존재하지 않습니다."));
+                    .orElseThrow(EntityNotFoundException::new);
 
         switch (actionType) {
             case IN -> updatedAmount = stock.getBookAmount() + dto.getAmount();
@@ -71,7 +105,7 @@ public class StockServiceImpl implements StockService {
         StockLog log = StockLog.builder()
                 .stockActionType(StockActionType.valueOf(dto.getType()))
                 .employeeId(employeeRepository.findById(dto.getEmployeeId()).orElseThrow(EntityNotFoundException::new))
-                .bookIsbn(bookRepository.findById(dto.getBookIsbn()).orElseThrow(EntityNotFoundException::new))
+                .bookIsbn(bookRepository.findByIdNotHidden(dto.getBookIsbn()).orElseThrow(EntityNotFoundException::new))
                 .branchId(branchRepository.findById(dto.getBranchId()).orElseThrow(EntityNotFoundException::new))
                 .amount(dto.getAmount())
                 .bookAmount(updatedAmount)
@@ -92,7 +126,7 @@ public class StockServiceImpl implements StockService {
             String message = "[" + stock.getBookIsbn().getBookTitle() + "] 도서의 재고가 "
                     + (updatedAmount == 0 ? "모두 소진되었습니다." : "부족합니다 (남은 수량: " + updatedAmount + "권)");
 
-            employeeRepository.findAllByAuthorityIdAndBranchId_BranchId(managerAuthority, finalStock.getBranchId().getBranchId())
+            employeeRepository.findAllByPositionId_AuthorityAndBranchId_BranchId(managerAuthority, finalStock.getBranchId().getBranchId())
                     .forEach(manager -> {
                         AlertCreateRequestDto alertDto = AlertCreateRequestDto.builder()
                                 .employeeId(manager.getEmployeeId())
@@ -109,7 +143,7 @@ public class StockServiceImpl implements StockService {
         return ResponseDto.success(ResponseCode.SUCCESS, ResponseMessage.SUCCESS, responseDto);
     }
 
-    // manager 재고 조회
+    // manager 재고 조회 (지점별)
     @Override
     public ResponseDto<List<StockListResponseDto>> searchStocksByBranch(UserPrincipal userPrincipal, String bookTitle, String isbn) {
         Branch branch = branchRepository.findById(userPrincipal.getBranchId())

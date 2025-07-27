@@ -1,6 +1,6 @@
 import { ResponseDto } from "@/dtos";
 import { axiosInstance, bearerAuthorization, responseErrorHandler, responseSuccessHandler } from "../axiosConfig";
-import { GET_ALERT_URL, GET_UNREAD_ALERT_URL, PUT_ALERT_URL } from "../../constants/url/sjw.constants";
+import { GET_ALERT_URL, GET_UNREAD_ALERT_URL, PUT_ALERT_URL } from "../../constants/api/sjw.constants";
 import axios, { AxiosError } from "axios";
 import { AlertResponseDto } from "@/dtos/alert/response/alert.response.dto";
 

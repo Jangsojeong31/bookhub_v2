@@ -2,7 +2,7 @@ package com.bookhub.bookhub_back.controller;
 
 import com.bookhub.bookhub_back.common.constants.ApiMappingPattern;
 import com.bookhub.bookhub_back.dto.ResponseDto;
-import com.bookhub.bookhub_back.dto.stock.request.StockUpdateRequestDto;
+import com.bookhub.bookhub_back.dto.stock.request.StockRequestDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockListResponseDto;
 import com.bookhub.bookhub_back.dto.stock.response.StockUpdateResponseDto;
 import com.bookhub.bookhub_back.security.UserPrincipal;
@@ -26,12 +26,12 @@ public class StockController {
     private static final String STOCK_ADMIN = ApiMappingPattern.ADMIN + "/stocks";
     private static final String STOCK_MANAGER = ApiMappingPattern.MANAGER + "/stocks";
 
-    // 재고 수정 - 책 재고 손실 시
+    // 재고량 수정
     @PutMapping(STOCK_MANAGER + "/{stockId}")
-    @Operation(summary = "재고 수정")
+    @Operation(summary = "재고량 수정")
     public ResponseEntity<ResponseDto<StockUpdateResponseDto>> updateStock(
             @PathVariable Long stockId,
-            @Valid @RequestBody StockUpdateRequestDto dto
+            @Valid @RequestBody StockRequestDto dto
     ){
         ResponseDto<StockUpdateResponseDto> responseDto = stockService.updateStock(stockId,dto);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);

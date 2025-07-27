@@ -26,4 +26,6 @@ public interface StockRepository extends JpaRepository<Stock, Long> {
             @Param("bookTitle") String bookTitle,
             @Param("isbn") String isbn,
             @Param("branchName") String branchName);
+
+    Stock findByBookIsbn_BookIsbnAndBranchId_BranchId(String bookIsbnBookIsbn, Long branchIdBranchId);
 }

@@ -11,7 +11,7 @@ import {
   GET_BRANCH_URL,
   POST_BRANCH_URL,
   PUT_BRANCH_URL,
-} from "../../constants/url/khj.constants";
+} from "../../constants/api/khj.constants";
 import { AxiosError } from "axios";
 import { BranchCreateRequestDto } from "@/dtos/branch/request/branch-create.request.dto";
 import { BranchDetailResponseDto } from "@/dtos/branch/response/branch-detail.response.dto";

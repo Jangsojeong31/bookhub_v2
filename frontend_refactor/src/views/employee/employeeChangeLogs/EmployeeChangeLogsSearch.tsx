@@ -86,7 +86,7 @@ function EmployeeChangeLogsSearch() {
     <div>
       <div className="searchContainer">
         <h2>회원정보 로그 조회</h2>
-        <div className="search-row">
+        <div className="filter-bar">
           <input
             type="text"
             name="employeeName"
@@ -126,10 +126,8 @@ function EmployeeChangeLogsSearch() {
             placeholder="마지막 일자"
             onChange={onInputChange}
           />
-          <div className="search-button">
             <button onClick={onSearchClick}>검색</button>
             <button onClick={onResetClcik}>초기화</button>
-          </div>
         </div>
       </div>
       <table>

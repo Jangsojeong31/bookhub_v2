@@ -15,7 +15,7 @@
             a.author_name,
             p.publisher_name,
             bc.category_name,
-            b.cover_url,
+            CONCAT('/files/', up.file_name) AS coverUrl,
             SUM(cod.amount) AS totalSales
         FROM customer_order_details cod
                  JOIN customer_orders co ON cod.customer_order_id = co.customer_order_id
@@ -23,10 +23,11 @@
                  JOIN authors a ON b.author_id = a.author_id
                  JOIN publishers p ON b.publisher_id = p.publisher_id
                  JOIN book_categories bc ON b.category_id = bc.category_id
+                 LEFT JOIN upload_files up ON b.cover_image_id = up.upload_file_id
                  LEFT JOIN refund_orders r ON r.customer_order_id = co.customer_order_id
         WHERE r.customer_order_id IS NULL
         GROUP BY b.book_isbn, b.book_title, a.author_name,
-                 p.publisher_name, bc.category_name, b.cover_url
+                 p.publisher_name, bc.category_name, coverUrl
         ORDER BY totalSales DESC
             LIMIT 100
     </select>
@@ -40,7 +41,7 @@
             a.author_name,
             p.publisher_name,
             bc.category_name,
-            b.cover_url,
+            CONCAT('/files/', up.file_name) AS coverUrl,
             SUM(cod.amount) AS totalSales
         FROM customer_order_details cod
                  JOIN customer_orders co ON cod.customer_order_id = co.customer_order_id
@@ -48,11 +49,12 @@
                  JOIN authors a ON b.author_id = a.author_id
                  JOIN publishers p ON b.publisher_id = p.publisher_id
                  JOIN book_categories bc ON b.category_id = bc.category_id
+                 LEFT JOIN upload_files up ON b.cover_image_id = up.upload_file_id
                  LEFT JOIN refund_orders r ON r.customer_order_id = co.customer_order_id
         WHERE co.ordered_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
           AND r.customer_order_id IS NULL
         GROUP BY b.book_isbn, b.book_title, a.author_name,
-                 p.publisher_name, bc.category_name, b.cover_url
+                 p.publisher_name, bc.category_name, coverUrl
         ORDER BY totalSales DESC
             LIMIT 100;
     </select>
@@ -65,7 +67,7 @@
             a.author_name,
             p.publisher_name,
             bc.category_name,
-            b.cover_url,
+            CONCAT('/files/', up.file_name) AS coverUrl,
             SUM(cod.amount) AS totalSales
         FROM customer_order_details cod
                  JOIN customer_orders co ON cod.customer_order_id = co.customer_order_id
@@ -73,11 +75,12 @@
                  JOIN authors a ON b.author_id = a.author_id
                  JOIN publishers p ON b.publisher_id = p.publisher_id
                  JOIN book_categories bc ON b.category_id = bc.category_id
+                 LEFT JOIN upload_files up ON b.cover_image_id = up.upload_file_id
                  LEFT JOIN refund_orders r ON r.customer_order_id = co.customer_order_id
         WHERE co.ordered_at >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
           AND r.customer_order_id IS NULL
         GROUP BY b.book_isbn, b.book_title, a.author_name,
-                 p.publisher_name, bc.category_name, b.cover_url
+                 p.publisher_name, bc.category_name, coverUrl
         ORDER BY totalSales DESC
             LIMIT 100;
     </select>
@@ -90,7 +93,7 @@
             a.author_name,
             p.publisher_name,
             bc.category_name,
-            b.cover_url,
+            CONCAT('/files/', up.file_name) AS coverUrl,
             SUM(cod.amount) AS totalSales
         FROM customer_order_details cod
                  JOIN customer_orders co ON cod.customer_order_id = co.customer_order_id
@@ -98,11 +101,12 @@
                  JOIN authors a ON b.author_id = a.author_id
                  JOIN publishers p ON b.publisher_id = p.publisher_id
                  JOIN book_categories bc ON b.category_id = bc.category_id
+                 LEFT JOIN upload_files up ON b.cover_image_id = up.upload_file_id
                  LEFT JOIN refund_orders r ON r.customer_order_id = co.customer_order_id
         WHERE co.ordered_at >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
           AND r.customer_order_id IS NULL
         GROUP BY b.book_isbn, b.book_title, a.author_name,
-                 p.publisher_name, bc.category_name, b.cover_url
+                 p.publisher_name, bc.category_name, coverUrl
         ORDER BY totalSales DESC
             LIMIT 100;
     </select>
@@ -115,7 +119,7 @@
             a.author_name,
             p.publisher_name,
             bc.category_name,
-            b.cover_url,
+            CONCAT('/files/', up.file_name) AS coverUrl,
             SUM(cod.amount) AS totalSales
         FROM customer_order_details cod
                  JOIN customer_orders co ON cod.customer_order_id = co.customer_order_id
@@ -123,12 +127,13 @@
                  JOIN authors a ON b.author_id = a.author_id
                  JOIN publishers p ON b.publisher_id = p.publisher_id
                  JOIN book_categories bc ON b.category_id = bc.category_id
+                 LEFT JOIN upload_files up ON b.cover_image_id = up.upload_file_id
                  LEFT JOIN refund_orders r ON r.customer_order_id = co.customer_order_id
-        WHERE co.ordered_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+        WHERE co.ordered_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)
           AND (bc.category_id = #{categoryId} OR bc.parent_category_id = #{categoryId})
           AND r.customer_order_id IS NULL
         GROUP BY b.book_isbn, b.book_title, a.author_name,
-                 p.publisher_name, bc.category_name, b.cover_url
+                 p.publisher_name, bc.category_name, up.file_name
         ORDER BY totalSales DESC
             LIMIT 20;
     </select>

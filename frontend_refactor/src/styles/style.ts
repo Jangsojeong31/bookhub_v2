@@ -29,6 +29,12 @@ export const createButton = css `
   border-radius: 4px;
 `;
 
+
+// 검색창, 검색버튼 container
+export const searchContainer = css `
+  display: flex;
+  gap: 12px;
+`
 /* 검색창 */
 export const searchInput = css `
   width: 300px;
@@ -44,6 +50,29 @@ export const searchInput = css `
   &:focus {
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
   }
+`;
+
+/* 전체 조회 버튼 */
+export const searchAllButton = css`
+  background-color: #e74c3c;
+  color: white;
+  font-size: 12px;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  margin-left: 24px;
+  cursor: pointer;
+`
+// 검색 버튼
+export const searchButton = css`
+  background-color: #265185;
+  width: 70px;
+  color: white;
+  font-size: 12px;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  cursor: pointer;
 `;
 
 /* 테이블 컨테이너: 스크롤 가능하도록 가로 여유 주기 */
@@ -142,23 +171,42 @@ export const pageText = css`
   margin-left: 12px;
 `;
 
-/* 전체 조회 버튼 */
-export const searchAll = css`
-  background-color: #e74c3c;
-  color: white;
-  font-size: 12px;
-  border: none;
-  border-radius: 5px;
-  padding: 6px 12px;
-  margin-left: 24px;
-  cursor: pointer;
-`;
+
 
 /* 모달 헤더 (제목) */
 export const publisherModalHeader = css`
   margin: 0 0 12px;
   font-size: 18px;
   color: #265185;
+`;
+
+// 모달 제목 (왼쪽 정렬)
+export const modalTitle = css`
+  font-size: 25px;
+  font-weight: bold;
+  color: #265185;
+  text-align: left;
+  margin: 0;
+`
+// 페이지 제목 (왼쪽 정렬)
+export const pageTitle = css`
+  font-size: 25px;
+  font-weight: bold;
+  color: #265185;
+  text-align: left;
+  margin: 0;
+`
+// 모달 내 등록 버튼
+export const modalCreateButton = css`
+  width: 80%;
+  margin: 10px auto;
+  background-color: #265185;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
 `;
 
 /* 입력 필드 */

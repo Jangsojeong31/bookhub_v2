@@ -1,8 +1,10 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { ReceptionListResponseDto } from "@/dtos/reception/response/receptionlist-response.dto";
 import { getAdminReceptionApproval } from "@/apis/reception/reception";
-import { GET_BRANCH_URL } from "@/constants/url/khj.constants";
+import { GET_BRANCH_URL } from "@/constants/api/khj.constants";
 
 type Branch = {
   branchId: number;
@@ -67,7 +69,7 @@ function AdminReceptionList() {
   return (
     <div>
       <h2>관리자 수령 확인 로그 조회</h2>
-      <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+      <div className="filter-bar">
         <select value={branchName} onChange={(e) => setBranchName(e.target.value)}>
           <option value="">전체 지점</option>
           {branches.map((branch) => (
@@ -84,8 +86,8 @@ function AdminReceptionList() {
           onChange={(e) => setBookIsbn(e.target.value)}
         />
 
-        <button onClick={fetchLogs}>조회</button>
-        <button onClick={fetchAllLogs}>전체</button>
+        <button onClick={fetchLogs} >조회</button>
+        <button onClick={fetchAllLogs} className="searchAllButton">전체</button>
       </div>
 
       {logs.length === 0 ? (

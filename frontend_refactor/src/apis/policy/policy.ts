@@ -13,7 +13,7 @@ import {
   PolicyUpdateRequestDto
 } from '@/dtos/policy/policy.request.dto';
 import { PolicyType } from '@/apis/enums/PolicyType';
-import { DELETE_POLICY_URL, GET_ALL_POLICIES_URL, GET_POLICY_URL, POST_POLICY_URL, PUT_POLICY_URL } from '../../constants/url/csy.constants';
+import { DELETE_POLICY_URL, GET_ALL_POLICIES_URL, GET_POLICY_URL, POST_POLICY_URL, PUT_POLICY_URL } from '../../constants/api/csy.constants';
 
 /**
  * 정책 목록 조회 (페이징 + 검색)
