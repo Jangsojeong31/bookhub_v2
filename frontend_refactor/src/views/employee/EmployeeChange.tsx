@@ -394,7 +394,7 @@ function EmployeeChange() {
       <div>
         <div className="searchContainer">
           <h2>사원 정보 수정</h2>
-          <div className="search-row">
+          <div className="filter-bar">
             <input
               type="text"
               name="name"
@@ -451,10 +451,8 @@ function EmployeeChange() {
                 </option>
               ))}
             </select>
-            <div className="search-button">
               <button onClick={onSearchClick}>검색</button>
               <button onClick={onResetButtonClick}>초기화</button>
-            </div>
           </div>
         </div>
         {message && <p style={{ color: "red" }}>{message}</p>}

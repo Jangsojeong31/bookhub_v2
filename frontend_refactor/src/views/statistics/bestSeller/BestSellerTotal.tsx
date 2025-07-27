@@ -66,15 +66,15 @@ function TotalBestSeller() {
           {book.coverUrl ? (
             <img
               src={`http://localhost:8080${encodeURI(book.coverUrl)}`}
-              alt="cover"
+              alt={book.bookTitle + "표지"}
               width={90}
               height={120}
             />
           ) : (
-            "없음"
+            "표지 없음"
           )}
         </td>
-        <td>{book.isbn}</td>
+        <td>{book.bookIsbn}</td>
         <td>{book.bookTitle}</td>
         <td>{book.authorName}</td>
         <td>{book.publisherName}</td>

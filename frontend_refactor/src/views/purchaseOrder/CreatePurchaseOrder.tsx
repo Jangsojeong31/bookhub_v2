@@ -57,7 +57,7 @@ function CreatePurchaseOrder() {
       setForm({
         isbn: "",
         purchaseOrderAmount: "",
-      })
+      });
     } catch (error) {
       console.error(error);
       alert("등록 중 오류가 발생했습니다.");
@@ -67,61 +67,63 @@ function CreatePurchaseOrder() {
   const modalContent: React.ReactNode = (
     <>
       <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 10,
-                    width: 500,
-                    height: 500,
-                    backgroundColor: "white",
-                    position: "absolute",
-                  }}
-                >
-                  <h2 style={{ color: "#265185", textAlign: "center" }}>발주 요청서 작성</h2>
-        
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <p>ISBN</p>
-                    <input
-                      type="text"
-                      name="isbn"
-                      value={form.isbn}
-                      onChange={onInputChange}
-                      placeholder="ISBN을 입력하세요."
-                      style={{
-                        border: "1px solid #ccc",
-                        borderRadius: "5px",
-                        width: 400,
-                        height: 50,
-                      }}
-                    />
-                  </div>
-        
-                  <div style={{ display: "flex", justifyContent: "space-between" }}>
-                    <p>발주량</p>
-                    <input
-                      type="text"
-                      name="purchaseOrderAmount"
-                      value={form.purchaseOrderAmount}
-                      onChange={onInputChange}
-                      placeholder="발주량을 입력하세요."
-                      style={{
-                        border: "1px solid #ccc",
-                        borderRadius: "5px",
-                        width: 400,
-                        height: 50,
-                      }}
-                    />
-                  </div>
-                  <button
-                    onClick={onCreatePurchaseOrderClick}
-                    css={style.createButton}
-                    style={{ margin: "10px auto", marginRight: 0, marginTop: "auto" }}
-                  >
-                    등록
-                  </button>
-                </div>
-              </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+            width: 500,
+            height: 500,
+            backgroundColor: "white",
+            position: "absolute",
+          }}
+        >
+          <h2 style={{ color: "#265185", textAlign: "center" }}>
+            발주 요청서 작성
+          </h2>
+
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <p>ISBN</p>
+            <input
+              type="text"
+              name="isbn"
+              value={form.isbn}
+              onChange={onInputChange}
+              placeholder="ISBN을 입력하세요."
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                width: 400,
+                height: 50,
+              }}
+            />
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <p>발주량</p>
+            <input
+              type="text"
+              name="purchaseOrderAmount"
+              value={form.purchaseOrderAmount}
+              onChange={onInputChange}
+              placeholder="발주량을 입력하세요."
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                width: 400,
+                height: 50,
+              }}
+            />
+          </div>
+          <button
+            onClick={onCreatePurchaseOrderClick}
+            css={style.createButton}
+            style={{ margin: "10px auto", marginRight: 0, marginTop: "auto" }}
+          >
+            등록
+          </button>
+        </div>
+      </div>
     </>
   );
 

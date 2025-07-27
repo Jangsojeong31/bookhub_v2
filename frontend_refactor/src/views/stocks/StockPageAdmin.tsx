@@ -47,16 +47,8 @@ function StockPageAdmin() {
   };
   return (
     <div className="stock-page-container">
-      <div className="topBar">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          <div style={{ display: "flex", gap: 12, height: 35 }}>
+
+          <div className="filter-bar">
             <input
               type="text"
               name="bookTitle"
@@ -85,10 +77,8 @@ function StockPageAdmin() {
               검색
             </button>
           </div>
-        </div>
-      </div>
 
-      <div className="table-container margin-top">
+      <div>
         <table>
           <thead>
             <tr>

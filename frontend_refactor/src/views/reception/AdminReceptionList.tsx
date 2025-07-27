@@ -69,7 +69,7 @@ function AdminReceptionList() {
   return (
     <div>
       <h2>관리자 수령 확인 로그 조회</h2>
-      <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+      <div className="filter-bar">
         <select value={branchName} onChange={(e) => setBranchName(e.target.value)}>
           <option value="">전체 지점</option>
           {branches.map((branch) => (
@@ -86,8 +86,8 @@ function AdminReceptionList() {
           onChange={(e) => setBookIsbn(e.target.value)}
         />
 
-        <button onClick={fetchLogs} css={style.createButton}>조회</button>
-        <button onClick={fetchAllLogs} css={style.searchAll}>전체</button>
+        <button onClick={fetchLogs} >조회</button>
+        <button onClick={fetchAllLogs} className="searchAllButton">전체</button>
       </div>
 
       {logs.length === 0 ? (

@@ -122,7 +122,7 @@ function BestSellerByPeriod() {
             "없음"
           )}
         </td>
-        <td>{book.isbn}</td>
+        <td>{book.bookIsbn}</td>
         <td>{book.bookTitle}</td>
         <td>{book.authorName}</td>
         <td>{book.publisherName}</td>

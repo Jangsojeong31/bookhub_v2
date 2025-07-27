@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import Select from 'react-select';
@@ -131,7 +133,13 @@ function CreateBook () {
 
   return (
     <form onSubmit={handleSubmit} className="create-book-form">
-      <h2>책 등록</h2>
+      <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", height: 40}}>
+        <p css={style.modalTitle}>책 등록</p>
+        <button 
+          type="submit" 
+          css={style.createButton}>등록</button>
+      </div>
+
       <input
         type="text"
         value={isbn} 
@@ -232,10 +240,7 @@ function CreateBook () {
       placeholder="설명" 
       className="create-book-input" 
       required />
-      <button 
-        type="submit" 
-        className="create-book-button"
-        style={{ backgroundColor: "#265185"}}>등록</button>
+      
     </form>
   );
 }

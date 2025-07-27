@@ -11,6 +11,8 @@ import { PurchaseOrderStatus } from "@/dtos/purchaseOrderApproval/request/purcha
 import React, { useState } from "react";
 import { useCookies } from "react-cookie";
 import CreatePurchaseOrder from "./CreatePurchaseOrder";
+import Pagination from "@/components/Pagination";
+import usePagination from "@/hooks/usePagination";
 
 function ElsePurchaseOrder() {
   const [searchForm, setSearchForm] = useState<{
@@ -36,9 +38,15 @@ function ElsePurchaseOrder() {
   >([]);
   const [modalStatus, setModalStatus] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 10;
-
+  const {
+      currentPage,
+      totalPages,
+      pagedItems: pagedPurchaseOrders,
+      goToPage,
+      goPrev,
+      goNext,
+    } = usePagination(purchaseOrders, 10);
+    
   const onSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSearchForm({ ...searchForm, [name]: value });
@@ -77,7 +85,6 @@ function ElsePurchaseOrder() {
       if (Array.isArray(data) && data.length > 0) {
         setPurchaseOrders(data);
         setMessage("");
-        setCurrentPage(0);
       } else {
         setMessage("올바른 검색 조건을 입력해주세요.");
       }
@@ -206,27 +213,6 @@ function ElsePurchaseOrder() {
     }
   };
 
-  const totalPages = Math.ceil(purchaseOrders.length / itemsPerPage);
-
-  const goToPage = (page: number) => {
-    if (page >= 0 && page < totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const goPrev = () => {
-    if (currentPage > 0) setCurrentPage(currentPage - 1);
-  };
-
-  const goNext = () => {
-    if (currentPage < totalPages - 1) setCurrentPage(currentPage + 1);
-  };
-
-  const pagedPurchaseOrders = purchaseOrders.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
-
   // *노출 리스트
   const responsePurchaseOrderList = pagedPurchaseOrders.map(
     (purchaseOrder, index) => {
@@ -273,18 +259,16 @@ function ElsePurchaseOrder() {
 
   return (
     <div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div>
+        <div className="filter-bar">
+          <div className="left-item">
           <CreatePurchaseOrder />
-        </div>
-        <div style={{ display: "flex", gap: "12px" }}>
+          </div>
           <input
             type="text"
             name="employeeName"
             value={searchForm.employeeName}
             placeholder="발주담당자"
             onInput={onSearchInputChange}
-            style={{ border: "1px solid #ccc", textAlign: "center" }}
           />
           <input
             type="text"
@@ -292,7 +276,6 @@ function ElsePurchaseOrder() {
             value={searchForm.bookIsbn}
             placeholder="ISBN"
             onInput={onSearchInputChange}
-            style={{ border: "1px solid #ccc", textAlign: "center" }}
           />
           <select
             name="approvalStatus"
@@ -315,7 +298,7 @@ function ElsePurchaseOrder() {
               })
             }
           >
-            <option value="">전체</option>
+            <option value="">승인 상태</option>
             <option value="REQUESTED">요청중</option>
             <option value="APPROVED">승인</option>
             <option value="REJECTED">승인 거부</option>
@@ -327,7 +310,6 @@ function ElsePurchaseOrder() {
             검색
           </button>
         </div>
-      </div>
       {purchaseOrders && (
         <table>
           <thead>
@@ -357,36 +339,15 @@ function ElsePurchaseOrder() {
         />
       )}
       {message && <p>{message}</p>}
-      {/* 페이지네이션 */}
+      
       {purchaseOrders.length > 0 && (
-        <div className="footer">
-          <button
-            className="pageBtn"
-            onClick={goPrev}
-            disabled={currentPage === 0}
-          >
-            {"<"}
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i).map((i) => (
-            <button
-              key={i}
-              className={`pageBtn${i === currentPage ? " current" : ""}`}
-              onClick={() => goToPage(i)}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            className="pageBtn"
-            onClick={goNext}
-            disabled={currentPage >= totalPages - 1}
-          >
-            {">"}
-          </button>
-          <span className="pageText">
-            {totalPages > 0 ? `${currentPage + 1} / ${totalPages}` : "0 / 0"}
-          </span>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+          onPrev={goPrev}
+          onNext={goNext}
+        />
       )}
     </div>
   );

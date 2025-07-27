@@ -1,11 +1,21 @@
+/** @jsxImportSource @emotion/react */
+import * as style from "@/styles/style";
 import { PolicyType } from "@/apis/enums/PolicyType";
-import { getPolicies, deletePolicy, getPolicyDetail } from "@/apis/policy/policy";
-import { PolicyListResponseDto, PolicyDetailResponseDto } from "@/dtos/policy/policy.response.dto";
+import {
+  getPolicies,
+  deletePolicy,
+  getPolicyDetail,
+} from "@/apis/policy/policy";
+import {
+  PolicyListResponseDto,
+  PolicyDetailResponseDto,
+} from "@/dtos/policy/policy.response.dto";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import CreatePolicy from "./CreatePolicy";
 import UpdatePolicy from "./UpdatePolicy";
 import "./policyC.css";
+import DataTable from "@/components/Table";
 
 const PAGE_SIZE = 10;
 
@@ -23,7 +33,8 @@ const PolicyPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [policies, setPolicies] = useState<PolicyListResponseDto[]>([]);
   const [selectedPolicyId, setSelectedPolicyId] = useState<number | null>(null);
-  const [selectedDetail, setSelectedDetail] = useState<PolicyDetailResponseDto | null>(null);
+  const [selectedDetail, setSelectedDetail] =
+    useState<PolicyDetailResponseDto | null>(null);
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
@@ -115,81 +126,99 @@ const PolicyPage: React.FC = () => {
 
   return (
     <div className="policy-page-container">
-      <div className="topBar">
-        <button onClick={() => setIsCreateOpen(true)} className="btn-primary">
+      <div className="filter-bar">
+        <button
+          className="left-item"
+          onClick={() => setIsCreateOpen(true)}
+          css={style.createButton}
+        >
           정책 등록
         </button>
-      </div>
-
-      <div className="filters">
-        <select className="input-search" value={type} onChange={(e) => setType(e.target.value as PolicyType)}>
-          <option value="">전체</option>
+        <select
+          value={type}
+          onChange={(e) => setType(e.target.value as PolicyType)}
+        >
+          <option value="">할인 유형</option>
           <option value={PolicyType.BOOK_DISCOUNT}>도서 할인</option>
           <option value={PolicyType.TOTAL_PRICE_DISCOUNT}>총 금액 할인</option>
           <option value={PolicyType.CATEGORY_DISCOUNT}>카테고리 할인</option>
         </select>
-        <input className="input-search" type = "date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-        <input className="input-search" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+
+        <p>시작일</p>
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+        />
+        <p>종료일</p>
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+        />
         <input
           type="text"
           placeholder="제목 검색"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && goToPage(0)}
-          className="input-search"
         />
         <input
           type="number"
           placeholder="할인율(%)"
           value={discountPercent}
-          onChange={(e) => setDiscountPercent(e.target.value === "" ? "" : Number(e.target.value))}
-          className="input-search"
+          onChange={(e) =>
+            setDiscountPercent(
+              e.target.value === "" ? "" : Number(e.target.value)
+            )
+          }
         />
-        <button onClick={() => goToPage(0)} className="btn-primary">
+        <button onClick={() => goToPage(0)} css={style.searchButton}>
           검색
         </button>
       </div>
 
-      <table className="table-policy">
-        <thead>
-          <tr>
-            <th>정책 ID</th>
-            <th>제목</th>
-            <th>타입</th>
-            <th>시작일</th>
-            <th>종료일</th>
-            <th>작업</th>
-          </tr>
-        </thead>
-        <tbody>
-          {policies.map((p) => (
-            <tr key={p.policyId}>
-              <td>{p.policyId}</td>
-              <td>{p.policyTitle}</td>
-              <td>{p.policyType}</td>
-              <td>{p.startDate}</td>
-              <td>{p.endDate}</td>
-              <td>
-                <button onClick={() => openUpdateModal(p.policyId)} className="modifyBtn">
-                  수정
-                </button>
-                <button onClick={() => handleDelete(p.policyId)} className="button">
-                  삭제
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="table-policy">
+        <DataTable<PolicyListResponseDto>
+          columns={[
+            { header: "정책 ID", accessor: "policyId" },
+            { header: "제목", accessor: "policyTitle" },
+            { header: "타입", accessor: "policyType" },
+            { header: "시작일", accessor: "startDate" },
+            { header: "종료일", accessor: "endDate" },
+          ]}
+          data={policies}
+          actions={[
+            {
+              label: "수정",
+              onClick: (p) => openUpdateModal(p.policyId),
+              buttonCss: style.modifyButton,
+            },
+            {
+              label: "삭제",
+              onClick: (p) => handleDelete(p.policyId),
+              buttonCss: style.deleteButton,
+            },
+          ]}
+        />
+      </div>
 
       <div className="pagination">
-        <button className="btn-primary" disabled={currentPage === 0} onClick={() => goToPage(currentPage - 1)}>
+        <button
+          className="btn-primary"
+          disabled={currentPage === 0}
+          onClick={() => goToPage(currentPage - 1)}
+        >
           이전
         </button>
         <span>
           {currentPage + 1} / {totalPages}
         </span>
-        <button className="btn-primary" disabled={currentPage + 1 >= totalPages} onClick={() => goToPage(currentPage + 1)}>
+        <button
+          className="btn-primary"
+          disabled={currentPage + 1 >= totalPages}
+          onClick={() => goToPage(currentPage + 1)}
+        >
           다음
         </button>
       </div>
@@ -216,4 +245,3 @@ const PolicyPage: React.FC = () => {
 };
 
 export default PolicyPage;
-

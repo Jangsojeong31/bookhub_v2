@@ -148,7 +148,6 @@ function CreateCategory({ onSuccess }: CreateCategoryProps) {
         <button
           css={style.createButton}
           type="submit"
-          className="create-category-button"
         >
           등록
         </button>

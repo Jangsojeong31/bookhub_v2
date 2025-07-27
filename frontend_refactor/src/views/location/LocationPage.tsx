@@ -42,17 +42,17 @@ export default function LocationPage() {
 
   return (
     <section style={{ padding: "1rem" }}>
-      <h1>책 진열 위치 관리</h1>
+      <h2>책 진열 위치 관리</h2>
 
       {/* 검색 + 등록 */}
-      <form onSubmit={handleSearch} style={{ marginBottom: "1rem" }}>
+      <form onSubmit={handleSearch} className="filter-bar">
         <input
+          type="text"
           placeholder="책 제목 검색"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          style={{ marginRight: "0.5rem" }}
         />
-        <button type="submit" style={{ marginRight: "0.5rem" }}>
+        <button type="submit" onClick={handleSearch}>
           검색
         </button>
         <button

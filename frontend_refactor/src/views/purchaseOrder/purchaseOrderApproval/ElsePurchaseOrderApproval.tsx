@@ -123,7 +123,7 @@ function ElsePurchaseOrderApproval() {
 
   return (
     <div>
-      <div style={{ display: "flex", gap: 12 }}>
+      <div className="filter-bar">
           <input
             type="text"
             name="employeeName"

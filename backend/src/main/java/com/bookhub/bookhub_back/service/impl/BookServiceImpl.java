@@ -202,7 +202,7 @@ public class BookServiceImpl implements BookService {
                 .publisherName(book.getPublisherId().getPublisherName())
                 .bookPrice(book.getBookPrice())
                 .publishedDate(book.getPublishedDate())
-                .coverUrl(book.getCoverImage() != null ? "/files/" + book.getCoverImage().getFilePath() : null)
+                .coverUrl(book.getCoverImage() != null ? "/files/" + book.getCoverImage().getFileName() : null)
                 .pageCount(book.getPageCount())
                 .language(book.getLanguage())
                 .description(book.getDescription())

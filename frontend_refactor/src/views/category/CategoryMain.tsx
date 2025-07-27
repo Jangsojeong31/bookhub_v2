@@ -36,11 +36,9 @@ function CategoryMain() {
 
   return (
     <div>
-    <div className="topBar">
-      <div style={{ display: "flex", gap: "12px", marginBottom: "20px" }}>
+    <div className="filter-bar" style={{justifyContent: "flex-start"}}>
         <button className="button" onClick={() => setMode("create")}>등록</button>
         <button className="button" onClick={() => setMode("read")}>전체 조회 / 수정 / 비활성화</button>
-      </div>
       </div>
       <div >
         <div>

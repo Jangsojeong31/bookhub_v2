@@ -131,10 +131,10 @@ function BestSellerByCategory() {
               height={120}
             />
           ) : (
-            "없음"
+            " 표지 없음"
           )}
         </td>
-        <td>{book.isbn}</td>
+        <td>{book.bookIsbn}</td>
         <td>{book.bookTitle}</td>
         <td>{book.authorName}</td>
         <td>{book.publisherName}</td>
@@ -146,7 +146,10 @@ function BestSellerByCategory() {
 
   return (
     <div>
+      <div style={{ display: 'flex', justifyContent: "center", alignItems: 'center', gap: '8px' }}>
       <h2>카테고리별 베스트셀러 순위</h2>
+      <p style={{marginBottom: 0}}>(30일 기준)</p>
+      </div>
       <p>국내 / 해외</p>
       <select
         id="topCategory"

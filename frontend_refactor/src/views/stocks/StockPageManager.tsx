@@ -27,7 +27,7 @@ function StockPage() {
 
   useEffect(() => {
     searchStocks();
-  }, [])
+  }, []);
 
   const searchStocks = async () => {
     setStocks([]);
@@ -72,37 +72,28 @@ function StockPage() {
 
   return (
     <div className="stock-page-container">
-                <h2>재고 관리 [ {branchName} ]</h2>
-
-      <div className="topBar">
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%"}}>
-          <div style={{display: "flex", gap: 12, height: 35}}>
-            <input
-            type="text"
-            name="bookTitle"
-            value={searchForm.bookTitle}
-            placeholder="책 제목"
-            onInput={onInputChange}
-            style={{ border: "1px solid #ccc", textAlign: "center" }}
-          />
-          <input
-            type="text"
-            name="isbn"
-            value={searchForm.isbn}
-            placeholder="ISBN"
-            onInput={onInputChange}
-            style={{ border: "1px solid #ccc", textAlign: "center" }}
-          />
-          <button className="modifyBtn" onClick={searchStocks}>
-            검색
-          </button>
-          </div>
-        
-        
-          </div>
+      <h2>재고 관리 [ {branchName} ]</h2>
+      <div className="filter-bar">
+        <input
+          type="text"
+          name="bookTitle"
+          value={searchForm.bookTitle}
+          placeholder="책 제목"
+          onInput={onInputChange}
+        />
+        <input
+          type="text"
+          name="isbn"
+          value={searchForm.isbn}
+          placeholder="ISBN"
+          onInput={onInputChange}
+        />
+        <button onClick={searchStocks}>
+          검색
+        </button>
       </div>
 
-      <div className="table-container margin-top">
+      <div>
         <table>
           <thead>
             <tr>
