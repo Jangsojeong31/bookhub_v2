@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import * as style from "@/styles/style";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import "./book.css";
 import { getBookByIsbn, updateBook, hideBook } from "@/apis/book/book";
@@ -16,6 +16,7 @@ function UpdateBook() {
   const [policyId, setPolicyId] = useState<number | null>(null);
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [bookStatus, setBookStatus] = useState<
     "ACTIVE" | "INACTIVE" | "HIDDEN"
@@ -41,6 +42,17 @@ function UpdateBook() {
     }
   };
 
+  useEffect(() => {
+    if (coverFile) {
+      const objectUrl = URL.createObjectURL(coverFile);
+      setPreviewUrl(objectUrl);
+
+      return () => URL.revokeObjectURL(objectUrl);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [coverFile]);
+
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = cookies.accessToken;
@@ -56,7 +68,7 @@ function UpdateBook() {
     };
 
     try {
-      const res = await updateBook(isbnInput, dto, token, coverFile);
+      const res = await updateBook(isbnInput, dto, token, coverFile ?? null);
       if (res.code !== "SU") throw new Error(res.message);
       alert("수정 성공");
     } catch (err) {
@@ -85,15 +97,15 @@ function UpdateBook() {
     <div>
       <div className="filter-bar">
         <h2>ISBN으로 책 검색</h2>
-          <input
+        <input
           className="searchInput"
-            value={isbnInput}
-            onChange={(e) => setIsbnInput(e.target.value)}
-            placeholder="ISBN 입력을 입력하세요"
-          />
-          <button type="button" onClick={handleSearch}>
-            검색
-          </button>
+          value={isbnInput}
+          onChange={(e) => setIsbnInput(e.target.value)}
+          placeholder="ISBN 입력을 입력하세요"
+        />
+        <button type="button" onClick={handleSearch}>
+          검색
+        </button>
       </div>
 
       <div className="table-container">
@@ -127,6 +139,7 @@ function UpdateBook() {
                       type="number"
                       value={bookPrice ?? ""}
                       onChange={(e) => setBookPrice(Number(e.target.value))}
+                      style={{ width: 100 }}
                       placeholder="가격"
                     />
                   </td>
@@ -136,6 +149,7 @@ function UpdateBook() {
                       value={policyId ?? ""}
                       onChange={(e) => setPolicyId(Number(e.target.value))}
                       placeholder="정책ID (선택)"
+                      style={{ width: 100 }}
                     />
                   </td>
                   <td>
@@ -146,6 +160,7 @@ function UpdateBook() {
                         const val = e.target.value;
                         setCategoryId(val === "" ? null : Number(val));
                       }}
+                      style={{ width: 100 }}
                       placeholder="카테고리ID"
                     />
                   </td>
@@ -178,16 +193,29 @@ function UpdateBook() {
                         }
                         className="file-upload-input"
                       />
-                      {coverUrl ? (
+
+                      {previewUrl ? (
                         <img
-                          src={`http://localhost:8080${encodeURI(coverUrl)}`}
+                          src={previewUrl}
+                          alt="미리보기 이미지"
+                          width={90}
+                          height={120}
+                        />
+                      ) : coverUrl ? (
+                        <img
+                          src={`http://3.35.24.241:8080${encodeURI(coverUrl)}`}
                           alt="cover"
                           width={90}
                           height={120}
                         />
                       ) : (
-                        <span>"없음"</span>
+                        <span>"표지 없음"</span>
                       )}
+                      {/* {coverFile && (
+                        <p className="file-name">
+                          선택된 파일: {coverFile.name}
+                        </p>
+                      )} */}
                     </div>
                   </td>
                   <td>

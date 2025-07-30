@@ -144,7 +144,7 @@ public class BookServiceImpl implements BookService {
         book.setDescription(dto.getDescription());
         book.setBookStatus(BookStatus.valueOf(dto.getBookStatus().toUpperCase()));
         book.setDiscountPolicyId(policy);
-        book.setCoverImage(coverImage);
+        if (coverImage != null) book.setCoverImage(coverImage);
 
         Book updatedBook = bookRepository.save(book);
 

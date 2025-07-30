@@ -45,7 +45,7 @@ export const updateBook = async (
   const blob = new Blob([JSON.stringify(dto)], { type: "application/json" });
 
   formData.append("dto", blob);
-  if (coverFile) formData.append("file", coverFile);
+  if (coverFile) formData.append("coverImageFile", coverFile);
 
   const response = await axiosInstance.put(
     UPDATE_BOOK_URL(isbn),

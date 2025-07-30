@@ -1,4 +1,4 @@
-const API_DOMAIN = "http://localhost:8080";
+const API_DOMAIN = "http://3.35.24.241:8080";
 
 const ADMIN = "admin";
 const MANAGER = "manager";
