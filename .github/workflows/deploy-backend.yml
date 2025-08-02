@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
       
       - name: Build with Gradle
-        run: 
+        run: |
           chmod +x gradlew
           ./gradlew clean build -x test
         working-directory: backend
