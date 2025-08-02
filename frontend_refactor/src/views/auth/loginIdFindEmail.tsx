@@ -48,7 +48,7 @@ function LoginIdFindEmail() {
   return (
     <div className="container">
       <img
-        src="/src/constants/image/북허브_로그_로그인창.png"
+        src="/assets/images/북허브_로그_로그인창.png"
         alt="BookHub 로고"
         className="logo-img"
         onClick={onLogoClick}

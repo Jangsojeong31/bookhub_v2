@@ -32,7 +32,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.logo}>
         <img
-          src="/src/constants/image/북허브_로고_배경제거_navy.png"
+          src="/assets/images/북허브_로고_배경제거_navy.png"
           alt="BookHub 로고"
           onClick={onLogoClick}
           className={styles.logoImg}
