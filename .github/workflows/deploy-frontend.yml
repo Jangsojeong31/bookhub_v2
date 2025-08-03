@@ -32,7 +32,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: $ {{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_KEY }}
           source: "frontend_refactor/dist/*"
           target: "/home/ec2-user/bookhub-deploy-frontend/dist"
 
@@ -41,7 +41,7 @@ jobs:
         with: 
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: $ {{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_KEY }}
           script: |
             sudo cp -r /home/ec2-user/bookhub-deploy-frontend/dist/* usr/share/nginx/html/
             sudo systemctl restart nginx
