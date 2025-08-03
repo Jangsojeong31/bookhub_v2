@@ -37,7 +37,7 @@ jobs:
           target: "/home/ec2-user/bookhub-deploy-frontend/dist"
 
       - name: Deploy to Nginx directory
-        uses: appleboy/ssh-actions@v1.0.3
+        uses: appleboy/ssh-action@v1.0.3
         with: 
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
