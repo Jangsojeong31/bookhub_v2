@@ -17,7 +17,7 @@ import { Position } from "@/dtos/position/position";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import "@/styles/employee/employeeUpdateModal.css";
-import "@/styles/employee/employeemodal.css";
+import "@/styles/employee/employeeModal.css";
 import "@/styles/employee/employeeSelect.css";
 import { Branch } from "@/dtos/branch/branch";
 
