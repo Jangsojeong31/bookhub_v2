@@ -9,7 +9,7 @@ import { EmployeeListResponseDto } from "@/dtos/employee/response/employee-list.
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import "@/styles/employee/employeeSelect.css";
-import "@/styles/employee/employeemodal.css";
+import "@/styles/employee/employeeModal.css";
 
 const positionOptions = ["사원", "대리", "과장", "부장", "점장"];
 const authorityOptions = ["STAFF", "MANAGER", "ADMIN"];
