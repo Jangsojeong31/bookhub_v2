@@ -1,4 +1,4 @@
-const API_DOMAIN = "http://13.124.15.92:8080";
+const API_DOMAIN = "http://3.34.198.61";
 
 const ADMIN = "admin";
 const MANAGER = "manager";

@@ -65,7 +65,7 @@ function TotalBestSeller() {
         <td>
           {book.coverUrl ? (
             <img
-              src={`http://localhost:8080${encodeURI(book.coverUrl)}`}
+              src={`http://3.34.198.61${encodeURI(book.coverUrl)}`}
               alt={book.bookTitle + "표지"}
               width={90}
               height={120}
