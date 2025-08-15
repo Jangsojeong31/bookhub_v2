@@ -203,7 +203,7 @@ function UpdateBook() {
                         />
                       ) : coverUrl ? (
                         <img
-                          src={`http://3.34.198.61${encodeURI(coverUrl)}`}
+                          src={`http://3.34.198.61:8080${encodeURI(coverUrl)}`}
                           alt="cover"
                           width={90}
                           height={120}

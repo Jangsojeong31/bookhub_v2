@@ -1,7 +1,7 @@
 // csy.constants.ts
 // # URL 상수 정의
 
-const API_DOMAIN = import.meta.env.REACT_APP_API_DOMAIN || "http://3.34.198.61";
+const API_DOMAIN = import.meta.env.REACT_APP_API_DOMAIN || "http://3.34.198.61:8080";
 
 const ADMIN = 'admin';
 const MANAGER = 'manager';

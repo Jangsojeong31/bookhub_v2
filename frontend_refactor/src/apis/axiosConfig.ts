@@ -8,7 +8,7 @@ export const axiosInstance = axios.create({
   // process.env.REACT_APP~~
   // : REACT 프로젝트에서 환경 변수를 사용하는 방식
   // > 프로젝트 루트에 .env 파일을 생성하여 데이터 저장
-  baseURL: import.meta.env.REACT_APP_API_DOMAIN || "http://3.34.198.61",
+  baseURL: import.meta.env.REACT_APP_API_DOMAIN || "http://3.34.198.61:8080",
   timeout: 8000,
 });
 
